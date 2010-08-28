@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static net.premereur.reflection.util.ReflectionUtil.*;
+
 public class EventBusFactory {
 
 	@SuppressWarnings("unchecked")
@@ -47,15 +49,11 @@ public class EventBusFactory {
 		}
 
 		private static Type[] getPresenterGenerics(Class<?> presenterClazz) {
-			for (Type genericInterface : presenterClazz.getGenericInterfaces()) {
-				if (genericInterface instanceof ParameterizedType) {
-					ParameterizedType paramType = (ParameterizedType) genericInterface;
-					if (Presenter.class.isAssignableFrom((Class<?>) paramType.getRawType())) {
-						return paramType.getActualTypeArguments();
-					}
-				}
+			Type[] presenterTypes = getImplementedInterfaceGenericTypes(presenterClazz, Presenter.class);
+			if (presenterTypes.length == 0) {
+				throw new RuntimeException("This class doesn't implement " + Presenter.class);
 			}
-			throw new RuntimeException("This class doesn't implement " + Presenter.class);
+			return presenterTypes;
 		}
 
 		private static Method correspondingPresenterMethod(Class<? extends Presenter<? extends View, ? extends EventBus>> presenter, Method ebm) {
