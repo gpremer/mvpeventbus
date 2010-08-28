@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="MVP" default="about">
+  <target name="ci">
+	<subant target="fasttest">
+		<fileset dir="." includes="*/build.xml"/>
+	</subant>
+  </target>
+
+  <target name="about">
+	<echo>Main build file for mvpeventbus project</echo>
+  </target>
+</project>
+
