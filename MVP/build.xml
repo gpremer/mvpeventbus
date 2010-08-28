@@ -33,6 +33,9 @@
 		<mkdir dir="${publish}" />
 	</target>
 
+	<target name="ci" depends="fasttest">
+	</target>
+	
 	<target name="clean">
 		<delete dir="${build}">
 		</delete>
