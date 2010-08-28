@@ -65,7 +65,7 @@
 				<pathelement path="${classes-test}"/>
 			</classpath>
 			<classpath refid="libpath.test"/>
-			<formatter type="plain"/>
+			<formatter type="xml"/>
 			<batchtest fork="yes" todir="${reports.tests}">
 				<fileset dir="${src.test.fast.standalone}">
 					<include name="**/*Test.java" />
