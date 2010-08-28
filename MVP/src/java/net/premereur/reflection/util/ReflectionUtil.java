@@ -17,4 +17,14 @@ public final class ReflectionUtil {
 		return new Type[] {};
 	}
 
+	public static <T> T uncheckedNewInstance(Class<T> clazz) {
+		try {
+			return clazz.newInstance();
+		} catch (InstantiationException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 }

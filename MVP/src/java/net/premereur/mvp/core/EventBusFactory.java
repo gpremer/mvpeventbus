@@ -1,16 +1,16 @@
 package net.premereur.mvp.core;
 
+import static net.premereur.reflection.util.ReflectionUtil.getImplementedInterfaceGenericTypes;
+import static net.premereur.reflection.util.ReflectionUtil.uncheckedNewInstance;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static net.premereur.reflection.util.ReflectionUtil.*;
 
 public class EventBusFactory {
 
@@ -27,17 +27,22 @@ public class EventBusFactory {
 
 		private final Map<Method, List<Method>> handlingMethodsByEventMethod = new HashMap<Method, List<Method>>();
 
-		public EventBusInvocationHandler(Class<? extends EventBus> clazz) {
-			for (Method eventMethod : eventMethods(clazz)) {
+		public EventBusInvocationHandler(Class<? extends EventBus> eventBusClass) {
+			for (Method eventMethod : eventMethods(eventBusClass)) {
 				Event eventAnt = eventMethod.getAnnotation(Event.class);
-				verifyHandlers(eventAnt.handlers(), clazz);
+				verifyHandlers(eventAnt.handlers(), eventBusClass);
 				verifyEventBusMethods(eventMethod);
-				List<Method> handlingMethods = new ArrayList<Method>();
-				for (Class<? extends Presenter<? extends View, ? extends EventBus>> presenter : eventAnt.handlers()) {
-					handlingMethods.add(correspondingPresenterMethod(presenter, eventMethod));
-				}
+				List<Method> handlingMethods = findHandlerMethodsForEvent(eventMethod, eventAnt);
 				handlingMethodsByEventMethod.put(eventMethod, handlingMethods);
 			}
+		}
+
+		private List<Method> findHandlerMethodsForEvent(Method eventMethod, Event eventAnt) {
+			List<Method> handlingMethods = new ArrayList<Method>();
+			for (Class<? extends Presenter<? extends View, ? extends EventBus>> presenter : eventAnt.handlers()) {
+				handlingMethods.add(correspondingPresenterMethod(presenter, eventMethod));
+			}
+			return handlingMethods;
 		}
 
 		private void verifyHandlers(Class<? extends Presenter<? extends View, ? extends EventBus>>[] handlers, Class<? extends EventBus> eventBusClass) {
@@ -58,7 +63,7 @@ public class EventBusFactory {
 
 		private static Method correspondingPresenterMethod(Class<? extends Presenter<? extends View, ? extends EventBus>> presenter, Method ebm) {
 			for (Method pm : presenter.getMethods()) {
-				if (corresponds(pm, ebm)) {
+				if (presenterMethodCorrespondsWithEventBusMethod(pm, ebm)) {
 					return pm;
 				}
 			}
@@ -66,7 +71,7 @@ public class EventBusFactory {
 					+ ebm.getName());
 		}
 
-		private static boolean corresponds(Method pm, Method ebm) {
+		private static boolean presenterMethodCorrespondsWithEventBusMethod(Method pm, Method ebm) {
 			return getEventMethodId(ebm).equals(getEventMethodId(pm));
 		}
 
@@ -78,7 +83,6 @@ public class EventBusFactory {
 		private void verifyOnlyVoidMethod(Method m) {
 			if (m.getReturnType().getName() != "void") {
 				throw new IllegalArgumentException("Found a method " + m.getName() + " with non-void return type");
-
 			}
 
 		}
@@ -145,26 +149,14 @@ public class EventBusFactory {
 		}
 
 		@SuppressWarnings("unchecked")
-		private static Object newHandler(Class<?> handlerClazz) {
-			try {
-				Presenter handler = (Presenter<? extends View, ? extends EventBus>) handlerClazz.newInstance();
-				handler.setView(newView(handlerClazz));
-				return handler;
-			} catch (InstantiationException e) {
-				throw new RuntimeException(e);
-			} catch (IllegalAccessException e) {
-				throw new RuntimeException(e);
-			}
+		private static Presenter newHandler(Class<?> handlerClazz) {
+			Presenter handler = (Presenter) uncheckedNewInstance(handlerClazz);
+			handler.setView(newView(handlerClazz));
+			return handler;
 		}
 
 		private static View newView(Class<?> handlerClazz) {
-			try {
-				return getViewClass(handlerClazz).newInstance();
-			} catch (InstantiationException e) {
-				throw new RuntimeException(e);
-			} catch (IllegalAccessException e) {
-				throw new RuntimeException(e);
-			}
+			return uncheckedNewInstance(getViewClass(handlerClazz));
 		}
 
 		@SuppressWarnings("unchecked")

@@ -3,6 +3,7 @@ package net.premereur.reflection.util;
 import static org.junit.Assert.*;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 import org.junit.Test;
 
@@ -36,5 +37,25 @@ public class ReflectionUtilTest {
 		interfaceTypes = ReflectionUtil.getImplementedInterfaceGenericTypes(MyImplementingNonGenericClass.class, MyInterface.class);
 		assertEquals(0, interfaceTypes.length);
 	}
+	
+	@Test
+	public void shouldReturnNewInstanceWithoutCheckedExceptions() {
+		ReflectionUtil.uncheckedNewInstance(ArrayList.class);
+	}
+	
+	@Test(expected=RuntimeException.class)
+	public void shouldThrowUncheckedExceptionInCaseOfInstantiationProblems() {
+		ReflectionUtil.uncheckedNewInstance(Boolean.class);
+	}
+	
+	static class MySingleton {
+		private MySingleton() { }
+	}
+
+	@Test(expected=RuntimeException.class)
+	public void shouldThrowUncheckedExceptionInCaseOfIllegalAccessProblems() {
+		ReflectionUtil.uncheckedNewInstance(MySingleton.class);
+	}
+
 
 }

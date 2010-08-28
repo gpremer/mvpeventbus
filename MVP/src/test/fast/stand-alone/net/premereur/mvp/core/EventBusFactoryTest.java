@@ -7,7 +7,7 @@ import org.junit.Test;
 
 public class EventBusFactoryTest {
 
-	static class MyView implements View {
+	public static class MyView implements View {
 		static int instantiations = 0; 
 
 		public MyView() {
@@ -15,7 +15,7 @@ public class EventBusFactoryTest {
 		}
 	}
 
-	static class MyPresenter implements Presenter<MyView, MyEventBus> {
+	public static class MyPresenter implements Presenter<MyView, MyEventBus> {
 		static int eventCalls = 0;
 		static int eventWithArgValue = 0;
 		static int viewSets = 0;		
@@ -114,7 +114,7 @@ public class EventBusFactoryTest {
 		void event(Integer i);
 	}
 
-	static class PresenterWithoutMatchingEvent implements Presenter<MyView, EventBusWithBadPresenter> {
+	public static class PresenterWithoutMatchingEvent implements Presenter<MyView, EventBusWithBadPresenter> {
 
 		void onEvent(String s) {
 		} // Type does not match
