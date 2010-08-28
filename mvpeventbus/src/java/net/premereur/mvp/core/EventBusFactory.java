@@ -131,17 +131,17 @@ public class EventBusFactory {
 		@Override
 		public Object invoke(Object proxy, Method eventMethod, Object[] args) throws Throwable {
 			for (Method handlerMethod : handlingMethodsByEventMethod.get(eventMethod)) {
-				Object handler = getHandlerInstance(handlerMethod.getDeclaringClass());
+				Object handler = getHandlerInstance(handlerMethod.getDeclaringClass(), (EventBus) proxy);
 				handlerMethod.invoke(handler, args);
 			}
 			return null;
 		}
 
-		private Object getHandlerInstance(Class<?> handlerClazz) {
+		private Object getHandlerInstance(Class<?> handlerClazz, EventBus bus) {
 			synchronized (handlerInstancesByClass) {
 				Object handlerInstance = handlerInstancesByClass.get(handlerClazz);
 				if (handlerInstance == null) {
-					handlerInstance = newHandler(handlerClazz);
+					handlerInstance = newHandler(handlerClazz, bus);
 					handlerInstancesByClass.put(handlerClazz, handlerInstance);
 				}
 				return handlerInstance;
@@ -149,9 +149,10 @@ public class EventBusFactory {
 		}
 
 		@SuppressWarnings("unchecked")
-		private static Presenter newHandler(Class<?> handlerClazz) {
+		private static Presenter newHandler(Class<?> handlerClazz, EventBus bus) {
 			Presenter handler = (Presenter) uncheckedNewInstance(handlerClazz);
 			handler.setView(newView(handlerClazz));
+			handler.setEventBus(bus);
 			return handler;
 		}
 
