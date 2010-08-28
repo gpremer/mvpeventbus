@@ -7,9 +7,18 @@ import org.junit.Test;
 
 public class EventBusFactoryTest {
 
-	static class MyPresenter implements Presenter<View, MyEventBus> {
+	static class MyView implements View {
+		static int instantiations = 0; 
+
+		public MyView() {
+			instantiations++;
+		}
+	}
+
+	static class MyPresenter implements Presenter<MyView, MyEventBus> {
 		static int eventCalls = 0;
 		static int eventWithArgValue = 0;
+		static int viewSets = 0;		
 
 		public void onEvent() {
 			eventCalls++;
@@ -17,6 +26,10 @@ public class EventBusFactoryTest {
 
 		public void onEventWithArg(Integer i) {
 			eventWithArgValue += i;
+		}
+
+		public void setView(MyView view) {
+			viewSets += view != null ? 1 : 0;
 		}
 	}
 
@@ -59,6 +72,23 @@ public class EventBusFactoryTest {
 		assertEquals(prevValue + 5, MyPresenter.eventWithArgValue);
 	}
 
+	@Test
+	public void shouldAssignViewsToPresenters() {
+		int viewSet = MyPresenter.viewSets;
+		MyEventBus bus = EventBusFactory.createEventBus(MyEventBus.class);
+		bus.event();
+		assertEquals(viewSet+1, MyPresenter.viewSets);
+	}
+
+	@Test
+	public void shouldDeferAssignViewsToPresentersUntilEventInvoked() {
+		int viewSet = MyPresenter.viewSets;
+		MyEventBus bus = EventBusFactory.createEventBus(MyEventBus.class);
+		assertEquals(viewSet, MyPresenter.viewSets);
+		bus.event();
+		assertEquals(viewSet+1, MyPresenter.viewSets);
+	}
+
 	static interface EventBusWithNonPrimitiveEventMethods extends EventBus {
 		@Event(handlers = {})
 		void event(int i);
@@ -66,8 +96,7 @@ public class EventBusFactoryTest {
 
 	@Test(expected = RuntimeException.class)
 	public void shouldNotAllowEventBusWithNonPrimitiveEventArguments() {
-		EventBusFactory
-				.createEventBus(EventBusWithNonPrimitiveEventMethods.class);
+		EventBusFactory.createEventBus(EventBusWithNonPrimitiveEventMethods.class);
 	}
 
 	static interface EventBusWithNonVoidEventMethods extends EventBus {
@@ -85,16 +114,29 @@ public class EventBusFactoryTest {
 		void event(Integer i);
 	}
 
-	static class PresenterWithoutMatchingEvent implements
-			Presenter<View, EventBusWithBadPresenter> {
+	static class PresenterWithoutMatchingEvent implements Presenter<MyView, EventBusWithBadPresenter> {
 
 		void onEvent(String s) {
 		} // Type does not match
+
+		public void setView(MyView view) {
+
+		}
 	}
 
 	@Test(expected = RuntimeException.class)
 	public void shouldNotAllowEventBusWithPresenterWithoutMatchingMethod() {
 		EventBusFactory.createEventBus(EventBusWithBadPresenter.class);
+	}
+
+	static interface MyOtherEventBus extends EventBus {
+		@Event(handlers = { MyPresenter.class })
+		void event();
+	}
+
+	@Test(expected = RuntimeException.class)
+	public void shouldNotAllowEventBusWithPresenterForDifferentEventBus() {
+		EventBusFactory.createEventBus(MyOtherEventBus.class);
 	}
 
 }
