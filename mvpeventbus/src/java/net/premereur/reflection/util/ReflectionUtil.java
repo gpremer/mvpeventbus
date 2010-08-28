@@ -14,6 +14,9 @@ public final class ReflectionUtil {
 				}
 			}
 		}
+		if ( sourceClass.getSuperclass() != null) {
+			return getImplementedInterfaceGenericTypes(sourceClass.getSuperclass(), interfaceClass);
+		}
 		return new Type[] {};
 	}
 
@@ -27,4 +30,6 @@ public final class ReflectionUtil {
 		}
 	}
 
+	private ReflectionUtil() {
+	}
 }

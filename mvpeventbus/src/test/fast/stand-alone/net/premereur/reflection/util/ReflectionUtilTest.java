@@ -38,6 +38,17 @@ public class ReflectionUtilTest {
 		assertEquals(0, interfaceTypes.length);
 	}
 	
+	static class MyDerivedClass extends MyClass {
+		
+	}
+	
+	@Test
+	public void shouldGetImplementedInterfaceGenericTypesEvenIfDerived() {
+		Type[] interfaceTypes = ReflectionUtil.getImplementedInterfaceGenericTypes(MyDerivedClass.class, MyInterface.class);
+		assertEquals(Integer.class, interfaceTypes[0]);
+		assertEquals(String.class, interfaceTypes[1]);
+	}	
+	
 	@Test
 	public void shouldReturnNewInstanceWithoutCheckedExceptions() {
 		ReflectionUtil.uncheckedNewInstance(ArrayList.class);
