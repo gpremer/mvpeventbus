@@ -46,19 +46,16 @@ public class EventBusFactory {
 		}
 
 		private void verifyHandlers(Class<? extends Presenter<? extends View, ? extends EventBus>>[] handlers, Class<? extends EventBus> eventBusClass) {
-			for (Class<? extends Presenter<? extends View, ? extends EventBus>> handler : handlers) {
-				if (!eventBusClass.isAssignableFrom((Class<?>) getPresenterGenerics(handler)[1])) {
-					throw new IllegalArgumentException("The requested handlerClass " + handler + " does not use event bus " + eventBusClass.getName());
-				}
+			for (Class<? extends Presenter<? extends View, ? extends EventBus>> handlerClass : handlers) {
+				verifyHasUseViewAnnotation(handlerClass);
 			}
 		}
 
-		private static Type[] getPresenterGenerics(Class<?> presenterClazz) {
-			Type[] presenterTypes = getImplementedInterfaceGenericTypes(presenterClazz, Presenter.class);
-			if (presenterTypes.length == 0) {
-				throw new RuntimeException("This class doesn't implement " + Presenter.class);
+		private void verifyHasUseViewAnnotation(Class<? extends Presenter<? extends View, ? extends EventBus>> handlerClass) {
+			UsesView viewAnnot = handlerClass.getAnnotation(UsesView.class);
+			if (viewAnnot == null || viewAnnot.value() == null) {
+				throw new RuntimeException("Should use " + UsesView.class.getName() + " annotation to declare view class on " + handlerClass);
 			}
-			return presenterTypes;
 		}
 
 		private static Method correspondingPresenterMethod(Class<? extends Presenter<? extends View, ? extends EventBus>> presenter, Method ebm) {
@@ -151,8 +148,8 @@ public class EventBusFactory {
 		@SuppressWarnings("unchecked")
 		private static Presenter newHandler(Class<?> handlerClazz, EventBus bus) {
 			Presenter handler = (Presenter) uncheckedNewInstance(handlerClazz);
-			handler.setView(newView(handlerClazz));
 			handler.setEventBus(bus);
+			handler.setView(newView(handlerClazz));
 			return handler;
 		}
 
@@ -160,9 +157,8 @@ public class EventBusFactory {
 			return uncheckedNewInstance(getViewClass(handlerClazz));
 		}
 
-		@SuppressWarnings("unchecked")
 		private static Class<? extends View> getViewClass(Class<?> handlerClazz) {
-			return (Class<? extends View>) (getPresenterGenerics(handlerClazz)[0]);
+			return handlerClazz.getAnnotation(UsesView.class).value();
 		}
 
 	}

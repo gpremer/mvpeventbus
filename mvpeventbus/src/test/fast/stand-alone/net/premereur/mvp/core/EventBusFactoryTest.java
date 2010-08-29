@@ -15,6 +15,7 @@ public class EventBusFactoryTest {
 		}
 	}
 
+	@UsesView(MyView.class)
 	public static class MyPresenter implements Presenter<MyView, MyEventBus> {
 		static int eventCalls = 0;
 		static int eventWithArgValue = 0;
@@ -97,16 +98,16 @@ public class EventBusFactoryTest {
 		int busSet = MyPresenter.busSets;
 		MyEventBus bus = EventBusFactory.createEventBus(MyEventBus.class);
 		bus.event();
-		assertEquals(busSet + 1, MyPresenter.busSets);		
+		assertEquals(busSet + 1, MyPresenter.busSets);
 	}
-	
+
 	@Test
 	public void shouldDeferAssignEventBusToPresentersUntilEventInvoked() {
 		int busSet = MyPresenter.busSets;
 		EventBusFactory.createEventBus(MyEventBus.class);
 		assertEquals(busSet, MyPresenter.busSets);
 	}
-	
+
 	static interface EventBusWithNonPrimitiveEventMethods extends EventBus {
 		@Event(handlers = {})
 		void event(int i);
@@ -132,16 +133,10 @@ public class EventBusFactoryTest {
 		void event(Integer i);
 	}
 
-	public static class PresenterWithoutMatchingEvent implements Presenter<MyView, EventBusWithBadPresenter> {
+	@UsesView(MyView.class)
+	public static class PresenterWithoutMatchingEvent extends BasePresenter<MyView, EventBusWithBadPresenter> {
 
-		void onEvent(String s) { // Type does not match
-		}
-
-		public void setView(MyView view) {
-		}
-
-		public void setEventBus(EventBusWithBadPresenter eventBus) {
-
+		public void onEvent(String s) { // Type does not match
 		}
 
 	}
@@ -151,13 +146,18 @@ public class EventBusFactoryTest {
 		EventBusFactory.createEventBus(EventBusWithBadPresenter.class);
 	}
 
+	static class MyPresenterWithoutAnnotation extends BasePresenter<View, MyOtherEventBus> {
+		public void onEvent() {
+		}
+	}
+
 	static interface MyOtherEventBus extends EventBus {
-		@Event(handlers = { MyPresenter.class })
+		@Event(handlers = { MyPresenterWithoutAnnotation.class })
 		void event();
 	}
 
 	@Test(expected = RuntimeException.class)
-	public void shouldNotAllowEventBusWithPresenterForDifferentEventBus() {
+	public void shouldNotAllowEventBusWithPresenterWithoutUseViewAnnotation() {
 		EventBusFactory.createEventBus(MyOtherEventBus.class);
 	}
 
