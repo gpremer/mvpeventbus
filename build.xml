@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="MVP" default="about">
   <target name="ci">
-	<subant target="fasttest">
-		<fileset dir="." includes="*/build.xml"/>
-	</subant>
+	  <subant target="fasttest" buildpath="mvpeventbus"/>
+	  <subant target="jar" buildpath="mvpeventbus"/>
+	  <subant target="fasttest" buildpath="mvp-swingexample"/>
   </target>
 
   <target name="about">

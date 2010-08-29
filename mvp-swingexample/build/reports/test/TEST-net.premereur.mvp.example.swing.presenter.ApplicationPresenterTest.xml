@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite errors="0" failures="0" hostname="mithril" name="net.premereur.mvp.example.swing.presenter.ApplicationPresenterTest" tests="1" time="0.496" timestamp="2010-08-29T19:00:33">
+  <properties>
+    <property name="java.vendor" value="Sun Microsystems Inc." />
+    <property name="sun.java.launcher" value="SUN_STANDARD" />
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Server Compiler" />
+    <property name="os.name" value="Linux" />
+    <property name="sun.boot.class.path" value="/usr/lib/jvm/java-6-sun-1.6.0.20/jre/lib/resources.jar:/usr/lib/jvm/java-6-sun-1.6.0.20/jre/lib/rt.jar:/usr/lib/jvm/java-6-sun-1.6.0.20/jre/lib/sunrsasign.jar:/usr/lib/jvm/java-6-sun-1.6.0.20/jre/lib/jsse.jar:/usr/lib/jvm/java-6-sun-1.6.0.20/jre/lib/jce.jar:/usr/lib/jvm/java-6-sun-1.6.0.20/jre/lib/charsets.jar:/usr/lib/jvm/java-6-sun-1.6.0.20/jre/classes" />
+    <property name="java.vm.specification.vendor" value="Sun Microsystems Inc." />
+    <property name="ant.home" value="/opt/apache-ant" />
+    <property name="java.runtime.version" value="1.6.0_20-b02" />
+    <property name="ant.file.type.mvpeventbus" value="file" />
+    <property name="publish" value="build/dist" />
+    <property name="reports.tests" value="build/reports/test" />
+    <property name="user.name" value="gpremer" />
+    <property name="projectjars" value="mvpeventbus.jar" />
+    <property name="reports" value="build/reports" />
+    <property name="src.java" value="src/java" />
+    <property name="classes-test" value="build/classes-test" />
+    <property name="user.language" value="en" />
+    <property name="build" value="build" />
+    <property name="sun.boot.library.path" value="/usr/lib/jvm/java-6-sun-1.6.0.20/jre/lib/amd64" />
+    <property name="ant.project.default-target" value="compile" />
+    <property name="ant.project.name" value="mvpeventbus" />
+    <property name="java.version" value="1.6.0_20" />
+    <property name="classes" value="build/classes" />
+    <property name="user.timezone" value="" />
+    <property name="sun.arch.data.model" value="64" />
+    <property name="java.endorsed.dirs" value="/usr/lib/jvm/java-6-sun-1.6.0.20/jre/lib/endorsed" />
+    <property name="jar" value="mvp-swingdemo.jar" />
+    <property name="sun.cpu.isalist" value="" />
+    <property name="sun.jnu.encoding" value="UTF-8" />
+    <property name="file.encoding.pkg" value="sun.io" />
+    <property name="file.separator" value="/" />
+    <property name="java.specification.name" value="Java Platform API Specification" />
+    <property name="src.test.fast.standalone" value="src/test/fast/stand-alone" />
+    <property name="java.class.version" value="50.0" />
+    <property name="src" value="src" />
+    <property name="user.country" value="US" />
+    <property name="java.home" value="/usr/lib/jvm/java-6-sun-1.6.0.20/jre" />
+    <property name="src.resources" value="src/resources" />
+    <property name="java.vm.info" value="mixed mode" />
+    <property name="ant.file" value="/home/gpremer/src/eclipse/mvp/mvp-swingexample/build.xml" />
+    <property name="os.version" value="2.6.24-28-generic" />
+    <property name="path.separator" value=":" />
+    <property name="java.vm.version" value="16.3-b01" />
+    <property name="ant.library.dir" value="/opt/apache-ant/lib" />
+    <property name="java.awt.printerjob" value="sun.print.PSPrinterJob" />
+    <property name="ant.file.MVP-common-build" value="/home/gpremer/src/eclipse/mvp/common-build/common-build.xml" />
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle" />
+    <property name="user.home" value="/home/gpremer" />
+    <property name="ant.file.MVP" value="/home/gpremer/src/eclipse/mvp/build.xml" />
+    <property name="java.specification.vendor" value="Sun Microsystems Inc." />
+    <property name="java.library.path" value="/usr/lib/jvm/java-6-sun-1.6.0.20/jre/lib/amd64/server:/usr/lib/jvm/java-6-sun-1.6.0.20/jre/lib/amd64:/usr/lib/jvm/java-6-sun-1.6.0.20/jre/../lib/amd64:/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib" />
+    <property name="java.vendor.url" value="http://java.sun.com/" />
+    <property name="java.vm.vendor" value="Sun Microsystems Inc." />
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment" />
+    <property name="java.class.path" value="/home/gpremer/src/eclipse/mvp/mvpeventbus/build/dist/mvpeventbus.jar:/home/gpremer/src/eclipse/mvp/mvp-swingexample/build/classes:/home/gpremer/src/eclipse/mvp/mvp-swingexample/build/classes-test:/home/gpremer/src/eclipse/mvp/mvp-swingexample/lib/test/junit.jar:/home/gpremer/src/eclipse/mvp/mvp-swingexample/lib/test/mockito-all-1.8.5.jar:/opt/apache-ant-1.8.1/lib/ant-launcher.jar:/opt/apache-ant/lib/ant.jar:/opt/apache-ant/lib/ant-junit.jar" />
+    <property name="ant.version" value="Apache Ant version 1.8.1 compiled on April 30 2010" />
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification" />
+    <property name="ant.file.type" value="file" />
+    <property name="java.vm.specification.version" value="1.0" />
+    <property name="base.dir" value=".." />
+    <property name="sun.cpu.endian" value="little" />
+    <property name="sun.os.patch.level" value="unknown" />
+    <property name="java.io.tmpdir" value="/tmp" />
+    <property name="java.vendor.url.bug" value="http://java.sun.com/cgi-bin/bugreport.cgi" />
+    <property name="ant.file.type.MVP-common-build" value="file" />
+    <property name="os.arch" value="amd64" />
+    <property name="java.awt.graphicsenv" value="sun.awt.X11GraphicsEnvironment" />
+    <property name="java.ext.dirs" value="/usr/lib/jvm/java-6-sun-1.6.0.20/jre/lib/ext:/usr/java/packages/lib/ext" />
+    <property name="user.dir" value="/home/gpremer/src/eclipse/mvp" />
+    <property name="line.separator" value="
+" />
+    <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM" />
+    <property name="lib.test" value="lib/test" />
+    <property name="basedir" value="/home/gpremer/src/eclipse/mvp/mvp-swingexample" />
+    <property name="ant.java.version" value="1.6" />
+    <property name="ant.core.lib" value="/opt/apache-ant/lib/ant.jar" />
+    <property name="ant.file.mvpeventbus" value="/home/gpremer/src/eclipse/mvp/mvp-swingexample/build.xml" />
+    <property name="file.encoding" value="UTF-8" />
+    <property name="ant.file.type.MVP" value="file" />
+    <property name="java.specification.version" value="1.6" />
+    <property name="ant.project.invoked-targets" value="fasttest" />
+    <property name="lib.default" value="lib/default" />
+  </properties>
+  <testcase classname="net.premereur.mvp.example.swing.presenter.ApplicationPresenterTest" name="shouldMakeTheApplicationFrameVisible" time="0.381" />
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
