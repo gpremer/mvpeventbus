@@ -11,6 +11,7 @@ public class ApplicationPresenter extends BasePresenter<ApplicationFrame, DemoEv
 	public void onApplicationStarted() {
 		ApplicationFrame view = getView();
 
+		getEventBus().categoryListActivated(view);
 		view.pack();
 		view.setVisible(true);
 	}

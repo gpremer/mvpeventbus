@@ -1,7 +1,8 @@
 package net.premereur.mvp.example.swing.view;
 
+import java.awt.Dimension;
+
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 
 import net.premereur.mvp.core.View;
 
@@ -16,9 +17,7 @@ public class ApplicationFrame extends JFrame implements View {
 		super("MVP Swing demo");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		// Add the ubiquitous "Hello World" label.
-		JLabel label = new JLabel("Hello World");
-		getContentPane().add(label);
+		setMinimumSize(new Dimension(200, 400));
 	}
 
 }
