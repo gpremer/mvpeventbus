@@ -1,6 +1,5 @@
 package net.premereur.mvp.core;
 
-import static net.premereur.reflection.util.ReflectionUtil.getImplementedInterfaceGenericTypes;
 import static net.premereur.reflection.util.ReflectionUtil.uncheckedNewInstance;
 
 import java.lang.reflect.InvocationHandler;
