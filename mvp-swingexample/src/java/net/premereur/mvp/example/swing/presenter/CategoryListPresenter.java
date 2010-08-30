@@ -4,8 +4,8 @@ import javax.swing.JFrame;
 
 import net.premereur.mvp.core.BasePresenter;
 import net.premereur.mvp.core.UsesView;
-import net.premereur.mvp.example.swing.data.DataProvider;
 import net.premereur.mvp.example.swing.eventbus.DemoEventBus;
+import net.premereur.mvp.example.swing.model.DataProvider;
 import net.premereur.mvp.example.swing.view.CategoryList;
 
 @UsesView(CategoryList.class)
