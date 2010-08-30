@@ -1,5 +1,6 @@
 package net.premereur.mvp.example.swing.view;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,7 @@ public class CategoryList extends JPanel implements View {
 	}
 	
 	public void showInFrame(JFrame frame) {
-		frame.getContentPane().add(this);
+		frame.getContentPane().add(this, BorderLayout.LINE_START);
 	}
 
 	public void bind(List<String> data) {
