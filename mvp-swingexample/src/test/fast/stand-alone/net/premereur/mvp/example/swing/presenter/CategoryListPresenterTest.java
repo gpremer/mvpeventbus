@@ -2,6 +2,9 @@ package net.premereur.mvp.example.swing.presenter;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Matchers.any;
+
+import java.util.List;
 
 import javax.swing.JFrame;
 
@@ -21,8 +24,10 @@ public class CategoryListPresenterTest {
 	@Before
 	public void setUpPresenterWithMockView() {
 		view = mock(CategoryList.class);
+		eventBus = mock(DemoEventBus.class);
 		presenter = new CategoryListPresenter();
 		presenter.setView(view);
+		presenter.setEventBus(eventBus);
 	}
 	
 	@Test
@@ -30,5 +35,13 @@ public class CategoryListPresenterTest {
 		JFrame frame = mock(JFrame.class);
 		presenter.onCategoryListActivated(frame);
 		verify(frame).setContentPane(view);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void shouldBindViewData() throws Exception {
+		JFrame frame = mock(JFrame.class);
+		presenter.onCategoryListActivated(frame);
+		verify(view).bind(any(List.class));
 	}
 }
