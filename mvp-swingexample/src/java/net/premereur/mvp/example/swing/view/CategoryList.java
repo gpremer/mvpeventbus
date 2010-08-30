@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -31,9 +32,13 @@ public class CategoryList extends JPanel implements View {
 		table.setFillsViewportHeight(true);
 		JScrollPane scrollPane = new JScrollPane(table);
 		add(scrollPane);
-		setOpaque(true);
+		setOpaque(true); // Otherwise it doesn't show
 	}
 	
+	public void showInFrame(JFrame frame) {
+		frame.getContentPane().add(this);
+	}
+
 	public void bind(List<String> data) {
 		dataModel.setData(data);
 	}
@@ -73,6 +78,5 @@ public class CategoryList extends JPanel implements View {
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
 			return false;
 		}
-				
 	}
 }

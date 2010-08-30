@@ -13,6 +13,6 @@ public class CategoryListPresenter extends BasePresenter<CategoryList, DemoEvent
 
 	public void onCategoryListActivated(JFrame frame) {
 		getView().bind(DataProvider.allCategories());
-		frame.setContentPane(getView());
+		getView().showInFrame(frame);
 	}
 }

@@ -1,6 +1,7 @@
 package net.premereur.mvp.example.swing.presenter;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Matchers.any;
 
@@ -34,7 +35,7 @@ public class CategoryListPresenterTest {
 	public void shouldAddTheViewToTheApplicationFrame() throws Exception {
 		JFrame frame = mock(JFrame.class);
 		presenter.onCategoryListActivated(frame);
-		verify(frame).setContentPane(view);
+		verify(view).showInFrame(frame);
 	}
 	
 	@SuppressWarnings("unchecked")

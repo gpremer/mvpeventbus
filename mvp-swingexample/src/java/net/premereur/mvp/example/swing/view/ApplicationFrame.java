@@ -18,6 +18,7 @@ public class ApplicationFrame extends JFrame implements View {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		setMinimumSize(new Dimension(200, 400));
+		
 	}
 
 }
