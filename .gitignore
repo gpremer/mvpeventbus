@@ -2,4 +2,5 @@
 *.class
 *~
 */build/*
+*/bin/*
 publish
