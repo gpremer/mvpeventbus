@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="MVP" default="about">
-  <target name="ci">
+  <target name="publish">
+	  <subant target="publish" buildpath="mvpeventbus"/>
+	  <subant target="publish" buildpath="mvp-demodomain"/>
+	  <subant target="publish" buildpath="mvp-swingexample"/>
+  </target>
+  
+  <target name="fasttest" depends="publish">
 	  <subant target="fasttest" buildpath="mvpeventbus"/>
-	  <subant target="jar" buildpath="mvpeventbus"/>
+	  <subant target="fasttest" buildpath="mvp-demodomain"/>
 	  <subant target="fasttest" buildpath="mvp-swingexample"/>
   </target>
-
+  
+  <target name="subclean">
+	  <subant target="clean" buildpath="mvpeventbus"/>
+	  <subant target="clean" buildpath="mvp-demodomain"/>
+	  <subant target="clean" buildpath="mvp-swingexample"/>
+  </target>
+  
+  <target name="ci" depends="fasttest" />
+ 
   <target name="about">
 	<echo>Main build file for mvpeventbus project</echo>
   </target>

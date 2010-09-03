@@ -1,11 +1,14 @@
-package net.premereur.mvp.example.swing.model;
+package net.premereur.mvp.example.domain.repository;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class DataProvider {
+import net.premereur.mvp.example.domain.model.Category;
 
-	static public List<Category> allCategories() {
+
+public class CategoryRepository {
+
+	public List<Category> allCategories() {
 		return Arrays.asList(new Category[] { new Category("Category 1"), new Category("Category 2"), new Category("Category 3"), new Category("Category 4") });
 	}
 }

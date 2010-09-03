@@ -18,29 +18,37 @@
 			<fileset dir="${lib.default}">
 				<include name="**/*.jar" />
 			</fileset>
+			<fileset dir="${publish.common}">
+				<include name="**/*.jar" />
+			</fileset>
 		</path>
 
 		<path id="libpath.test">
 			<fileset dir="${lib.test}">
 				<include name="**/*.jar" />
 			</fileset>
+			<fileset dir="${publish.common}">
+				<include name="**/*.jar" />
+			</fileset>
 		</path>
 		
 		<path id="libpath.project">
+			<!--
 			<fileset dir="${base.dir}">
 				<include name="**/build/dist/${projectjars}"/>
 			</fileset>
+			-->
 		</path>
 		<mkdir dir="${build}" />
 		<mkdir dir="${classes}" />
 		<mkdir dir="${classes-test}" />
 		<mkdir dir="${reports.tests}" />
 		<mkdir dir="${publish}" />
+		<mkdir dir="${publish.common}" />
 	</target>
 
 	<target name="clean">
-		<delete dir="${build}">
-		</delete>
+		<delete dir="${build}" />
 	</target>
 
 	<target name="jar" depends="compile" description="--> makes a jar">
@@ -64,6 +72,12 @@
 		</javac>
 	</target>
 
+	<target name="publish" depends="jar">
+		<copy todir="${publish.common}" >
+			<fileset dir="${publish}"/>
+		</copy>
+	</target>
+	
 	<target name="fasttest" depends="compile-fasttest">
 		<junit>
 			<classpath refid="libpath.default"/>

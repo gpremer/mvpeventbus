@@ -1,4 +1,4 @@
-package net.premereur.mvp.example.swing.model;
+package net.premereur.mvp.example.domain.model;
 
 import java.util.UUID;
 

@@ -13,7 +13,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
 
 import net.premereur.mvp.core.View;
-import net.premereur.mvp.example.swing.model.Category;
+import net.premereur.mvp.example.domain.model.Category;
 
 public class CategoryList extends JPanel implements View {
 	/**
