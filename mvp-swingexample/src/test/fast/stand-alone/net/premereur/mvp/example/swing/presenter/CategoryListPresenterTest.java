@@ -1,13 +1,12 @@
 package net.premereur.mvp.example.swing.presenter;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Matchers.any;
 
 import java.util.List;
 
-import javax.swing.JFrame;
-
+import net.premereur.mvp.example.domain.model.Category;
 import net.premereur.mvp.example.swing.eventbus.DemoEventBus;
 import net.premereur.mvp.example.swing.view.CategoryList;
 
@@ -30,17 +29,23 @@ public class CategoryListPresenterTest {
 	}
 
 	@Test
-	public void shouldAddTheViewToTheApplicationFrame() throws Exception {
-		JFrame frame = mock(JFrame.class);
-		presenter.onCategoryListActivated(frame);
-		verify(view).showInFrame(frame);
+	public void shouldMakeTheViewVisible() throws Exception {
+		presenter.onCategoryListActivated();
+		verify(eventBus).setLeftComponent(view);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Test
 	public void shouldBindViewData() throws Exception {
-		JFrame frame = mock(JFrame.class);
-		presenter.onCategoryListActivated(frame);
+		presenter.onCategoryListActivated();
 		verify(view).bind(any(List.class));
 	}
+	
+	@Test
+	public void shouldUpdateListWhenCategoryIsChanged() throws Exception {
+		Category category = new Category("cat");
+		presenter.onCategoryChanged(category);
+		verify(view).refreshList();
+	}
+	
 }

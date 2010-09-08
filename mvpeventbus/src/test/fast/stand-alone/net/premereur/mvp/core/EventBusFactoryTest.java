@@ -7,11 +7,17 @@ import org.junit.Test;
 
 public class EventBusFactoryTest {
 
-	public static class MyView implements View {
+	public static class MyView implements View<MyEventBus> {
 		static int instantiations = 0;
+		static int busSets = 0;
 
 		public MyView() {
 			instantiations++;
+		}
+		
+		@Override
+		public void setEventBus(MyEventBus eventBus) {
+			busSets += eventBus != null ? 1 : 0;
 		}
 	}
 
@@ -108,6 +114,21 @@ public class EventBusFactoryTest {
 		assertEquals(busSet, MyPresenter.busSets);
 	}
 
+	@Test
+	public void shouldAssignEventBusToView() {
+		int busSet = MyView.busSets;
+		MyEventBus bus = EventBusFactory.createEventBus(MyEventBus.class);
+		bus.event();
+		assertEquals(busSet + 1, MyView.busSets);
+	}
+
+	@Test
+	public void shouldDeferAssignEventBusToView() {
+		int busSet = MyView.busSets;
+		EventBusFactory.createEventBus(MyEventBus.class);
+		assertEquals(busSet, MyView.busSets);
+	}
+
 	static interface EventBusWithNonPrimitiveEventMethods extends EventBus {
 		@Event(handlers = {})
 		void event(int i);
@@ -133,8 +154,16 @@ public class EventBusFactoryTest {
 		void event(Integer i);
 	}
 
-	@UsesView(MyView.class)
-	public static class PresenterWithoutMatchingEvent extends BasePresenter<MyView, EventBusWithBadPresenter> {
+	public static class MyBadView1 implements View<EventBusWithBadPresenter> {
+
+		@Override
+		public void setEventBus(EventBusWithBadPresenter eventBus) {
+		}
+		
+	}
+	
+	@UsesView(MyBadView1.class)
+	public static class PresenterWithoutMatchingEvent extends BasePresenter<MyBadView1, EventBusWithBadPresenter> {
 
 		public void onEvent(String s) { // Type does not match
 		}
@@ -146,7 +175,15 @@ public class EventBusFactoryTest {
 		EventBusFactory.createEventBus(EventBusWithBadPresenter.class);
 	}
 
-	static class MyPresenterWithoutAnnotation extends BasePresenter<View, MyOtherEventBus> {
+	public static class MyBadView2 implements View<MyOtherEventBus> {
+
+		@Override
+		public void setEventBus(MyOtherEventBus eventBus) {
+		}
+		
+	}
+	
+	static class MyPresenterWithoutAnnotation extends BasePresenter<MyBadView2, MyOtherEventBus> {
 		public void onEvent() {
 		}
 	}

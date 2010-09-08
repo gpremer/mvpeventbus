@@ -1,5 +1,6 @@
 package net.premereur.mvp.example.domain.model;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
@@ -15,5 +16,12 @@ public class CategoryTest {
 	public void shouldAssignAnId() throws Exception {
 		Category category = new Category("a name");
 		assertNotNull(category.getId());
+	}
+	
+	@Test
+	public void shouldChangeItsName() throws Exception {
+		Category category = new Category("a name");
+		category.setName("new name");
+		assertEquals("new name", category.getName());
 	}
 }

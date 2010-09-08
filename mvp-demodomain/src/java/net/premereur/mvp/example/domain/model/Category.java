@@ -19,6 +19,10 @@ public class Category {
 		return name;
 	}
 	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
 	@Override
 	public boolean equals(Object obj) {		
 		return obj instanceof Category && ((Category)obj).getId().equals(getId());

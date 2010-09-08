@@ -1,10 +1,13 @@
 package net.premereur.mvp.example.swing.presenter;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import javax.swing.JFrame;
+import java.awt.BorderLayout;
+import java.awt.Container;
+
+import javax.swing.JComponent;
 
 import net.premereur.mvp.example.swing.eventbus.DemoEventBus;
 import net.premereur.mvp.example.swing.view.ApplicationFrame;
@@ -26,7 +29,7 @@ public class ApplicationPresenterTest {
 		presenter.setView(view);
 		presenter.setEventBus(eventBus);
 	}
-	
+
 	@Test
 	public void shouldMakeTheApplicationFrameVisible() throws Exception {
 		presenter.onApplicationStarted();
@@ -37,6 +40,34 @@ public class ApplicationPresenterTest {
 	@Test
 	public void shouldSendEventToRequestCategoryListActivation() throws Exception {
 		presenter.onApplicationStarted();
-		verify(eventBus).categoryListActivated(any(JFrame.class));
+		verify(eventBus).categoryListActivated();
+	}
+
+	@Test
+	public void shouldAddComponentToLeftOfContentPaneWhenLeftEvent() throws Exception {
+		JComponent component = mock(JComponent.class);
+		Container contentPane = mock(Container.class);
+		when(view.getContentPane()).thenReturn(contentPane);
+		presenter.onSetLeftComponent(component);
+		verify(view).getContentPane();
+		verify(contentPane).add(component, BorderLayout.LINE_START);
+		verify(view).pack();
+	}
+
+	@Test
+	public void shouldAddComponentToCenterOfContentPaneWhenCenterEvent() throws Exception {
+		JComponent component = mock(JComponent.class);
+		Container contentPane = mock(Container.class);
+		when(view.getContentPane()).thenReturn(contentPane);
+		presenter.onSetCenterComponent(component);
+		verify(view).getContentPane();
+		verify(contentPane).add(component, BorderLayout.CENTER);
+		verify(view).pack();
+	}
+
+	@Test
+	public void shouldSetFeedbackText() throws Exception {
+		presenter.onSetFeedback("feedback");
+		verify(view).setFeedback("feedback");
 	}
 }

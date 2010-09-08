@@ -9,5 +9,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface UsesView {
 
-	Class<? extends View> value();
+	Class<? extends View<?>> value();
 }
