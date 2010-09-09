@@ -77,7 +77,6 @@ public class CategoryUpdaterPanel extends JPanel implements View<DemoEventBus> {
 			public void actionPerformed(ActionEvent e) {
 				category.setName(nameField.getText());
 				getEventBus().updateCategory(category);
-				getEventBus().setFeedback("Category updated");
 			}
 		});
 	}
