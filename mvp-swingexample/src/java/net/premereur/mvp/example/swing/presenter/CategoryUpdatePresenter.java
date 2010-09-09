@@ -19,9 +19,10 @@ public class CategoryUpdatePresenter extends CategoryPresenterBase<CategoryUpdat
 		getEventBus().setCenterComponent(view);
 	}
 		
-	public void onUpdateCategory(Category category) {
+	public void updateCategory(Category category) {
 		getRepository().save(category);
 		getEventBus().setFeedback("Category updated");
 		getEventBus().categoryChanged(category);
 	}
+
 }

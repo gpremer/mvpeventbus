@@ -71,7 +71,7 @@ public class CategoryUpdaterPanel extends JPanel implements View {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				category.setName(nameField.getText());
-				presenter.onUpdateCategory(category);
+				presenter.updateCategory(category);
 			}
 		});
 	}

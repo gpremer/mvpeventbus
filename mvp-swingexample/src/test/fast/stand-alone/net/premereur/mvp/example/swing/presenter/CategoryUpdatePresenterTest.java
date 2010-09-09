@@ -46,21 +46,27 @@ public class CategoryUpdatePresenterTest {
 	@Test
 	public void shouldSaveCategoryWhenCategoryUpdated() throws Exception {
 		Category category = new Category("cat");
-		presenter.onUpdateCategory(category);
+		presenter.updateCategory(category);
 		verify(repository).save(category);
 	}
 
 	@Test
 	public void shouldSetFeedbackWhenCategoryUpdated() throws Exception {
 		Category category = new Category("cat");
-		presenter.onUpdateCategory(category);
+		presenter.updateCategory(category);
 		verify(eventBus).setFeedback(any(String.class));
 	}
 
 	@Test
 	public void shouldSendCategoryChangedEventWhenCategoryUpdated() throws Exception {
 		Category category = new Category("cat");
-		presenter.onUpdateCategory(category);
+		presenter.updateCategory(category);
 		verify(eventBus).categoryChanged(category);
 	}
+	
+	@Test
+	public void shouldRegisterItselfAsUpdateListener() throws Exception {
+		verify(view).setOperationButtonListener(presenter);
+	}
+	
 }

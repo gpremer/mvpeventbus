@@ -47,7 +47,7 @@ public class CategoryListPresenterTest {
 	}
 
 	@Test
-	public void shouldSendEventWhenCategoryIsSelected() throws Exception {		
+	public void shouldSendSelectionEventWhenCategoryIsSelected() throws Exception {		
 		Category category = new Category("cat");
 		presenter.categorySelected(category);
 		verify(eventBus).categorySelected(category);
