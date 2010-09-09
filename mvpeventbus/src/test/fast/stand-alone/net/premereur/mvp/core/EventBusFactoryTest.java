@@ -7,18 +7,13 @@ import org.junit.Test;
 
 public class EventBusFactoryTest {
 
-	public static class MyView implements View<MyEventBus> {
+	public static class MyView implements View {
 		static int instantiations = 0;
-		static int busSets = 0;
 
 		public MyView() {
 			instantiations++;
 		}
 
-		@Override
-		public void setEventBus(MyEventBus eventBus) {
-			busSets += eventBus != null ? 1 : 0;
-		}
 	}
 
 	@UsesView(MyView.class)
@@ -114,30 +109,11 @@ public class EventBusFactoryTest {
 		assertEquals(busSet, MyPresenter.busSets);
 	}
 
-	@Test
-	public void shouldAssignEventBusToView() {
-		int busSet = MyView.busSets;
-		MyEventBus bus = EventBusFactory.createEventBus(MyEventBus.class);
-		bus.event();
-		assertEquals(busSet + 1, MyView.busSets);
-	}
-
-	@Test
-	public void shouldDeferAssignEventBusToView() {
-		int busSet = MyView.busSets;
-		EventBusFactory.createEventBus(MyEventBus.class);
-		assertEquals(busSet, MyView.busSets);
-	}
-
 	@UsesPresenter(MyPresenterForView.class)
-	public static class MyViewWithPresenter implements View<MyEventbusWithViewAndPresenterThatKnowEachOther>, NeedsPresenter<MyPresenterForView> {
+	public static class MyViewWithPresenter implements View, NeedsPresenter<MyPresenterForView> {
 		static int presenterSets = 0;
 
 		public MyViewWithPresenter() {
-		}
-
-		@Override
-		public void setEventBus(MyEventbusWithViewAndPresenterThatKnowEachOther eventBus) {
 		}
 
 		@Override
@@ -148,7 +124,7 @@ public class EventBusFactoryTest {
 
 	@UsesView(MyViewWithPresenter.class)
 	public static class MyPresenterForView implements Presenter<MyViewWithPresenter, MyEventbusWithViewAndPresenterThatKnowEachOther> {
-		
+
 		@Override
 		public void setEventBus(MyEventbusWithViewAndPresenterThatKnowEachOther eventBus) {
 		}
@@ -200,11 +176,7 @@ public class EventBusFactoryTest {
 		void event(Integer i);
 	}
 
-	public static class MyBadView1 implements View<EventBusWithBadPresenter> {
-
-		@Override
-		public void setEventBus(EventBusWithBadPresenter eventBus) {
-		}
+	public static class MyBadView1 implements View {
 
 	}
 
@@ -221,11 +193,7 @@ public class EventBusFactoryTest {
 		EventBusFactory.createEventBus(EventBusWithBadPresenter.class);
 	}
 
-	public static class MyBadView2 implements View<MyOtherEventBus> {
-
-		@Override
-		public void setEventBus(MyOtherEventBus eventBus) {
-		}
+	public static class MyBadView2 implements View {
 
 	}
 

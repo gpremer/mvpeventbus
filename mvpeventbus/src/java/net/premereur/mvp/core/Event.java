@@ -9,6 +9,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface Event {
 
-	Class<? extends Presenter<? extends View<?>, ? extends EventBus>>[] handlers();
+	Class<? extends Presenter<? extends View, ? extends EventBus>>[] handlers();
 
 }

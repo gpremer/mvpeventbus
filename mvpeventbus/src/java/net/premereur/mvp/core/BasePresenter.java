@@ -1,6 +1,6 @@
 package net.premereur.mvp.core;
 
-public abstract class BasePresenter<V extends View<E>, E extends EventBus> implements Presenter<V, E> {
+public abstract class BasePresenter<V extends View, E extends EventBus> implements Presenter<V, E> {
 
 	private E eventBus;
 

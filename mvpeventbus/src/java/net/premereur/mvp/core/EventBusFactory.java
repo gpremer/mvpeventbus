@@ -38,26 +38,26 @@ public class EventBusFactory {
 
 		private List<Method> findHandlerMethodsForEvent(Method eventMethod, Event eventAnt) {
 			List<Method> handlingMethods = new ArrayList<Method>();
-			for (Class<? extends Presenter<? extends View<?>, ? extends EventBus>> presenter : eventAnt.handlers()) {
+			for (Class<? extends Presenter<? extends View, ? extends EventBus>> presenter : eventAnt.handlers()) {
 				handlingMethods.add(correspondingPresenterMethod(presenter, eventMethod));
 			}
 			return handlingMethods;
 		}
 
-		private void verifyHandlers(Class<? extends Presenter<? extends View<?>, ? extends EventBus>>[] handlers, Class<? extends EventBus> eventBusClass) {
-			for (Class<? extends Presenter<? extends View<?>, ? extends EventBus>> handlerClass : handlers) {
+		private void verifyHandlers(Class<? extends Presenter<? extends View, ? extends EventBus>>[] handlers, Class<? extends EventBus> eventBusClass) {
+			for (Class<? extends Presenter<? extends View, ? extends EventBus>> handlerClass : handlers) {
 				verifyHasUseViewAnnotation(handlerClass);
 			}
 		}
 
-		private void verifyHasUseViewAnnotation(Class<? extends Presenter<? extends View<?>, ? extends EventBus>> handlerClass) {
+		private void verifyHasUseViewAnnotation(Class<? extends Presenter<? extends View, ? extends EventBus>> handlerClass) {
 			UsesView viewAnnot = handlerClass.getAnnotation(UsesView.class);
 			if (viewAnnot == null || viewAnnot.value() == null) {
 				throw new RuntimeException("Should use " + UsesView.class.getName() + " annotation to declare view class on " + handlerClass);
 			}
 		}
 
-		private static Method correspondingPresenterMethod(Class<? extends Presenter<? extends View<?>, ? extends EventBus>> presenter, Method ebm) {
+		private static Method correspondingPresenterMethod(Class<? extends Presenter<? extends View, ? extends EventBus>> presenter, Method ebm) {
 			for (Method pm : presenter.getMethods()) {
 				if (presenterMethodCorrespondsWithEventBusMethod(pm, ebm)) {
 					return pm;
@@ -153,9 +153,8 @@ public class EventBusFactory {
 		}
 
 		@SuppressWarnings("unchecked")
-		private static View<?> newView(Class<?> handlerClazz, EventBus bus, Presenter presenter) {
+		private static View newView(Class<?> handlerClazz, EventBus bus, Presenter presenter) {
 			View view = uncheckedNewInstance(getViewClass(handlerClazz));
-			view.setEventBus(bus);
 			setPresenterIfRequested(view, presenter);
 			return view;
 		}
@@ -167,7 +166,7 @@ public class EventBusFactory {
 			}
 		}
 
-		private static Class<? extends View<?>> getViewClass(Class<?> handlerClazz) {
+		private static Class<? extends View> getViewClass(Class<?> handlerClazz) {
 			return handlerClazz.getAnnotation(UsesView.class).value();
 		}
 
