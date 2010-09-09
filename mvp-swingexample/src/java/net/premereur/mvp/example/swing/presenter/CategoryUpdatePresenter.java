@@ -7,6 +7,12 @@ import net.premereur.mvp.example.swing.view.CategoryUpdaterPanel;
 @UsesView(CategoryUpdaterPanel.class)
 public class CategoryUpdatePresenter extends CategoryPresenterBase<CategoryUpdaterPanel> {		
 	
+	@Override
+	public void setView(CategoryUpdaterPanel view) {
+		super.setView(view);
+		getView().setOperationButtonListener(this);
+	}
+	
 	public void onCategorySelected(Category selectedCategory) {
 		CategoryUpdaterPanel view = getView();
 		view.bind(selectedCategory);

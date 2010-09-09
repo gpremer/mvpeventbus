@@ -14,9 +14,9 @@ import javax.swing.table.AbstractTableModel;
 
 import net.premereur.mvp.core.View;
 import net.premereur.mvp.example.domain.model.Category;
-import net.premereur.mvp.example.swing.eventbus.DemoEventBus;
+import net.premereur.mvp.example.swing.presenter.CategoryListPresenter;
 
-public class CategoryList extends JPanel implements View<DemoEventBus> {
+public class CategoryList extends JPanel implements View {
 	/**
 	 * Class version.
 	 */
@@ -24,7 +24,6 @@ public class CategoryList extends JPanel implements View<DemoEventBus> {
 	private TableModel dataModel;
 	private JTable table;
 	private List<Category> data = new ArrayList<Category>();
-	private DemoEventBus eventBus;
 
 	public CategoryList() {
 		init();
@@ -39,16 +38,6 @@ public class CategoryList extends JPanel implements View<DemoEventBus> {
 		JScrollPane scrollPane = new JScrollPane(table);
 		add(scrollPane);
 		setOpaque(true); // Otherwise it doesn't show
-		addSelectionListener();
-	}
-
-	@Override
-	public void setEventBus(DemoEventBus eventBus) {
-		this.eventBus = eventBus;
-	}
-
-	public DemoEventBus getEventBus() {
-		return eventBus;
 	}
 
 	public void bind(List<Category> list) {
@@ -85,7 +74,11 @@ public class CategoryList extends JPanel implements View<DemoEventBus> {
 		}
 	}
 
-	private void addSelectionListener() {
+	public void refreshList() {
+		dataModel.fireTableDataChanged();
+	}
+
+	public void addSelectionListener(final CategoryListPresenter presenter) {
 		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
 			@Override
@@ -93,7 +86,7 @@ public class CategoryList extends JPanel implements View<DemoEventBus> {
 				if (e.getValueIsAdjusting() == false) {
 					Category selectedCategory = getSelectedCategory();
 					if (selectedCategory != null) {
-						getEventBus().categorySelected(selectedCategory);
+						presenter.categorySelected(selectedCategory);
 					}
 				}
 			}
@@ -108,9 +101,5 @@ public class CategoryList extends JPanel implements View<DemoEventBus> {
 			return null;
 		}
 		return data.get(selectedRow);
-	}
-
-	public void refreshList() {
-		dataModel.fireTableDataChanged();
 	}
 }

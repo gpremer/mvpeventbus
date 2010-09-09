@@ -5,7 +5,7 @@ import net.premereur.mvp.core.View;
 import net.premereur.mvp.example.domain.repository.CategoryRepository;
 import net.premereur.mvp.example.swing.eventbus.DemoEventBus;
 
-public abstract class CategoryPresenterBase<V extends View<DemoEventBus>> extends BasePresenter<V, DemoEventBus> {
+public abstract class CategoryPresenterBase<V extends View> extends BasePresenter<V, DemoEventBus> {
 
 	private CategoryRepository repository;
 

@@ -13,15 +13,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import net.premereur.mvp.core.NeedsPresenter;
-import net.premereur.mvp.core.UsesPresenter;
 import net.premereur.mvp.core.View;
 import net.premereur.mvp.example.domain.model.Category;
 import net.premereur.mvp.example.swing.eventbus.DemoEventBus;
 import net.premereur.mvp.example.swing.presenter.CategoryUpdatePresenter;
 
-@UsesPresenter(CategoryUpdatePresenter.class)
-public class CategoryUpdaterPanel extends JPanel implements View<DemoEventBus>, NeedsPresenter<CategoryUpdatePresenter> {
+public class CategoryUpdaterPanel extends JPanel implements View {
 
 	private static final long serialVersionUID = 1L;
 	private JLabel operationLabel;
@@ -29,8 +26,7 @@ public class CategoryUpdaterPanel extends JPanel implements View<DemoEventBus>, 
 	private JButton operationButton = new JButton("save");
 	private JTextField nameField;
 	private Category category;
-	private DemoEventBus eventBus;
-	private CategoryUpdatePresenter presenter;
+	private DemoEventBus eventBus;	
 
 	public CategoryUpdaterPanel() {
 		init();
@@ -55,19 +51,9 @@ public class CategoryUpdaterPanel extends JPanel implements View<DemoEventBus>, 
 		add(fieldPane, BorderLayout.CENTER);
 		add(buttonPane, BorderLayout.PAGE_END);
 		
-		setOperationButtonListener();
 		setCancelButtonListener();
 	}
 
-	@Override
-	public void setEventBus(DemoEventBus eventBus) {
-		this.eventBus = eventBus;
-	}
-	
-	public void setPresenter(CategoryUpdatePresenter presenter) {
-		this.presenter = presenter;
-	}
-	
 	public DemoEventBus getEventBus() {
 		return eventBus;
 	}
@@ -79,7 +65,7 @@ public class CategoryUpdaterPanel extends JPanel implements View<DemoEventBus>, 
 		operationButton.setText("Save");
 	}
 
-	protected void setOperationButtonListener() {
+	public void setOperationButtonListener(final CategoryUpdatePresenter presenter) {
 		this.operationButton.addActionListener(new ActionListener() {
 
 			@Override

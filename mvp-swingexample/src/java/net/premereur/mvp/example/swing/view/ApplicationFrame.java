@@ -7,9 +7,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import net.premereur.mvp.core.View;
-import net.premereur.mvp.example.swing.eventbus.DemoEventBus;
 
-public class ApplicationFrame extends JFrame implements View<DemoEventBus> {
+public class ApplicationFrame extends JFrame implements View {
 
 	private static final long serialVersionUID = 1L;
 
@@ -21,10 +20,6 @@ public class ApplicationFrame extends JFrame implements View<DemoEventBus> {
 		
 		add(feedbackLbl, BorderLayout.PAGE_END);
 		setMinimumSize(new Dimension(200, 400));		
-	}
-
-	@Override
-	public void setEventBus(DemoEventBus eventBus) {		
 	}
 	
 	public void setFeedback(String text) {
