@@ -14,7 +14,7 @@ public class EventBusFactoryTest {
 		public MyView() {
 			instantiations++;
 		}
-		
+
 		@Override
 		public void setEventBus(MyEventBus eventBus) {
 			busSets += eventBus != null ? 1 : 0;
@@ -129,6 +129,52 @@ public class EventBusFactoryTest {
 		assertEquals(busSet, MyView.busSets);
 	}
 
+	@UsesPresenter(MyPresenterForView.class)
+	public static class MyViewWithPresenter implements View<MyEventbusWithViewAndPresenterThatKnowEachOther>, NeedsPresenter<MyPresenterForView> {
+		static int presenterSets = 0;
+
+		public MyViewWithPresenter() {
+		}
+
+		@Override
+		public void setEventBus(MyEventbusWithViewAndPresenterThatKnowEachOther eventBus) {
+		}
+
+		@Override
+		public void setPresenter(MyPresenterForView p) {
+			presenterSets += p != null ? 1 : 0;
+		}
+	}
+
+	@UsesView(MyViewWithPresenter.class)
+	public static class MyPresenterForView implements Presenter<MyViewWithPresenter, MyEventbusWithViewAndPresenterThatKnowEachOther> {
+		
+		@Override
+		public void setEventBus(MyEventbusWithViewAndPresenterThatKnowEachOther eventBus) {
+		}
+
+		@Override
+		public void setView(MyViewWithPresenter view) {
+		}
+
+		public void onEvent() {
+		}
+
+	}
+
+	public static interface MyEventbusWithViewAndPresenterThatKnowEachOther extends EventBus {
+		@Event(handlers = MyPresenterForView.class)
+		public void event();
+	}
+
+	@Test
+	public void shouldAssignPresenterToViewIfViewImplementsNeedsPresenterInterface() {
+		int presenterSets = MyViewWithPresenter.presenterSets;
+		MyEventbusWithViewAndPresenterThatKnowEachOther eventBus = EventBusFactory.createEventBus(MyEventbusWithViewAndPresenterThatKnowEachOther.class);
+		eventBus.event();
+		assertEquals(presenterSets + 1, MyViewWithPresenter.presenterSets);
+	}
+
 	static interface EventBusWithNonPrimitiveEventMethods extends EventBus {
 		@Event(handlers = {})
 		void event(int i);
@@ -159,9 +205,9 @@ public class EventBusFactoryTest {
 		@Override
 		public void setEventBus(EventBusWithBadPresenter eventBus) {
 		}
-		
+
 	}
-	
+
 	@UsesView(MyBadView1.class)
 	public static class PresenterWithoutMatchingEvent extends BasePresenter<MyBadView1, EventBusWithBadPresenter> {
 
@@ -180,9 +226,9 @@ public class EventBusFactoryTest {
 		@Override
 		public void setEventBus(MyOtherEventBus eventBus) {
 		}
-		
+
 	}
-	
+
 	static class MyPresenterWithoutAnnotation extends BasePresenter<MyBadView2, MyOtherEventBus> {
 		public void onEvent() {
 		}

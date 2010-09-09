@@ -5,8 +5,8 @@ import net.premereur.mvp.example.domain.model.Category;
 import net.premereur.mvp.example.swing.view.CategoryUpdaterPanel;
 
 @UsesView(CategoryUpdaterPanel.class)
-public class CategoryUpdatePresenter extends CategoryPresenterBase<CategoryUpdaterPanel> {	
-
+public class CategoryUpdatePresenter extends CategoryPresenterBase<CategoryUpdaterPanel> {		
+	
 	public void onCategorySelected(Category selectedCategory) {
 		CategoryUpdaterPanel view = getView();
 		view.bind(selectedCategory);

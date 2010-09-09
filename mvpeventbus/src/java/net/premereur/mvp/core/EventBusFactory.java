@@ -148,15 +148,23 @@ public class EventBusFactory {
 		private static Presenter newHandler(Class<?> handlerClazz, EventBus bus) {
 			Presenter handler = (Presenter) uncheckedNewInstance(handlerClazz);
 			handler.setEventBus(bus);
-			handler.setView(newView(handlerClazz, bus));
+			handler.setView(newView(handlerClazz, bus, handler));
 			return handler;
 		}
 
 		@SuppressWarnings("unchecked")
-		private static View<?> newView(Class<?> handlerClazz, EventBus bus) {
+		private static View<?> newView(Class<?> handlerClazz, EventBus bus, Presenter presenter) {
 			View view = uncheckedNewInstance(getViewClass(handlerClazz));
 			view.setEventBus(bus);
+			setPresenterIfRequested(view, presenter);
 			return view;
+		}
+
+		@SuppressWarnings("unchecked")
+		private static void setPresenterIfRequested(View view, Presenter presenter) {
+			if ( view instanceof NeedsPresenter<?>) {
+				((NeedsPresenter)view).setPresenter(presenter);
+			}
 		}
 
 		private static Class<? extends View<?>> getViewClass(Class<?> handlerClazz) {
