@@ -70,4 +70,5 @@ public class ApplicationPresenterTest {
 		presenter.onSetFeedback("feedback");
 		verify(view).setFeedback("feedback");
 	}
+	
 }

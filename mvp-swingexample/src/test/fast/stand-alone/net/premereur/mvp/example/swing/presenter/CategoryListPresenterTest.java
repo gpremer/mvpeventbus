@@ -40,6 +40,18 @@ public class CategoryListPresenterTest {
 		presenter.onCategoryListActivated();
 		verify(view).bind(any(List.class));
 	}
+
+	@Test
+	public void shouldSetItselfAsListListener() throws Exception {
+		verify(view).addSelectionListener(presenter);
+	}
+
+	@Test
+	public void shouldSendEventWhenCategoryIsSelected() throws Exception {		
+		Category category = new Category("cat");
+		presenter.categorySelected(category);
+		verify(eventBus).categorySelected(category);
+	}
 	
 	@Test
 	public void shouldUpdateListWhenCategoryIsChanged() throws Exception {
