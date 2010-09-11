@@ -31,8 +31,4 @@ public interface DemoEventBus extends EventBus {
 
 	@Event(handlers = CategoryListPresenter.class)
 	void categoryChanged(Category category);
-
-	@Event(handlers = CategoryUpdatePresenter.class)
-	void updateCategory(Category category);
-
 }

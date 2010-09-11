@@ -21,13 +21,11 @@ public class ApplicationPresenter extends BasePresenter<ApplicationFrame, DemoEv
 	}
 	
 	public void onSetLeftComponent(JComponent component) {
-		getView().getContentPane().add(component, BorderLayout.LINE_START);
-		getView().pack();
+		getView().setLeftComponent(component);
 	}
 
 	public void onSetCenterComponent(JComponent component) {
-		getView().getContentPane().add(component, BorderLayout.CENTER);
-		getView().pack();
+		getView().setCentralComponent(component);
 	}
 
 	public void onSetFeedback(String text) {
@@ -36,7 +34,7 @@ public class ApplicationPresenter extends BasePresenter<ApplicationFrame, DemoEv
 			@Override
 			public void run() {
 				try {
-					sleep(4000);
+					sleep(3000);
 				} catch (InterruptedException e) {
 					
 				} finally {

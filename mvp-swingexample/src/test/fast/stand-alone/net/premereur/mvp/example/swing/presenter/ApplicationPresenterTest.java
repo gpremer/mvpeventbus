@@ -49,9 +49,7 @@ public class ApplicationPresenterTest {
 		Container contentPane = mock(Container.class);
 		when(view.getContentPane()).thenReturn(contentPane);
 		presenter.onSetLeftComponent(component);
-		verify(view).getContentPane();
-		verify(contentPane).add(component, BorderLayout.LINE_START);
-		verify(view).pack();
+		verify(view).setLeftComponent(component);
 	}
 
 	@Test
@@ -60,9 +58,7 @@ public class ApplicationPresenterTest {
 		Container contentPane = mock(Container.class);
 		when(view.getContentPane()).thenReturn(contentPane);
 		presenter.onSetCenterComponent(component);
-		verify(view).getContentPane();
-		verify(contentPane).add(component, BorderLayout.CENTER);
-		verify(view).pack();
+		verify(view).setCentralComponent(component);
 	}
 
 	@Test

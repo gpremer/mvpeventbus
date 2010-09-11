@@ -49,9 +49,7 @@ public class CategoryUpdaterPanel extends JPanel implements View {
 		setLayout(new BorderLayout());
 		add(operationLabel, BorderLayout.PAGE_START);
 		add(fieldPane, BorderLayout.CENTER);
-		add(buttonPane, BorderLayout.PAGE_END);
-		
-		setCancelButtonListener();
+		add(buttonPane, BorderLayout.PAGE_END);		
 	}
 
 	public DemoEventBus getEventBus() {
@@ -71,17 +69,18 @@ public class CategoryUpdaterPanel extends JPanel implements View {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				category.setName(nameField.getText());
-				presenter.updateCategory(category);
+				presenter.saveClicked(category);
 			}
 		});
 	}
 
-	protected void setCancelButtonListener() {
+	public void setCancelButtonListener(final CategoryUpdatePresenter presenter) {
 		this.cancelButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				nameField.setText(category.getName());
+				presenter.cancelClicked();
 			}
 		});
 	}

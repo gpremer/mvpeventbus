@@ -3,6 +3,7 @@ package net.premereur.mvp.example.swing.view;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
@@ -13,6 +14,10 @@ public class ApplicationFrame extends JFrame implements View {
 	private static final long serialVersionUID = 1L;
 
 	private JLabel feedbackLbl = new JLabel();
+	
+	private JComponent leftComponent;
+	
+	private JComponent centralComponent;
 	
 	public ApplicationFrame() {
 		super("MVP Swing demo");
@@ -25,5 +30,22 @@ public class ApplicationFrame extends JFrame implements View {
 	public void setFeedback(String text) {
 		feedbackLbl.setText(text);
 	}
+	
+	public synchronized void setLeftComponent(JComponent component) {
+		if ( leftComponent != null ) {
+			getContentPane().remove(leftComponent);
+		}
+		leftComponent = component;
+		getContentPane().add(component, BorderLayout.LINE_START);
+		pack();
+	}
 
+	public synchronized void setCentralComponent(JComponent component) {
+		if ( centralComponent != null ) {
+			getContentPane().remove(centralComponent);
+		}
+		centralComponent = component;
+		getContentPane().add(component, BorderLayout.CENTER);
+		pack();
+	}
 }
