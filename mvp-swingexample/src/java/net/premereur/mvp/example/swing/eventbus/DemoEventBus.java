@@ -6,8 +6,10 @@ import net.premereur.mvp.core.Event;
 import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.example.domain.model.Category;
 import net.premereur.mvp.example.swing.presenter.ApplicationPresenter;
+import net.premereur.mvp.example.swing.presenter.CategoryCreatorPresenter;
 import net.premereur.mvp.example.swing.presenter.CategoryListPresenter;
 import net.premereur.mvp.example.swing.presenter.CategoryUpdatePresenter;
+import net.premereur.mvp.example.swing.presenter.DefaultCategoryPanelPresenter;
 
 public interface DemoEventBus extends EventBus {
 
@@ -31,4 +33,14 @@ public interface DemoEventBus extends EventBus {
 
 	@Event(handlers = CategoryListPresenter.class)
 	void categoryChanged(Category category);
+
+	@Event(handlers = DefaultCategoryPanelPresenter.class)
+	void defaultCategoryPanelActivated();
+
+	@Event(handlers = CategoryCreatorPresenter.class)
+	void activateCategoryCreation();
+
+	@Event(handlers = CategoryListPresenter.class)
+	void categoryAdded(Category category);
+
 }

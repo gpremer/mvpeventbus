@@ -120,6 +120,7 @@ public class EventBusFactoryTest {
 		public void setPresenter(MyPresenterForView p) {
 			presenterSets += p != null ? 1 : 0;
 		}
+
 	}
 
 	@UsesView(MyViewWithPresenter.class)

@@ -48,4 +48,5 @@ public class ApplicationFrame extends JFrame implements View {
 		getContentPane().add(component, BorderLayout.CENTER);
 		pack();
 	}
+
 }

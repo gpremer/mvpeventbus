@@ -3,9 +3,6 @@ package net.premereur.mvp.example.swing.presenter;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-
-import javax.swing.JPanel;
-
 import net.premereur.mvp.example.domain.model.Category;
 import net.premereur.mvp.example.domain.repository.CategoryRepository;
 import net.premereur.mvp.example.swing.eventbus.DemoEventBus;
@@ -25,7 +22,7 @@ public class CategoryUpdatePresenterTest {
 	public void setUpPresenterWithMockView() {
 		view = mock(CategoryUpdaterPanel.class);
 		eventBus = mock(DemoEventBus.class);
-		repository = mock (CategoryRepository.class);
+		repository = mock(CategoryRepository.class);
 		presenter = new CategoryUpdatePresenter();
 		presenter.setView(view);
 		presenter.setEventBus(eventBus);
@@ -66,28 +63,28 @@ public class CategoryUpdatePresenterTest {
 		presenter.saveClicked(category);
 		verify(eventBus).categoryChanged(category);
 	}
-	
+
 	@Test
 	public void shouldClearMainPanelWhenCancelled() throws Exception {
 		Category category = new Category("cat");
 		presenter.saveClicked(category);
-		verify(eventBus).setCenterComponent(any(JPanel.class));
+		verify(eventBus).defaultCategoryPanelActivated();
 	}
 
 	@Test
 	public void shouldClearMainPanelWhenCategoryUpdated() throws Exception {
 		presenter.cancelClicked();
-		verify(eventBus).setCenterComponent(any(JPanel.class));
+		verify(eventBus).defaultCategoryPanelActivated();
 	}
 
 	@Test
 	public void shouldRegisterItselfAsUpdateListener() throws Exception {
 		verify(view).setOperationButtonListener(presenter);
 	}
-	
+
 	@Test
 	public void shouldRegisterItselfAsCancelListener() throws Exception {
 		verify(view).setCancelButtonListener(presenter);
 	}
-	
+
 }

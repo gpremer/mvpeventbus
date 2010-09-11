@@ -17,10 +17,15 @@ public class CategoryListPresenter extends CategoryPresenterBase<CategoryList> {
 		final CategoryList categoryList = getView();
 		categoryList.bind(getRepository().allCategories());
 		getEventBus().setLeftComponent(categoryList);
+		getEventBus().defaultCategoryPanelActivated();
 	}
 	
 	public void onCategoryChanged(final Category category) {
 		getView().refreshList();
+	}
+	
+	public void onCategoryAdded(Category category) {
+		getView().bind(getRepository().allCategories());
 	}
 
 	public void categorySelected(Category selectedCategory) {

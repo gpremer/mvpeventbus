@@ -12,12 +12,13 @@ public abstract class CategoryPresenterBase<V extends View> extends BasePresente
 	public CategoryPresenterBase() {
 		setRepository(CategoryRepository.instance());
 	}
-	
+
 	public void setRepository(CategoryRepository repository) {
 		this.repository = repository;
 	}
-	
+
 	public CategoryRepository getRepository() {
 		return repository;
 	}
+
 }
