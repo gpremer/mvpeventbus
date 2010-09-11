@@ -24,8 +24,9 @@ public class CategoryUpdatePresenter extends CategoryPresenterBase<CategoryUpdat
 		
 	public void saveClicked(Category category) {
 		getRepository().save(category);
-		getEventBus().setFeedback("Category updated");
+		getEventBus().setCenterComponent(new JPanel());
 		getEventBus().categoryChanged(category);
+		getEventBus().setFeedback("Category updated");
 	}
 
 	public void cancelClicked() {

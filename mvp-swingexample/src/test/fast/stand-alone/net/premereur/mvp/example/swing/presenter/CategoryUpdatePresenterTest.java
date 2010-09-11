@@ -69,6 +69,13 @@ public class CategoryUpdatePresenterTest {
 	
 	@Test
 	public void shouldClearMainPanelWhenCancelled() throws Exception {
+		Category category = new Category("cat");
+		presenter.saveClicked(category);
+		verify(eventBus).setCenterComponent(any(JPanel.class));
+	}
+
+	@Test
+	public void shouldClearMainPanelWhenCategoryUpdated() throws Exception {
 		presenter.cancelClicked();
 		verify(eventBus).setCenterComponent(any(JPanel.class));
 	}
