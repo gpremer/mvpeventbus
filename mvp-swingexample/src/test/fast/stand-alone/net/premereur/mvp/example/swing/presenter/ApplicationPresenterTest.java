@@ -4,7 +4,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.awt.BorderLayout;
 import java.awt.Container;
 
 import javax.swing.JComponent;
@@ -66,5 +65,5 @@ public class ApplicationPresenterTest {
 		presenter.onSetFeedback("feedback");
 		verify(view).setFeedback("feedback");
 	}
-	
+
 }

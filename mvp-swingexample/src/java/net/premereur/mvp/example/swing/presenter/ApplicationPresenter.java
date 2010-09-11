@@ -1,7 +1,5 @@
 package net.premereur.mvp.example.swing.presenter;
 
-import java.awt.BorderLayout;
-
 import javax.swing.JComponent;
 
 import net.premereur.mvp.core.BasePresenter;
@@ -10,8 +8,8 @@ import net.premereur.mvp.example.swing.eventbus.DemoEventBus;
 import net.premereur.mvp.example.swing.view.ApplicationFrame;
 
 @UsesView(ApplicationFrame.class)
-public class ApplicationPresenter extends BasePresenter<ApplicationFrame, DemoEventBus> {	
-	
+public class ApplicationPresenter extends BasePresenter<ApplicationFrame, DemoEventBus> {
+
 	public void onApplicationStarted() {
 		ApplicationFrame view = getView();
 
@@ -19,7 +17,7 @@ public class ApplicationPresenter extends BasePresenter<ApplicationFrame, DemoEv
 		view.pack();
 		view.setVisible(true);
 	}
-	
+
 	public void onSetLeftComponent(JComponent component) {
 		getView().setLeftComponent(component);
 	}
@@ -36,7 +34,7 @@ public class ApplicationPresenter extends BasePresenter<ApplicationFrame, DemoEv
 				try {
 					sleep(3000);
 				} catch (InterruptedException e) {
-					
+
 				} finally {
 					getView().setFeedback("");
 				}
