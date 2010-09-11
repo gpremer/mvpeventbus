@@ -22,8 +22,8 @@ public class CategoryUpdaterPanel extends JPanel implements View {
 
 	private static final long serialVersionUID = 1L;
 	private JLabel operationLabel;
-	private JButton cancelButton = new JButton("cancel");
-	private JButton operationButton = new JButton("save");
+	private JButton cancelButton = new JButton("Cancel");
+	private JButton operationButton = new JButton("Save");
 	private JTextField nameField;
 	private Category category;
 	private DemoEventBus eventBus;	
