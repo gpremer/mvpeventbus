@@ -8,7 +8,7 @@ public abstract class SingleCategoryPresenterBase<V extends CategoryPanelBase> e
 	@Override
 	public void setView(V view) {
 		super.setView(view);
-		view.setOperationButtonListener(this);
+		view.setSaveButtonListener(this);
 		view.setCancelButtonListener(this);
 	}
 

@@ -6,24 +6,24 @@ import static org.mockito.Mockito.verify;
 import net.premereur.mvp.example.domain.model.Category;
 import net.premereur.mvp.example.domain.repository.CategoryRepository;
 import net.premereur.mvp.example.swing.eventbus.DemoEventBus;
-import net.premereur.mvp.example.swing.view.CategoryUpdaterPanel;
+import net.premereur.mvp.example.swing.view.CategoryCreatorPanel;
 
 import org.junit.Before;
 import org.junit.Test;
 
-public class CategoryUpdatePresenterTest {
+public class CategoryCreatorPresenterTest {
 
-	private CategoryUpdatePresenter presenter;
-	private CategoryUpdaterPanel view;
+	private CategoryCreatorPresenter presenter;
+	private CategoryCreatorPanel view;
 	private DemoEventBus eventBus;
 	private CategoryRepository repository;
 
 	@Before
 	public void setUpPresenterWithMockView() {
-		view = mock(CategoryUpdaterPanel.class);
+		view = mock(CategoryCreatorPanel.class);
 		eventBus = mock(DemoEventBus.class);
 		repository = mock(CategoryRepository.class);
-		presenter = new CategoryUpdatePresenter();
+		presenter = new CategoryCreatorPresenter();
 		presenter.setView(view);
 		presenter.setEventBus(eventBus);
 		presenter.setRepository(repository);
@@ -31,41 +31,39 @@ public class CategoryUpdatePresenterTest {
 
 	@Test
 	public void shouldBindCategoryToViewWhenCategorySelected() throws Exception {
-		Category category = new Category("cat");
-		presenter.onCategorySelected(category);
-		verify(view).bind(category);
+		presenter.onActivateCategoryCreation();
+		verify(view).bind(any(Category.class));
 	}
 
 	@Test
 	public void shouldSendEventToAttachViewWhenCategorySelected() throws Exception {
-		Category category = new Category("cat");
-		presenter.onCategorySelected(category);
+		presenter.onActivateCategoryCreation();
 		verify(eventBus).setCenterComponent(view);
 	}
 
 	@Test
-	public void shouldSaveCategoryWhenCategoryUpdated() throws Exception {
+	public void shouldSaveCategoryWhenCategoryCreated() throws Exception {
 		Category category = new Category("cat");
 		presenter.saveClicked(category);
 		verify(repository).save(category);
 	}
 
 	@Test
-	public void shouldSetFeedbackWhenCategoryUpdated() throws Exception {
+	public void shouldSetFeedbackWhenCategoryCreatod() throws Exception {
 		Category category = new Category("cat");
 		presenter.saveClicked(category);
 		verify(eventBus).setFeedback(any(String.class));
 	}
 
 	@Test
-	public void shouldSendCategoryChangedEventWhenCategoryUpdated() throws Exception {
+	public void shouldSendCategoryAddedEventWhenCategoryCreated() throws Exception {
 		Category category = new Category("cat");
 		presenter.saveClicked(category);
-		verify(eventBus).categoryChanged(category);
+		verify(eventBus).categoryAdded(category);
 	}
 
 	@Test
-	public void shouldClearMainPanelWhenCategoryUpdated() throws Exception {
+	public void shouldClearMainPanelWhenCategoryCreated() throws Exception {
 		Category category = new Category("cat");
 		presenter.saveClicked(category);
 		verify(eventBus).defaultCategoryPanelActivated();
@@ -78,7 +76,7 @@ public class CategoryUpdatePresenterTest {
 	}
 
 	@Test
-	public void shouldRegisterItselfAsUpdateListener() throws Exception {
+	public void shouldRegisterItselfAsCreatorListener() throws Exception {
 		verify(view).setSaveButtonListener(presenter);
 	}
 

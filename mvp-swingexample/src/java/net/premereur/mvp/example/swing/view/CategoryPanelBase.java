@@ -20,7 +20,7 @@ import net.premereur.mvp.example.swing.presenter.SingleCategoryPresenterBase;
 public abstract class CategoryPanelBase extends JPanel implements View {
 	private final JLabel operationLabel;
 	private final JButton cancelButton = new JButton("Cancel");
-	private final JButton operationButton = new JButton("Save");
+	private final JButton saveButton = new JButton("Save");
 	private final JTextField nameField = new JTextField(20);
 	private Category category;
 
@@ -37,7 +37,7 @@ public abstract class CategoryPanelBase extends JPanel implements View {
 		buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.LINE_AXIS));
 		buttonPane.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 		buttonPane.add(Box.createHorizontalGlue());
-		buttonPane.add(operationButton);
+		buttonPane.add(saveButton);
 		buttonPane.add(Box.createRigidArea(new Dimension(10, 0)));
 		buttonPane.add(cancelButton);
 
@@ -51,17 +51,17 @@ public abstract class CategoryPanelBase extends JPanel implements View {
 		this.category = selectedCategory;
 		nameField.setText(this.category.getName());
 	}
-	public void setOperationButtonListener(final SingleCategoryPresenterBase<? extends CategoryPanelBase> presenter) {
-		this.operationButton.addActionListener(new ActionListener() {
+	public void setSaveButtonListener(final SingleCategoryPresenterBase<? extends CategoryPanelBase> presenter) {
+		this.saveButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				operationButtonClicked(presenter);
+				saveButtonClicked(presenter);
 			}
 		});
 	}
 	
-	protected void operationButtonClicked(final SingleCategoryPresenterBase<? extends CategoryPanelBase> presenter) {
+	protected void saveButtonClicked(final SingleCategoryPresenterBase<? extends CategoryPanelBase> presenter) {
 		category.setName(nameField.getText());
 		presenter.saveClicked(category);		
 	}
