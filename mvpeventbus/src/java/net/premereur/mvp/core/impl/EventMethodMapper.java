@@ -26,7 +26,7 @@ public class EventMethodMapper {
 
 	private static List<Method> findHandlerMethodsForEvent(Method eventMethod, Event eventAnt) {
 		List<Method> handlingMethods = new ArrayList<Method>();
-		for (Class<? extends Presenter<? extends View, ? extends EventBus>> presenter : eventAnt.handlers()) {
+		for (Class<? extends Presenter<? extends View, ? extends EventBus>> presenter : eventAnt.value()) {
 			handlingMethods.add(correspondingPresenterMethod(presenter, eventMethod));
 		}
 		return handlingMethods;

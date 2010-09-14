@@ -13,34 +13,34 @@ import net.premereur.mvp.example.swing.presenter.DefaultCategoryPanelPresenter;
 
 public interface DemoEventBus extends EventBus {
 
-	@Event(handlers = ApplicationPresenter.class)
+	@Event(ApplicationPresenter.class)
 	void applicationStarted();
 
-	@Event(handlers = ApplicationPresenter.class)
+	@Event(ApplicationPresenter.class)
 	void setLeftComponent(JComponent component);
 
-	@Event(handlers = ApplicationPresenter.class)
+	@Event(ApplicationPresenter.class)
 	void setCenterComponent(JComponent component);
 
-	@Event(handlers = ApplicationPresenter.class)
+	@Event(ApplicationPresenter.class)
 	void setFeedback(String text);
 
-	@Event(handlers = CategoryListPresenter.class)
+	@Event(CategoryListPresenter.class)
 	void categoryListActivated();
 
-	@Event(handlers = CategoryUpdatePresenter.class)
+	@Event(CategoryUpdatePresenter.class)
 	void categorySelected(Category selectedCategory);
 
-	@Event(handlers = CategoryListPresenter.class)
+	@Event(CategoryListPresenter.class)
 	void categoryChanged(Category category);
 
-	@Event(handlers = DefaultCategoryPanelPresenter.class)
+	@Event(DefaultCategoryPanelPresenter.class)
 	void defaultCategoryPanelActivated();
 
-	@Event(handlers = CategoryCreatorPresenter.class)
+	@Event(CategoryCreatorPresenter.class)
 	void activateCategoryCreation();
 
-	@Event(handlers = CategoryListPresenter.class)
+	@Event(CategoryListPresenter.class)
 	void categoryAdded(Category category);
 
 }

@@ -15,7 +15,7 @@ public class EventBusVerifier {
 	public <E extends EventBus> void verify(Class<E> eventBusClass) {
 		for (Method eventMethod : ReflectionUtil.annotatedMethods(eventBusClass, Event.class)) {
 			Event eventAnt = eventMethod.getAnnotation(Event.class);
-			verifyHandlers(eventAnt.handlers(), eventBusClass);
+			verifyHandlers(eventAnt.value(), eventBusClass);
 			verifyEventBusMethods(eventMethod);
 		}
 	}

@@ -41,10 +41,10 @@ public class EventBusFactoryTest {
 	}
 
 	static interface MyEventBus extends EventBus {
-		@Event(handlers = { MyPresenter.class })
+		@Event({ MyPresenter.class })
 		void event();
 
-		@Event(handlers = { MyPresenter.class })
+		@Event({ MyPresenter.class })
 		void eventWithArg(Integer i);
 
 		int nonAnnotatedMethod(int i); // Here to show that non-annotated
@@ -140,7 +140,7 @@ public class EventBusFactoryTest {
 	}
 
 	public static interface MyEventbusWithViewAndPresenterThatKnowEachOther extends EventBus {
-		@Event(handlers = MyPresenterForView.class)
+		@Event(MyPresenterForView.class)
 		public void event();
 	}
 
@@ -153,7 +153,7 @@ public class EventBusFactoryTest {
 	}
 
 	static interface EventBusWithNonPrimitiveEventMethods extends EventBus {
-		@Event(handlers = {})
+		@Event({})
 		void event(int i);
 	}
 
@@ -163,7 +163,7 @@ public class EventBusFactoryTest {
 	}
 
 	static interface EventBusWithNonVoidEventMethods extends EventBus {
-		@Event(handlers = {})
+		@Event({})
 		int event();
 	}
 
@@ -173,7 +173,7 @@ public class EventBusFactoryTest {
 	}
 
 	static interface EventBusWithBadPresenter extends EventBus {
-		@Event(handlers = { PresenterWithoutMatchingEvent.class })
+		@Event({ PresenterWithoutMatchingEvent.class })
 		void event(Integer i);
 	}
 
@@ -204,7 +204,7 @@ public class EventBusFactoryTest {
 	}
 
 	static interface MyOtherEventBus extends EventBus {
-		@Event(handlers = { MyPresenterWithoutAnnotation.class })
+		@Event({ MyPresenterWithoutAnnotation.class })
 		void event();
 	}
 
