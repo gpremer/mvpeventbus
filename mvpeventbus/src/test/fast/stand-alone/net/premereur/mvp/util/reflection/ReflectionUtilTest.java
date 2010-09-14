@@ -1,4 +1,4 @@
-package net.premereur.reflection.util;
+package net.premereur.mvp.util.reflection;
 
 import static org.junit.Assert.assertTrue;
 

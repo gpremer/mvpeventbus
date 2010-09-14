@@ -1,4 +1,4 @@
-package net.premereur.reflection.util;
+package net.premereur.mvp.util.reflection;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;

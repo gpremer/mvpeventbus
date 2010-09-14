@@ -8,7 +8,7 @@ import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.core.Presenter;
 import net.premereur.mvp.core.UsesView;
 import net.premereur.mvp.core.View;
-import net.premereur.reflection.util.ReflectionUtil;
+import net.premereur.mvp.util.reflection.ReflectionUtil;
 
 public class EventBusVerifier {
 
