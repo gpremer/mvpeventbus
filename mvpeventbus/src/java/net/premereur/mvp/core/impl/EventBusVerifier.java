@@ -44,7 +44,7 @@ public class EventBusVerifier {
 		}
 	}
 
-	static void verifyNoPrimitiveArguments(Method m) {
+	private void verifyNoPrimitiveArguments(Method m) {
 		for (Type t : m.getGenericParameterTypes()) {
 			if (t instanceof Class<?> && ((Class<?>) t).isPrimitive()) {
 				throw new IllegalArgumentException("Found a method " + m.getName() + " with primitive argument");
