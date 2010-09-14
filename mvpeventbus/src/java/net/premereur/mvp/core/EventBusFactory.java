@@ -11,6 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.premereur.mvp.core.impl.EventBusVerifier;
+import net.premereur.reflection.util.ReflectionUtil;
+
 public class EventBusFactory {
 
 	@SuppressWarnings("unchecked")
@@ -19,42 +22,30 @@ public class EventBusFactory {
 		return (E) Proxy.newProxyInstance(clazz.getClassLoader(), new Class[] { clazz }, handler);
 	}
 
-	static class EventBusInvocationHandler implements InvocationHandler {
+	private static class EventBusInvocationHandler implements InvocationHandler {
 		public Map<String, Method> methods = new HashMap<String, Method>();
 
 		private final Map<Class<?>, Object> handlerInstancesByClass = new HashMap<Class<?>, Object>();
 
 		private final Map<Method, List<Method>> handlingMethodsByEventMethod = new HashMap<Method, List<Method>>();
 
+		private static final EventBusVerifier VERIFIER = new EventBusVerifier();
+
 		public EventBusInvocationHandler(Class<? extends EventBus> eventBusClass) {
-			for (Method eventMethod : eventMethods(eventBusClass)) {
+			VERIFIER.verify(eventBusClass);
+			for (Method eventMethod : ReflectionUtil.annotatedMethods(eventBusClass, Event.class)) {
 				Event eventAnt = eventMethod.getAnnotation(Event.class);
-				verifyHandlers(eventAnt.handlers(), eventBusClass);
-				verifyEventBusMethods(eventMethod);
 				List<Method> handlingMethods = findHandlerMethodsForEvent(eventMethod, eventAnt);
 				handlingMethodsByEventMethod.put(eventMethod, handlingMethods);
 			}
 		}
 
-		private List<Method> findHandlerMethodsForEvent(Method eventMethod, Event eventAnt) {
+		private static List<Method> findHandlerMethodsForEvent(Method eventMethod, Event eventAnt) {
 			List<Method> handlingMethods = new ArrayList<Method>();
 			for (Class<? extends Presenter<? extends View, ? extends EventBus>> presenter : eventAnt.handlers()) {
 				handlingMethods.add(correspondingPresenterMethod(presenter, eventMethod));
 			}
 			return handlingMethods;
-		}
-
-		private void verifyHandlers(Class<? extends Presenter<? extends View, ? extends EventBus>>[] handlers, Class<? extends EventBus> eventBusClass) {
-			for (Class<? extends Presenter<? extends View, ? extends EventBus>> handlerClass : handlers) {
-				verifyHasUseViewAnnotation(handlerClass);
-			}
-		}
-
-		private void verifyHasUseViewAnnotation(Class<? extends Presenter<? extends View, ? extends EventBus>> handlerClass) {
-			UsesView viewAnnot = handlerClass.getAnnotation(UsesView.class);
-			if (viewAnnot == null || viewAnnot.value() == null) {
-				throw new RuntimeException("Should use " + UsesView.class.getName() + " annotation to declare view class on " + handlerClass);
-			}
 		}
 
 		private static Method correspondingPresenterMethod(Class<? extends Presenter<? extends View, ? extends EventBus>> presenter, Method ebm) {
@@ -69,37 +60,6 @@ public class EventBusFactory {
 
 		private static boolean presenterMethodCorrespondsWithEventBusMethod(Method pm, Method ebm) {
 			return getEventMethodId(ebm).equals(getEventMethodId(pm));
-		}
-
-		private void verifyEventBusMethods(Method m) {
-			verifyNoPrimitiveArguments(m);
-			verifyOnlyVoidMethod(m);
-		}
-
-		private void verifyOnlyVoidMethod(Method m) {
-			if (m.getReturnType().getName() != "void") {
-				throw new IllegalArgumentException("Found a method " + m.getName() + " with non-void return type");
-			}
-
-		}
-
-		private void verifyNoPrimitiveArguments(Method m) {
-			for (Type t : m.getGenericParameterTypes()) {
-				if (t instanceof Class<?> && ((Class<?>) t).isPrimitive()) {
-					throw new IllegalArgumentException("Found a method " + m.getName() + " with primitive argument");
-				}
-			}
-		}
-
-		private List<Method> eventMethods(Class<?> clazz) {
-			List<Method> eventMethods = new ArrayList<Method>();
-			for (Method m : clazz.getMethods()) {
-				Event eventAnt = m.getAnnotation(Event.class);
-				if (eventAnt != null) {
-					eventMethods.add(m);
-				}
-			}
-			return eventMethods;
 		}
 
 		private static String getEventMethodId(final Method m) {
@@ -161,8 +121,8 @@ public class EventBusFactory {
 
 		@SuppressWarnings("unchecked")
 		private static void setPresenterIfRequested(View view, Presenter presenter) {
-			if ( view instanceof NeedsPresenter<?>) {
-				((NeedsPresenter)view).setPresenter(presenter);
+			if (view instanceof NeedsPresenter<?>) {
+				((NeedsPresenter) view).setPresenter(presenter);
 			}
 		}
 

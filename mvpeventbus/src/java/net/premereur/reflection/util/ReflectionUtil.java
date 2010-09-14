@@ -1,5 +1,10 @@
 package net.premereur.reflection.util;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+
 public final class ReflectionUtil {
 
 	public static <T> T uncheckedNewInstance(Class<T> clazz) {
@@ -10,6 +15,17 @@ public final class ReflectionUtil {
 		} catch (IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	public static Iterable<Method> annotatedMethods(final Class<?> clazz, final Class<? extends Annotation> annot) {
+		Method[] methods = clazz.getMethods();
+		List<Method> annotatedMethods = new ArrayList<Method>(methods.length);
+		for (Method m : methods) {
+			if (m.getAnnotation(annot) != null) {
+				annotatedMethods.add(m);
+			}
+		}
+		return annotatedMethods;
 	}
 
 	private ReflectionUtil() {

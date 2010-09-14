@@ -213,4 +213,13 @@ public class EventBusFactoryTest {
 		EventBusFactory.createEventBus(MyOtherEventBus.class);
 	}
 
+	class ClassEventBus implements EventBus {
+		
+	}
+	
+	@Test(expected = RuntimeException.class)
+	public void shouldNotAllowEventBusThatIsClass() {
+		EventBusFactory.createEventBus(ClassEventBus.class);
+	}
+	
 }
