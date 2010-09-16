@@ -3,6 +3,7 @@ package net.premereur.mvp.core.impl;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,26 +15,31 @@ import net.premereur.mvp.core.View;
 
 public class EventMethodMapper {
 
-	private final Map<Method, List<Method>> handlingMethodsByEventMethod = new HashMap<Method, List<Method>>();
+	private final Map<String, List<Method>> handlingMethodsByEventMethod = new HashMap<String, List<Method>>();
 
-	public EventMethodMapper(Iterable<Method> eventBusEventMethods) {
-		for (Method eventMethod : eventBusEventMethods) {
-			Event eventAnt = eventMethod.getAnnotation(Event.class);
-			List<Method> handlingMethods = findHandlerMethodsForEvent(eventMethod, eventAnt);
-			handlingMethodsByEventMethod.put(eventMethod, handlingMethods);
+	public void addHandlerMethods(final Iterable<Method> eventBusEventMethods) {
+		for (final Method eventMethod : eventBusEventMethods) {
+			final Event eventAnt = eventMethod.getAnnotation(Event.class);
+			final String eventMethodSignature = eventMethodSignature(eventMethod);
+			final List<Method> handlingMethods = findHandlerMethodsForEvent(eventMethod, eventAnt);
+			if (handlingMethodsByEventMethod.containsKey(eventMethodSignature)) {
+				handlingMethodsByEventMethod.get(eventMethodSignature).addAll(handlingMethods);
+			} else {
+				handlingMethodsByEventMethod.put(eventMethodSignature, handlingMethods);
+			}
 		}
 	}
 
-	private static List<Method> findHandlerMethodsForEvent(Method eventMethod, Event eventAnt) {
-		List<Method> handlingMethods = new ArrayList<Method>();
-		for (Class<? extends Presenter<? extends View, ? extends EventBus>> presenter : eventAnt.value()) {
+	private static List<Method> findHandlerMethodsForEvent(final Method eventMethod, final Event eventAnt) {
+		final List<Method> handlingMethods = new ArrayList<Method>();
+		for (final Class<? extends Presenter<? extends View, ? extends EventBus>> presenter : eventAnt.value()) {
 			handlingMethods.add(correspondingPresenterMethod(presenter, eventMethod));
 		}
 		return handlingMethods;
 	}
 
-	private static Method correspondingPresenterMethod(Class<? extends Presenter<? extends View, ? extends EventBus>> presenter, Method ebm) {
-		for (Method pm : presenter.getMethods()) {
+	private static Method correspondingPresenterMethod(final Class<? extends Presenter<? extends View, ? extends EventBus>> presenter, final Method ebm) {
+		for (final Method pm : presenter.getMethods()) {
 			if (presenterMethodCorrespondsWithEventBusMethod(pm, ebm)) {
 				return pm;
 			}
@@ -42,11 +48,11 @@ public class EventMethodMapper {
 				+ ebm.getName());
 	}
 
-	private static boolean presenterMethodCorrespondsWithEventBusMethod(Method pm, Method ebm) {
-		return getEventMethodSignature(ebm).equals(getEventMethodSignature(pm));
+	private static boolean presenterMethodCorrespondsWithEventBusMethod(final Method pm, final Method ebm) {
+		return eventMethodSignature(ebm).equals(eventMethodSignature(pm));
 	}
 
-	private static String getEventMethodSignature(final Method m) {
+	private static String eventMethodSignature(final Method m) {
 		final StringBuilder sb = new StringBuilder();
 		addNameWithoutPrefix(sb, m.getName());
 		sb.append('+');
@@ -68,8 +74,11 @@ public class EventMethodMapper {
 		}
 	}
 
-	public Iterable<Method> getHandlerEvents(Method eventMethod) {
-		return this.handlingMethodsByEventMethod.get(eventMethod);
+	private static final List<Method> NO_METHODS = Collections.emptyList();
+	
+	public Iterable<Method> getHandlerEvents(final Method eventMethod) {
+		final Iterable<Method> methods = this.handlingMethodsByEventMethod.get(eventMethodSignature(eventMethod));
+		return methods == null ? NO_METHODS : methods;
 	}
 
 }

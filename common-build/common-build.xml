@@ -58,6 +58,7 @@
 
 	<target name="compile" depends="init" description="--> compiles java files">
 		<javac srcdir="${src.java}" destdir="${classes}" debug="on" includeantruntime="false">
+			<compilerarg value="-Xlint"/>
 			<classpath refid="libpath.default" />
 			<classpath refid="libpath.project" />
 		</javac>
@@ -66,6 +67,7 @@
 
 	<target name="compile-fasttest" depends="compile" description="Compiles the fast test (for CI)">
 		<javac srcdir="${src.test.fast.standalone}" destdir="${classes-test}" debug="on"  includeantruntime="false">
+			<compilerarg value="-Xlint"/>
 			<classpath refid="libpath.test" />
 			<classpath refid="libpath.project" />
 			<classpath path="${classes}" />

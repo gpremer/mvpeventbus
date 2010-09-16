@@ -2,10 +2,22 @@ package net.premereur.mvp.core;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
 
+import org.junit.Before;
 import org.junit.Test;
 
+@SuppressWarnings("unchecked")
 public class EventBusFactoryTest {
+
+	@Before
+	public void resetMementos() {
+		reset(MainBusPresenter.memento);
+		reset(ChildBusPresenter.memento);
+	}
 
 	public static class MyView implements View {
 		static int instantiations = 0;
@@ -14,6 +26,10 @@ public class EventBusFactoryTest {
 			instantiations++;
 		}
 
+	}
+
+	interface Memento {
+		void invoke(String arg);
 	}
 
 	@UsesView(MyView.class)
@@ -41,10 +57,10 @@ public class EventBusFactoryTest {
 	}
 
 	static interface MyEventBus extends EventBus {
-		@Event({ MyPresenter.class })
+		@Event( { MyPresenter.class })
 		void event();
 
-		@Event({ MyPresenter.class })
+		@Event( { MyPresenter.class })
 		void eventWithArg(Integer i);
 
 		int nonAnnotatedMethod(int i); // Here to show that non-annotated
@@ -153,7 +169,7 @@ public class EventBusFactoryTest {
 	}
 
 	static interface EventBusWithNonPrimitiveEventMethods extends EventBus {
-		@Event({})
+		@Event( {})
 		void event(int i);
 	}
 
@@ -163,7 +179,7 @@ public class EventBusFactoryTest {
 	}
 
 	static interface EventBusWithNonVoidEventMethods extends EventBus {
-		@Event({})
+		@Event( {})
 		int event();
 	}
 
@@ -173,7 +189,7 @@ public class EventBusFactoryTest {
 	}
 
 	static interface EventBusWithBadPresenter extends EventBus {
-		@Event({ PresenterWithoutMatchingEvent.class })
+		@Event( { PresenterWithoutMatchingEvent.class })
 		void event(Integer i);
 	}
 
@@ -204,7 +220,7 @@ public class EventBusFactoryTest {
 	}
 
 	static interface MyOtherEventBus extends EventBus {
-		@Event({ MyPresenterWithoutAnnotation.class })
+		@Event( { MyPresenterWithoutAnnotation.class })
 		void event();
 	}
 
@@ -214,12 +230,95 @@ public class EventBusFactoryTest {
 	}
 
 	class ClassEventBus implements EventBus {
-		
+
 	}
-	
+
 	@Test(expected = RuntimeException.class)
 	public void shouldNotAllowEventBusThatIsClass() {
 		EventBusFactory.createEventBus(ClassEventBus.class);
 	}
-	
+
+	interface MainEventBus extends EventBus {
+		@Event(MainBusPresenter.class)
+		public void event();
+
+		@Event(MainBusPresenter.class)
+		public void masterEvent();
+	}
+
+	interface ChainedEventBus extends EventBus {
+		@Event(ChildBusPresenter.class)
+		void event();
+
+		@Event(ChildBusPresenter.class)
+		void child1Event();
+	}
+
+	@UsesView(MyView.class)
+	public static class MainBusPresenter implements Presenter<MyView, MainEventBus> {
+		public static Memento memento = mock(Memento.class);
+
+		@Override
+		public void setEventBus(MainEventBus eventBus) {
+		}
+
+		@Override
+		public void setView(MyView view) {
+		}
+
+		public void onEvent() {
+			memento.invoke("shared_event");
+		}
+
+		public void onMasterEvent() {
+			memento.invoke("master_ev");
+		}
+
+	}
+
+	@UsesView(MyView.class)
+	public static class ChildBusPresenter implements Presenter<MyView, ChainedEventBus> {
+		public static Memento memento = mock(Memento.class);
+
+		public void onEvent() {
+			memento.invoke("shared_event");
+		}
+
+		public void onChild1Event() {
+			memento.invoke("child1_ev");
+		}
+
+		@Override
+		public void setEventBus(ChainedEventBus eventBus) {
+		}
+
+		@Override
+		public void setView(MyView view) {
+		}
+
+	}
+
+	@Test
+	public void shouldBeAbleToCreateBusComposedOfSegmentBusses() throws Exception {
+		MainEventBus masterBus = EventBusFactory.createEventBus(MainEventBus.class, ChainedEventBus.class);
+		assertTrue(masterBus instanceof MainEventBus);
+		assertTrue(masterBus instanceof ChainedEventBus);
+	}
+
+	@Test
+	public void shouldPropagateEventsSentToAttachedBusToMasterAndAttachedBus() throws Exception {
+		ChainedEventBus chainedBus = (ChainedEventBus) EventBusFactory.createEventBus(MainEventBus.class, ChainedEventBus.class);
+		chainedBus.event();
+		verify(MainBusPresenter.memento).invoke("shared_event");
+		verify(ChildBusPresenter.memento).invoke("shared_event");
+	}
+
+	@Test
+	public void shouldPropagateEventsSentToMasterBusToMasterBusaAndAttachedBus() throws Exception {
+		MainEventBus masterBus = EventBusFactory.createEventBus(MainEventBus.class, ChainedEventBus.class);
+		masterBus.event();
+		verify(MainBusPresenter.memento).invoke("shared_event");
+		verify(ChildBusPresenter.memento).invoke("shared_event");
+	}
+
 }
