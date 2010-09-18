@@ -4,16 +4,18 @@ MVP Event Bus
 Goal
 ----
 
-The MVP Event Bus framework is used to let the Views and Presenters communicate with each other in a loosely coupled fashion.
-For an overview of why you could use the MVP pattern have a look at : [WikiPedia](http://en.wikipedia.org/wiki/Model-view-presenter).
-The rationale of using MVP in conjunction with an event bus see this [Google IO 2009 session](http://code.google.com/events/io/2009/sessions/GoogleWebToolkitBestPractices.html).
+The MVP Event Bus framework is used to let the Presenters from the Model-View-Presenter framework communicate with each other in a loosely coupled fashion.
+
+For an overview of why you could use the MVP pattern have a look at : [Wikipedia](http://en.wikipedia.org/wiki/Model-view-presenter).
+
+For the rationale of using MVP in conjunction with an event bus see this Google IO 2009 [session](http://code.google.com/events/io/2009/sessions/GoogleWebToolkitBestPractices.html).
 
 Overview
 --------
 
 ### The EventBus
 
-An eventbus is a simple interface extending `EventBus` and containing methods marked with an `@Event` annotation:
+An event bus is a simple interface extending `EventBus` and containing methods marked with an `@Event` annotation. These methods represent the events that are sent over the event bus.
 
     interface DemoEventBus extends EventBus {
       @Event(ApplicationPresenter.class)
@@ -25,7 +27,11 @@ An eventbus is a simple interface extending `EventBus` and containing methods ma
       // Many more events ....
     }
 
-Somewhere in the initialisation part of your application you then request an instance of this interface:
+Event methods are void methods that can take any number of parameters (of reference types), so there is no need to create special-purpose event classes.
+
+### Creating event busses
+
+Somewhere in the initialisation part of your application you request an instance of this interface:
 
     public void init() {
       EventBusFactory.createEventBus(DemoEventBus.class).applicationStarted();
@@ -44,8 +50,8 @@ The `EventBusFactory` will create all `Presenter`s mentioned in the `Event` anno
         ApplicationFrame view = getView();
 
         getEventBus().categoryListActivated();
-	view.pack();
-	view.setVisible(true);
+        view.pack();
+        view.setVisible(true);
       }
    
       // Many more event handlers
@@ -53,7 +59,7 @@ The `EventBusFactory` will create all `Presenter`s mentioned in the `Event` anno
 
 As can be observed, the Presenter has a handler method named after the event but starting with 'on'. The `EventBusFactory` injects the `View` specified in the `@UsesView` annotation. It also provides a reference to the event bus object used for delivering the event so that the Presenter can also send new events to the bus.
 
-# Views
+### Views
 
 Views are classes that interact with the UI framework you use in your application and implement the `View` marker interface.
 
@@ -62,3 +68,10 @@ Views are classes that interact with the UI framework you use in your applicatio
     }
 
 It is suggested that UI-framework-specific methods call back to methods in the presenter that the View belongs to.
+
+For a complete example, look at the included mvp-swingexample project.
+
+## Acknowledgement
+
+The interface of the framework as heavily inspired by the [mvp4g](http://code.google.com/p/mvp4g/) project.
+
