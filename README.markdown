@@ -4,7 +4,7 @@ MVP Event Bus
 Goal
 ----
 
-The MVP Event Bus framework is used to let the Presenters from the Model-View-Presenter framework communicate with each other in a loosely coupled fashion.
+The MVP Event Bus framework is used to let the Presenters in the Model-View-Presenter pattern communicate with each other in a loosely coupled fashion.
 
 For an overview of why you could use the MVP pattern have a look at : [Wikipedia](http://en.wikipedia.org/wiki/Model-view-presenter).
 
@@ -37,11 +37,11 @@ Somewhere in the initialisation part of your application you request an instance
       EventBusFactory.createEventBus(DemoEventBus.class).applicationStarted();
     }
 
-The `EventBusFactory` will create all `Presenter`s mentioned in the `Event` annotations when (and only when) the event handled by the Presenter is sent. Once created, a presenter is kept alive, so it is safe to keep state within the presenter.
+The `EventBusFactory` will create all `Presenter`s mentioned in the `Event` annotations the first time en event handled by the Presenter is sent. Once created, a presenter is kept alive, so it is safe to keep state within the presenter.
 
 ### Presenters
 
-`Presenter`s implement the application logic and are simple classes that implement the `Presenter` interface or inherit from `BasePresenter`.
+`Presenter`s implement the application logic and are simple classes that implement the `Presenter` interface. There's a convenience class `BasePresenter` that implements this interface and that you can extend from.
 
     @UsesView(ApplicationFrame.class)
     public class ApplicationPresenter extends BasePresenter<ApplicationFrame, DemoEventBus> {
@@ -57,7 +57,7 @@ The `EventBusFactory` will create all `Presenter`s mentioned in the `Event` anno
       // Many more event handlers
     }
 
-As can be observed, the Presenter has a handler method named after the event but starting with 'on'. The `EventBusFactory` injects the `View` specified in the `@UsesView` annotation. It also provides a reference to the event bus object used for delivering the event so that the Presenter can also send new events to the bus.
+As can be observed, the Presenter has a handler method named after the event but starting with 'on'. The `EventBusFactory` injects the `View` specified in the `@UsesView` annotation. It also provides a reference to the event bus object used for delivering the event so that the Presenter can send new events to the bus.
 
 ### Views
 
@@ -73,5 +73,5 @@ For a complete example, look at the included mvp-swingexample project.
 
 ## Acknowledgement
 
-The interface of the framework as heavily inspired by the [mvp4g](http://code.google.com/p/mvp4g/) project.
+The interface of the framework was heavily inspired by the [mvp4g](http://code.google.com/p/mvp4g/) project.
 
