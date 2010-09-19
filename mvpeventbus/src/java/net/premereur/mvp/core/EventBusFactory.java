@@ -33,7 +33,8 @@ public class EventBusFactory {
 	 * the choice of replicating event methods in the attached bus or calling
 	 * events directly on the master bus.
 	 * 
-	 * @param <E> The main event bus interface
+	 * @param <E>
+	 *            The main event bus interface
 	 * @param mainEventBusIntf
 	 * @param segmentIntfs
 	 * @return

@@ -75,7 +75,7 @@ public class EventMethodMapper {
 	}
 
 	private static final List<Method> NO_METHODS = Collections.emptyList();
-	
+
 	public Iterable<Method> getHandlerEvents(final Method eventMethod) {
 		final Iterable<Method> methods = this.handlingMethodsByEventMethod.get(eventMethodSignature(eventMethod));
 		return methods == null ? NO_METHODS : methods;

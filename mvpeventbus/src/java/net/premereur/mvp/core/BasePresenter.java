@@ -5,7 +5,7 @@ public abstract class BasePresenter<V extends View, E extends EventBus> implemen
 	private E eventBus;
 
 	private V view;
-	
+
 	@Override
 	public void setEventBus(E eventBus) {
 		this.eventBus = eventBus;

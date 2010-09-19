@@ -14,10 +14,10 @@ package net.premereur.mvp.core;
  * {@link EventBusFactory}.
  * 
  * EventBusses can be combined with other {@link EventBus}ses (called "master"
- * EventBus). See {@link JoinableEventBus}. 
+ * EventBus). See {@link JoinableEventBus}.
  * 
- * The way event busses are typically implemented it doesn't matter much how many
- * events they respond to.
+ * The way event busses are typically implemented it doesn't matter much how
+ * many events they respond to.
  * 
  * @author gpremer
  * 
