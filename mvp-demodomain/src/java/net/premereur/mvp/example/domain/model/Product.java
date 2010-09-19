@@ -1,9 +1,10 @@
 package net.premereur.mvp.example.domain.model;
 
-public class Category extends IdentifiableEntity {
+
+public class Product extends IdentifiableEntity {
 	private String name;
 
-	public Category(String name) {
+	public Product(String name) {
 		super();
 		this.name = name;
 	}
