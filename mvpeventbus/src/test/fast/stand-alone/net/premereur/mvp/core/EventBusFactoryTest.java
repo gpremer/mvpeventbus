@@ -321,4 +321,43 @@ public class EventBusFactoryTest {
 		verify(ChildBusPresenter.memento).invoke("shared_event");
 	}
 
+	static interface EventBusWithAbstractHandler extends EventBus {
+		@Event(AbstractHandler.class)
+		void abstractClassEvent();
+	}
+
+	@UsesView(MyView.class)
+	static abstract class AbstractHandler extends BasePresenter<MyView, EventBusDerivedHandler> {
+		public void onEvent() {
+		}
+		
+	}
+
+	@Test(expected=IllegalArgumentException.class)
+	public void shouldNotAllowAbstractHandlers() throws Exception {
+		EventBusFactory.createEventBus(EventBusWithAbstractHandler.class);
+	}
+
+	static interface EventBusDerivedHandler extends EventBus {
+		@Event(DerivedHandler.class)
+		void event();
+
+	}
+
+	@UsesView(MyView.class)
+	static abstract class BaseHandler extends BasePresenter<MyView, EventBusDerivedHandler> {
+		public void onEvent() {
+		}
+		
+	}
+
+	@UsesView(MyView.class)
+	public static class DerivedHandler extends BaseHandler {
+
+	}
+
+	@Test
+	public void shouldCopeWithHandlerMethodsDefinedOnSuperClass() throws Exception {
+		EventBusFactory.createEventBus(EventBusDerivedHandler.class).event();
+	}
 }

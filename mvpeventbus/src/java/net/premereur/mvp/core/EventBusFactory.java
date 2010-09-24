@@ -67,9 +67,9 @@ public class EventBusFactory {
 
 		@Override
 		public Object invoke(Object proxy, Method eventMethod, Object[] args) throws Throwable {
-			for (Method handlerMethod : methodMapper.getHandlerEvents(eventMethod)) {
-				Object handler = presenterFactory.getPresenter(handlerMethod.getDeclaringClass(), (EventBus) proxy);
-				handlerMethod.invoke(handler, args);
+			for (EventMethodMapper.HandlerMethodPair handlerMethodPair : methodMapper.getHandlerEvents(eventMethod)) {
+				Object handler = presenterFactory.getPresenter(handlerMethodPair.getHandlerClass(), (EventBus) proxy);
+				handlerMethodPair.getMethod().invoke(handler, args);
 			}
 			return null;
 		}

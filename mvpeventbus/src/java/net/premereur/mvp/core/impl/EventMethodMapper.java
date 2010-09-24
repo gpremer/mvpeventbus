@@ -15,13 +15,31 @@ import net.premereur.mvp.core.View;
 
 public class EventMethodMapper {
 
-	private final Map<String, List<Method>> handlingMethodsByEventMethod = new HashMap<String, List<Method>>();
+	public static class HandlerMethodPair {
+		private final Class<?> handlerClass;
+		private final Method method;
+
+		HandlerMethodPair(Class<?> presenterClass, Method method) {
+			this.handlerClass = presenterClass;
+			this.method = method;
+		}
+
+		public Class<?> getHandlerClass() {
+			return handlerClass;
+		}
+
+		public Method getMethod() {
+			return method;
+		}
+	}
+
+	private final Map<String, List<HandlerMethodPair>> handlingMethodsByEventMethod = new HashMap<String, List<HandlerMethodPair>>();
 
 	public void addHandlerMethods(final Iterable<Method> eventBusEventMethods) {
 		for (final Method eventMethod : eventBusEventMethods) {
 			final Event eventAnt = eventMethod.getAnnotation(Event.class);
 			final String eventMethodSignature = eventMethodSignature(eventMethod);
-			final List<Method> handlingMethods = findHandlerMethodsForEvent(eventMethod, eventAnt);
+			final List<HandlerMethodPair> handlingMethods = createHandlerMethodPairsForEvent(eventMethod, eventAnt);
 			if (handlingMethodsByEventMethod.containsKey(eventMethodSignature)) {
 				handlingMethodsByEventMethod.get(eventMethodSignature).addAll(handlingMethods);
 			} else {
@@ -30,10 +48,10 @@ public class EventMethodMapper {
 		}
 	}
 
-	private static List<Method> findHandlerMethodsForEvent(final Method eventMethod, final Event eventAnt) {
-		final List<Method> handlingMethods = new ArrayList<Method>();
+	private static List<HandlerMethodPair> createHandlerMethodPairsForEvent(final Method eventMethod, final Event eventAnt) {
+		final List<HandlerMethodPair> handlingMethods = new ArrayList<HandlerMethodPair>();
 		for (final Class<? extends Presenter<? extends View, ? extends EventBus>> presenter : eventAnt.value()) {
-			handlingMethods.add(correspondingPresenterMethod(presenter, eventMethod));
+			handlingMethods.add(new HandlerMethodPair(presenter, correspondingPresenterMethod(presenter, eventMethod)));
 		}
 		return handlingMethods;
 	}
@@ -74,10 +92,10 @@ public class EventMethodMapper {
 		}
 	}
 
-	private static final List<Method> NO_METHODS = Collections.emptyList();
+	private static final List<HandlerMethodPair> NO_METHODS = Collections.emptyList();
 
-	public Iterable<Method> getHandlerEvents(final Method eventMethod) {
-		final Iterable<Method> methods = this.handlingMethodsByEventMethod.get(eventMethodSignature(eventMethod));
+	public Iterable<HandlerMethodPair> getHandlerEvents(final Method eventMethod) {
+		final Iterable<HandlerMethodPair> methods = this.handlingMethodsByEventMethod.get(eventMethodSignature(eventMethod));
 		return methods == null ? NO_METHODS : methods;
 	}
 

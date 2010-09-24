@@ -1,6 +1,7 @@
 package net.premereur.mvp.core.impl;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 
 import net.premereur.mvp.core.Event;
@@ -23,6 +24,14 @@ public class EventBusVerifier {
 	private void verifyHandlers(Class<? extends Presenter<? extends View, ? extends EventBus>>[] handlers, Class<? extends EventBus> eventBusClass) {
 		for (Class<? extends Presenter<? extends View, ? extends EventBus>> handlerClass : handlers) {
 			verifyHasUseViewAnnotation(handlerClass);
+			verifyIsConcrete(handlerClass);
+		}
+	}
+
+	private void verifyIsConcrete(Class<?> handlerClass) {
+		int modifiers = handlerClass.getModifiers();
+		if (Modifier.isAbstract(modifiers) || Modifier.isInterface(modifiers)) {
+			throw new IllegalArgumentException("The handler has to be a concrete class");
 		}
 	}
 
