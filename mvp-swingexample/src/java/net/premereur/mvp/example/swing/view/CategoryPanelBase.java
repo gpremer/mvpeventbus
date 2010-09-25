@@ -1,56 +1,87 @@
 package net.premereur.mvp.example.swing.view;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
+import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.LayoutStyle;
 
 import net.premereur.mvp.core.View;
 import net.premereur.mvp.example.domain.model.Category;
 import net.premereur.mvp.example.swing.presenter.SingleCategoryPresenterBase;
 
 public abstract class CategoryPanelBase extends JPanel implements View {
-	private final JLabel operationLabel;
-	private final JButton cancelButton = new JButton("Cancel");
-	private final JButton saveButton = new JButton("Save");
-	private final JTextField nameField = new JTextField(20);
 	private Category category;
+	private JButton cancelButton = new JButton("Cancel");
+	private JButton saveButton = new JButton("Save");
+	private JLabel operationLabel = new JLabel();
+	private JTextField nameField = new JTextField();
+	private JLabel prodSelLabel = new JLabel();
+	private JLabel nameLabel;
 
 	public CategoryPanelBase(final String operationText) {
-		operationLabel = new JLabel(operationText);
-		init();
+		init(operationText);
 	}
 
-	private void init() {
-		JPanel fieldPane = new JPanel();
-		fieldPane.add(new JLabel("name"));
-		fieldPane.add(nameField);
-		JPanel buttonPane = new JPanel();
-		buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.LINE_AXIS));
-		buttonPane.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
-		buttonPane.add(Box.createHorizontalGlue());
-		buttonPane.add(saveButton);
-		buttonPane.add(Box.createRigidArea(new Dimension(10, 0)));
-		buttonPane.add(cancelButton);
+	private void init(String operationText) {
+		saveButton = new JButton();
+		cancelButton = new JButton();
+		operationLabel = new JLabel();
+		nameLabel = new JLabel();
+		nameField = new JTextField();
+		prodSelLabel = new JLabel();
 
-		setLayout(new BorderLayout());
-		add(operationLabel, BorderLayout.PAGE_START);
-		add(fieldPane, BorderLayout.CENTER);
-		add(buttonPane, BorderLayout.PAGE_END);
-	}
-	
+		saveButton.setText("Save");
+		cancelButton.setText("Cancel");
+		operationLabel.setText(operationText);
+		nameLabel.setText("name");
+		nameLabel.setFocusable(false);
+		prodSelLabel.setText("Product selection");
+
+		GroupLayout layout = new GroupLayout(this);
+		this.setLayout(layout);
+		layout.setHorizontalGroup(
+				layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+				.addGroup(layout.createSequentialGroup()
+						.addContainerGap()
+						.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+								.addGroup(layout.createSequentialGroup()
+										.addGap(12, 12, 12)
+										.addComponent(nameField, GroupLayout.PREFERRED_SIZE, 223, GroupLayout.PREFERRED_SIZE))
+										.addComponent(operationLabel)
+										.addComponent(nameLabel)
+										.addGroup(layout.createSequentialGroup()
+												.addComponent(saveButton)
+												.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+												.addComponent(cancelButton)))
+												.addContainerGap(153, Short.MAX_VALUE))
+		);
+		layout.setVerticalGroup(
+				layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+				.addGroup(layout.createSequentialGroup()
+						.addContainerGap()
+						.addComponent(operationLabel)
+						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+						.addComponent(nameLabel)
+						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+						.addComponent(nameField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addGap(192, 192, 192)
+						.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+								.addComponent(saveButton)
+								.addComponent(cancelButton))
+								.addContainerGap())
+		);
+    }
+
 	public void bind(Category selectedCategory) {
 		this.category = selectedCategory;
 		nameField.setText(this.category.getName());
 	}
+
 	public void setSaveButtonListener(final SingleCategoryPresenterBase<? extends CategoryPanelBase> presenter) {
 		this.saveButton.addActionListener(new ActionListener() {
 
@@ -60,10 +91,10 @@ public abstract class CategoryPanelBase extends JPanel implements View {
 			}
 		});
 	}
-	
+
 	protected void saveButtonClicked(final SingleCategoryPresenterBase<? extends CategoryPanelBase> presenter) {
 		category.setName(nameField.getText());
-		presenter.saveClicked(category);		
+		presenter.saveClicked(category);
 	}
 
 	public void setCancelButtonListener(final SingleCategoryPresenterBase<? extends CategoryPanelBase> presenter) {

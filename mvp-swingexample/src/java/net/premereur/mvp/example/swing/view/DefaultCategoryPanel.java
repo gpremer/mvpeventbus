@@ -4,6 +4,7 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -14,11 +15,14 @@ public class DefaultCategoryPanel extends JPanel implements View {
 
 	private static final long serialVersionUID = 1L;
 
-	JButton createBtn = new JButton("create");
+	JButton createBtn = new JButton("Add category");
 
 	public DefaultCategoryPanel() {
-		setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
-		add(createBtn);
+		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));		
+		JPanel buttonPnl = new JPanel();
+		buttonPnl.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+		buttonPnl.add(createBtn);
+		add(buttonPnl);
 	}
 
 	public void setCreateButtonListener(final DefaultCategoryPanelPresenter presenter) {

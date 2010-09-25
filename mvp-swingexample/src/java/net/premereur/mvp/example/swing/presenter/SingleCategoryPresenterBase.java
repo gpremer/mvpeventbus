@@ -13,8 +13,8 @@ public abstract class SingleCategoryPresenterBase<V extends CategoryPanelBase> e
 	}
 
 	public void cancelClicked() {
-		getEventBus().defaultCategoryPanelActivated();		
+		getEventBus().defaultCategoryPanelActivated();
 	}
-	
+
 	public abstract void saveClicked(Category category);
 }
