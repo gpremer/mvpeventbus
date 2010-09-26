@@ -77,7 +77,7 @@ public class CategoryCreatorPresenterTest {
 	@Test
 	public void shouldClearMainPanelWhenCancelled() throws Exception {
 		presenter.cancelClicked();
-		//verify(eventBus).defaultCategoryPanelActivated();
+		verify(eventBus).defaultCategoryPanelActivated();
 	}
 
 	@Test
