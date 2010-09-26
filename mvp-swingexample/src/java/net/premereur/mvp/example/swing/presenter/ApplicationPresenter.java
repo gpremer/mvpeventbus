@@ -4,16 +4,17 @@ import javax.swing.JComponent;
 
 import net.premereur.mvp.core.BasePresenter;
 import net.premereur.mvp.core.UsesView;
-import net.premereur.mvp.example.swing.eventbus.DemoEventBus;
+import net.premereur.mvp.example.swing.eventbus.ApplicationBus;
+import net.premereur.mvp.example.swing.eventbus.CategoryMgtBus;
 import net.premereur.mvp.example.swing.view.ApplicationFrame;
 
 @UsesView(ApplicationFrame.class)
-public class ApplicationPresenter extends BasePresenter<ApplicationFrame, DemoEventBus> {
+public class ApplicationPresenter extends BasePresenter<ApplicationFrame, ApplicationBus> {
 
 	public void onApplicationStarted() {
 		ApplicationFrame view = getView();
 
-		getEventBus().categoryListActivated();
+		getEventBus(CategoryMgtBus.class).categoryListActivated();
 		view.pack();
 		view.setVisible(true);
 	}

@@ -3,12 +3,14 @@ package net.premereur.mvp.example.swing.presenter;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.withSettings;
 
 import java.awt.Container;
 
 import javax.swing.JComponent;
 
-import net.premereur.mvp.example.swing.eventbus.DemoEventBus;
+import net.premereur.mvp.example.swing.eventbus.ApplicationBus;
+import net.premereur.mvp.example.swing.eventbus.CategoryMgtBus;
 import net.premereur.mvp.example.swing.view.ApplicationFrame;
 
 import org.junit.Before;
@@ -18,12 +20,14 @@ public class ApplicationPresenterTest {
 
 	private ApplicationPresenter presenter;
 	private ApplicationFrame view;
-	private DemoEventBus eventBus;
+	private ApplicationBus eventBus;
+	private CategoryMgtBus catBus;
 
 	@Before
 	public void setUpPresenterWithMockView() {
 		view = mock(ApplicationFrame.class);
-		eventBus = mock(DemoEventBus.class);
+		eventBus = mock(ApplicationBus.class, withSettings().extraInterfaces(CategoryMgtBus.class));
+		catBus = (CategoryMgtBus) eventBus;
 		presenter = new ApplicationPresenter();
 		presenter.setView(view);
 		presenter.setEventBus(eventBus);
@@ -39,7 +43,7 @@ public class ApplicationPresenterTest {
 	@Test
 	public void shouldSendEventToRequestCategoryListActivation() throws Exception {
 		presenter.onApplicationStarted();
-		verify(eventBus).categoryListActivated();
+		verify(catBus).categoryListActivated();
 	}
 
 	@Test
