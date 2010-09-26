@@ -1,5 +1,6 @@
 package net.premereur.mvp.example.swing.application;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -9,9 +10,7 @@ import java.awt.Container;
 
 import javax.swing.JComponent;
 
-import net.premereur.mvp.example.swing.application.ApplicationBus;
-import net.premereur.mvp.example.swing.application.ApplicationFrame;
-import net.premereur.mvp.example.swing.application.ApplicationPresenter;
+import net.premereur.mvp.example.support.ClickHandler;
 import net.premereur.mvp.example.swing.categorymgt.CategoryMgtBus;
 
 import org.junit.Before;
@@ -71,4 +70,15 @@ public class ApplicationPresenterTest {
 		verify(view).setFeedback("feedback");
 	}
 
+	@Test
+	public void shouldBindToExitMenu() {
+		presenter.onApplicationStarted();
+		verify(view).setExitListener(any(ClickHandler.class));
+	}
+
+	@Test
+	public void shouldBindToCategoryMenu() {
+		presenter.onApplicationStarted();
+		verify(view).setCategoryListener(any(ClickHandler.class));
+	}
 }
