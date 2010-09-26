@@ -40,11 +40,11 @@ public class EventBusFactory {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	static public <E extends EventBus> E createEventBus(Class<E> mainEventBusIntf, Class<? extends EventBus>... segmentIntfs) {
+	static public <E extends EventBus> E createEventBus(Class<E> mainEventBusIntf, Class<?>... segmentIntfs) {
 		Class<? extends EventBus>[] eventBusIntfs = (Class<? extends EventBus>[]) new Class<?>[1 + segmentIntfs.length];
 		eventBusIntfs[0] = mainEventBusIntf;
 		for (int i = 0; i < segmentIntfs.length; ++i) {
-			eventBusIntfs[i + 1] = segmentIntfs[i];
+			eventBusIntfs[i + 1] = (Class<? extends EventBus>) segmentIntfs[i];
 		}
 		EventBusInvocationHandler handler = new EventBusInvocationHandler(eventBusIntfs);
 		return (E) Proxy.newProxyInstance(mainEventBusIntf.getClassLoader(), eventBusIntfs, handler);
