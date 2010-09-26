@@ -1,4 +1,4 @@
-package net.premereur.mvp.example.swing.presenter;
+package net.premereur.mvp.example.swing.categorymgt;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -6,9 +6,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.withSettings;
 import net.premereur.mvp.example.domain.model.Category;
 import net.premereur.mvp.example.domain.repository.CategoryRepository;
-import net.premereur.mvp.example.swing.eventbus.ApplicationBus;
-import net.premereur.mvp.example.swing.eventbus.CategoryMgtBus;
-import net.premereur.mvp.example.swing.view.CategoryUpdaterPanel;
+import net.premereur.mvp.example.swing.application.ApplicationBus;
+import net.premereur.mvp.example.swing.categorymgt.CategoryMgtBus;
+import net.premereur.mvp.example.swing.categorymgt.CategoryUpdatePresenter;
+import net.premereur.mvp.example.swing.categorymgt.CategoryUpdaterPanel;
 
 import org.junit.Before;
 import org.junit.Test;

@@ -1,9 +1,8 @@
-package net.premereur.mvp.example.swing.presenter;
+package net.premereur.mvp.example.swing.categorymgt;
 
 import net.premereur.mvp.core.UsesView;
 import net.premereur.mvp.example.domain.model.Category;
-import net.premereur.mvp.example.swing.eventbus.ApplicationBus;
-import net.premereur.mvp.example.swing.view.CategoryList;
+import net.premereur.mvp.example.swing.application.ApplicationBus;
 
 @UsesView(CategoryList.class)
 public class CategoryListPresenter extends CategoryPresenterBase<CategoryList> {

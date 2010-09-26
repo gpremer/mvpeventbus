@@ -1,4 +1,4 @@
-package net.premereur.mvp.example.swing.view;
+package net.premereur.mvp.example.swing.categorymgt;
 
 import net.premereur.mvp.core.View;
 

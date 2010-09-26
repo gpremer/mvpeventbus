@@ -1,4 +1,4 @@
-package net.premereur.mvp.example.swing.presenter;
+package net.premereur.mvp.example.swing.application;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -9,9 +9,10 @@ import java.awt.Container;
 
 import javax.swing.JComponent;
 
-import net.premereur.mvp.example.swing.eventbus.ApplicationBus;
-import net.premereur.mvp.example.swing.eventbus.CategoryMgtBus;
-import net.premereur.mvp.example.swing.view.ApplicationFrame;
+import net.premereur.mvp.example.swing.application.ApplicationBus;
+import net.premereur.mvp.example.swing.application.ApplicationFrame;
+import net.premereur.mvp.example.swing.application.ApplicationPresenter;
+import net.premereur.mvp.example.swing.categorymgt.CategoryMgtBus;
 
 import org.junit.Before;
 import org.junit.Test;

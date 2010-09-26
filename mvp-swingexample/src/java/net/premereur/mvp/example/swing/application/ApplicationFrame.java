@@ -1,4 +1,4 @@
-package net.premereur.mvp.example.swing.view;
+package net.premereur.mvp.example.swing.application;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;

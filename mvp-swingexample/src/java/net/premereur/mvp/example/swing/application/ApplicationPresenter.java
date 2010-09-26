@@ -1,12 +1,10 @@
-package net.premereur.mvp.example.swing.presenter;
+package net.premereur.mvp.example.swing.application;
 
 import javax.swing.JComponent;
 
 import net.premereur.mvp.core.BasePresenter;
 import net.premereur.mvp.core.UsesView;
-import net.premereur.mvp.example.swing.eventbus.ApplicationBus;
-import net.premereur.mvp.example.swing.eventbus.CategoryMgtBus;
-import net.premereur.mvp.example.swing.view.ApplicationFrame;
+import net.premereur.mvp.example.swing.categorymgt.CategoryMgtBus;
 
 @UsesView(ApplicationFrame.class)
 public class ApplicationPresenter extends BasePresenter<ApplicationFrame, ApplicationBus> {

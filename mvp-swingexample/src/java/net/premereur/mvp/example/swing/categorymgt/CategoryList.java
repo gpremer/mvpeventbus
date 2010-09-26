@@ -1,4 +1,4 @@
-package net.premereur.mvp.example.swing.view;
+package net.premereur.mvp.example.swing.categorymgt;
 
 import java.awt.Dimension;
 import java.util.ArrayList;
@@ -14,7 +14,6 @@ import javax.swing.table.AbstractTableModel;
 
 import net.premereur.mvp.core.View;
 import net.premereur.mvp.example.domain.model.Category;
-import net.premereur.mvp.example.swing.presenter.CategoryListPresenter;
 
 public class CategoryList extends JPanel implements View {
 	/**

@@ -1,10 +1,9 @@
-package net.premereur.mvp.example.swing.eventbus;
+package net.premereur.mvp.example.swing.application;
 
 import javax.swing.JComponent;
 
 import net.premereur.mvp.core.Event;
 import net.premereur.mvp.core.EventBus;
-import net.premereur.mvp.example.swing.presenter.ApplicationPresenter;
 
 public interface ApplicationBus extends EventBus {
 

@@ -1,4 +1,4 @@
-package net.premereur.mvp.example.swing.view;
+package net.premereur.mvp.example.swing.categorymgt;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -9,7 +9,6 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import net.premereur.mvp.core.View;
-import net.premereur.mvp.example.swing.presenter.DefaultCategoryPanelPresenter;
 
 public class DefaultCategoryPanel extends JPanel implements View {
 

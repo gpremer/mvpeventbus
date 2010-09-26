@@ -1,7 +1,6 @@
-package net.premereur.mvp.example.swing.presenter;
+package net.premereur.mvp.example.swing.categorymgt;
 
 import net.premereur.mvp.example.domain.model.Category;
-import net.premereur.mvp.example.swing.view.CategoryPanelBase;
 
 public abstract class SingleCategoryPresenterBase<V extends CategoryPanelBase> extends CategoryPresenterBase<V> {
 

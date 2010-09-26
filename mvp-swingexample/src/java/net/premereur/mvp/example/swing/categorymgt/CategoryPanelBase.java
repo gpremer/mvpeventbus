@@ -1,4 +1,4 @@
-package net.premereur.mvp.example.swing.view;
+package net.premereur.mvp.example.swing.categorymgt;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,7 +12,6 @@ import javax.swing.LayoutStyle;
 
 import net.premereur.mvp.core.View;
 import net.premereur.mvp.example.domain.model.Category;
-import net.premereur.mvp.example.swing.presenter.SingleCategoryPresenterBase;
 
 public abstract class CategoryPanelBase extends JPanel implements View {
 	private Category category;

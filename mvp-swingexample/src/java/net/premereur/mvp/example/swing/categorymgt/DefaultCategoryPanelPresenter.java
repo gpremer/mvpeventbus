@@ -1,10 +1,8 @@
-package net.premereur.mvp.example.swing.presenter;
+package net.premereur.mvp.example.swing.categorymgt;
 
 import net.premereur.mvp.core.BasePresenter;
 import net.premereur.mvp.core.UsesView;
-import net.premereur.mvp.example.swing.eventbus.ApplicationBus;
-import net.premereur.mvp.example.swing.eventbus.CategoryMgtBus;
-import net.premereur.mvp.example.swing.view.DefaultCategoryPanel;
+import net.premereur.mvp.example.swing.application.ApplicationBus;
 
 @UsesView(DefaultCategoryPanel.class)
 public class DefaultCategoryPanelPresenter extends BasePresenter<DefaultCategoryPanel, CategoryMgtBus>{
