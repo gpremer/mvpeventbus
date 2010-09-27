@@ -11,6 +11,9 @@ public interface ApplicationBus extends EventBus {
 	void applicationStarted();
 
 	@Event(ApplicationPresenter.class)
+	void clearScreen();
+
+	@Event(ApplicationPresenter.class)
 	void setLeftComponent(JComponent component);
 
 	@Event(ApplicationPresenter.class)

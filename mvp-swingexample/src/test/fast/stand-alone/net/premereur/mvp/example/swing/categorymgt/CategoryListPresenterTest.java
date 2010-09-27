@@ -35,14 +35,14 @@ public class CategoryListPresenterTest {
 
 	@Test
 	public void shouldMakeTheViewVisible() throws Exception {
-		presenter.onCategoryListActivated();
+		presenter.onCategoryMgtActivated();
 		verify(appBus).setLeftComponent(view);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Test
 	public void shouldBindViewData() throws Exception {
-		presenter.onCategoryListActivated();
+		presenter.onCategoryMgtActivated();
 		verify(view).bind(any(List.class));
 	}
 

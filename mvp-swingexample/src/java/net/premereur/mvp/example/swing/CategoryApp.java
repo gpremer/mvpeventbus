@@ -3,6 +3,7 @@ package net.premereur.mvp.example.swing;
 import net.premereur.mvp.core.EventBusFactory;
 import net.premereur.mvp.example.swing.application.ApplicationBus;
 import net.premereur.mvp.example.swing.categorymgt.CategoryMgtBus;
+import net.premereur.mvp.example.swing.productmgt.ProductMgtBus;
 
 public class CategoryApp {
 	public static void main(String[] args) {
@@ -10,7 +11,7 @@ public class CategoryApp {
 		// creating and showing this application's GUI.
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				EventBusFactory.createEventBus(ApplicationBus.class, CategoryMgtBus.class).applicationStarted();
+				EventBusFactory.createEventBus(ApplicationBus.class, CategoryMgtBus.class, ProductMgtBus.class).applicationStarted();
 			}
 		});
 	}

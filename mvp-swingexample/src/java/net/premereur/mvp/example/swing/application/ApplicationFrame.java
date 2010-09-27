@@ -41,7 +41,7 @@ public class ApplicationFrame extends JFrame implements View {
 	private void initComponents() {
 		initMenu();
 		initStatusArea();
-		setMinimumSize(new Dimension(200, 400));
+		setMinimumSize(new Dimension(600, 400));
 	}
 
 	private void initMenu() {
@@ -88,21 +88,31 @@ public class ApplicationFrame extends JFrame implements View {
 	}
 
 	public synchronized void setLeftComponent(JComponent component) {
-		if (leftComponent != null) {
-			getContentPane().remove(leftComponent);
-		}
+		clearLeftComponent();
 		leftComponent = component;
 		getContentPane().add(component, BorderLayout.LINE_START);
 		pack();
 	}
 
+	public synchronized void clearLeftComponent() {
+		if (leftComponent != null) {
+			getContentPane().remove(leftComponent);
+			leftComponent = null;
+		}		
+	}
+
 	public synchronized void setCentralComponent(JComponent component) {
-		if (centralComponent != null) {
-			getContentPane().remove(centralComponent);
-		}
+		clearCentralComponent();
 		centralComponent = component;
 		getContentPane().add(component, BorderLayout.CENTER);
 		pack();
+	}
+
+	public void clearCentralComponent() {
+		if (centralComponent != null) {
+			getContentPane().remove(centralComponent);
+			centralComponent = null;
+		}
 	}
 
 	public void setExitListener(final ClickHandler handler) {
@@ -112,4 +122,10 @@ public class ApplicationFrame extends JFrame implements View {
 	public void setCategoryListener(final ClickHandler handler) {
 		catMenuItem.addActionListener(new ClickHandlerActionListener(handler));
 	}
+
+	public void setProductListener(final ClickHandler handler) {
+		productMenuItem.addActionListener(new ClickHandlerActionListener(handler));
+	}
+
+		
 }

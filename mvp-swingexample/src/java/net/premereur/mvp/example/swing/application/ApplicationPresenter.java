@@ -10,6 +10,7 @@ import net.premereur.mvp.core.BasePresenter;
 import net.premereur.mvp.core.UsesView;
 import net.premereur.mvp.example.support.ClickHandler;
 import net.premereur.mvp.example.swing.categorymgt.CategoryMgtBus;
+import net.premereur.mvp.example.swing.productmgt.ProductMgtBus;
 
 @UsesView(ApplicationFrame.class)
 public class ApplicationPresenter extends BasePresenter<ApplicationFrame, ApplicationBus> {
@@ -17,15 +18,21 @@ public class ApplicationPresenter extends BasePresenter<ApplicationFrame, Applic
 	public void onApplicationStarted() {
 		ApplicationFrame view = getView();
 
-		getEventBus(CategoryMgtBus.class).categoryListActivated();
+		getEventBus(CategoryMgtBus.class).categoryMgtActivated();
 		view.pack();
 		view.setVisible(true);
 		view.setExitListener(getExitClickHandler());
 		view.setCategoryListener(getCategoryClickHandler());
+		view.setProductListener(getProductClickHandler());
 	}
 
 	public void onSetLeftComponent(JComponent component) {
 		getView().setLeftComponent(component);
+	}
+
+	public void onClearScreen() {
+		getView().clearLeftComponent();
+		getView().clearCentralComponent();
 	}
 
 	public void onSetCenterComponent(JComponent component) {
@@ -58,8 +65,17 @@ public class ApplicationPresenter extends BasePresenter<ApplicationFrame, Applic
 		return new ClickHandler() {
 			@Override
 			public void click() {
-				getEventBus(CategoryMgtBus.class).categoryListActivated();
+				getEventBus(CategoryMgtBus.class).categoryMgtActivated();
 			}
 		};
+	}
+	
+	public ClickHandler getProductClickHandler() {
+		return new ClickHandler() {
+			@Override
+			public void click() {
+				getEventBus(ProductMgtBus.class).productMgtActivated();
+			}
+		};		
 	}
 }

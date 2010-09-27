@@ -13,7 +13,7 @@ public class CategoryListPresenter extends CategoryPresenterBase<CategoryList> {
 		view.addSelectionListener(this);
 	}
 	
-	public void onCategoryListActivated() {
+	public void onCategoryMgtActivated() {
 		final CategoryList categoryList = getView();
 		categoryList.bind(getRepository().allCategories());
 		getEventBus(ApplicationBus.class).setLeftComponent(categoryList);

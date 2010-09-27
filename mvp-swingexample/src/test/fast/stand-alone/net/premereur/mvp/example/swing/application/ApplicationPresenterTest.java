@@ -43,7 +43,7 @@ public class ApplicationPresenterTest {
 	@Test
 	public void shouldSendEventToRequestCategoryListActivation() throws Exception {
 		presenter.onApplicationStarted();
-		verify(catBus).categoryListActivated();
+		verify(catBus).categoryMgtActivated();
 	}
 
 	@Test
@@ -80,5 +80,23 @@ public class ApplicationPresenterTest {
 	public void shouldBindToCategoryMenu() {
 		presenter.onApplicationStarted();
 		verify(view).setCategoryListener(any(ClickHandler.class));
+	}
+
+	@Test
+	public void shouldBindToProductMenu() {
+		presenter.onApplicationStarted();
+		verify(view).setProductListener(any(ClickHandler.class));
+	}
+	
+	@Test
+	public void shouldClearLeftComponentWhenClearEvent() {
+		presenter.onClearScreen();
+		verify(view).clearLeftComponent();		
+	}
+
+	@Test
+	public void shouldClearCentralComponentWhenClearEvent() {
+		presenter.onClearScreen();
+		verify(view).clearCentralComponent();		
 	}
 }

@@ -6,7 +6,7 @@ import net.premereur.mvp.example.domain.model.Category;
 
 public interface CategoryMgtBus extends EventBus {
 	@Event(CategoryListPresenter.class)
-	void categoryListActivated();
+	void categoryMgtActivated();
 
 	@Event(CategoryUpdatePresenter.class)
 	void categorySelected(Category selectedCategory);
