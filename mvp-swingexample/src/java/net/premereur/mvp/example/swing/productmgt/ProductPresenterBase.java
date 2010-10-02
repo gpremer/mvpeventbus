@@ -6,7 +6,16 @@ import net.premereur.mvp.example.domain.repository.ProductRepository;
 
 public abstract class ProductPresenterBase<V extends View> extends BasePresenter<V, ProductMgtBus> {
 
+	ProductRepository repository;
+	
 	public ProductRepository getProductRepository() {
-		return ProductRepository.instance();
+		if ( repository == null ) {
+			repository = ProductRepository.instance(); 
+		}
+		return repository;
+	}
+	
+	public void setProductRepository(ProductRepository repository) {
+		this.repository = repository;
 	}
 }
