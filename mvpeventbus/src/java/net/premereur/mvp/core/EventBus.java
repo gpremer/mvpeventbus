@@ -1,5 +1,7 @@
 package net.premereur.mvp.core;
 
+import net.premereur.mvp.core.basic.BasicEventBusFactory;
+
 /**
  * EventBusses receive events from {@link Presenter}s (or {@link View}s) and
  * distribute them to other Presenters.
@@ -11,7 +13,7 @@ package net.premereur.mvp.core;
  * associated Presenter.
  * 
  * Concrete implementations of an EventBus are created by an
- * {@link EventBusFactory}.
+ * {@link BasicEventBusFactory}.
  * 
  * EventBusses can be combined with other {@link EventBus}ses (called "master"
  * EventBus). See {@link JoinableEventBus}.

@@ -3,10 +3,19 @@ package net.premereur.mvp.core;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 
+import net.premereur.mvp.core.basic.BasicEventBusFactory;
+
 import org.junit.Before;
 
 @SuppressWarnings("unchecked")
 public abstract class EventBusFactoryTestBase {
+
+	protected EventBusFactory eventBusFactory;
+
+	@Before
+	public void setUpFactory() {
+		eventBusFactory = new BasicEventBusFactory();
+	}
 
 	interface Memento {
 		void invoke(String arg);
@@ -47,7 +56,7 @@ public abstract class EventBusFactoryTestBase {
 		}
 
 		public void setEventBus(MyEventBus eventBus) {
-			busSets .invoke("setEventBus");
+			busSets.invoke("setEventBus");
 		}
 	}
 
@@ -61,6 +70,5 @@ public abstract class EventBusFactoryTestBase {
 		int nonAnnotatedMethod(int i); // Here to show that non-annotated
 		// methods are just ignored
 	}
-
 
 }

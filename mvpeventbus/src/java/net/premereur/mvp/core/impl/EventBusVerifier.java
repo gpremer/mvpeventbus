@@ -21,39 +21,39 @@ public class EventBusVerifier {
 		}
 	}
 
-	private void verifyHandlers(Class<? extends Presenter<? extends View, ? extends EventBus>>[] handlers, Class<? extends EventBus> eventBusClass) {
+	protected void verifyHandlers(Class<? extends Presenter<? extends View, ? extends EventBus>>[] handlers, Class<? extends EventBus> eventBusClass) {
 		for (Class<? extends Presenter<? extends View, ? extends EventBus>> handlerClass : handlers) {
 			verifyHasUseViewAnnotation(handlerClass);
 			verifyIsConcrete(handlerClass);
 		}
 	}
 
-	private void verifyIsConcrete(Class<?> handlerClass) {
+	protected void verifyIsConcrete(Class<?> handlerClass) {
 		int modifiers = handlerClass.getModifiers();
 		if (Modifier.isAbstract(modifiers) || Modifier.isInterface(modifiers)) {
 			throw new IllegalArgumentException("The handler has to be a concrete class");
 		}
 	}
 
-	private void verifyHasUseViewAnnotation(Class<? extends Presenter<? extends View, ? extends EventBus>> handlerClass) {
+	protected void verifyHasUseViewAnnotation(Class<? extends Presenter<? extends View, ? extends EventBus>> handlerClass) {
 		UsesView viewAnnot = handlerClass.getAnnotation(UsesView.class);
 		if (viewAnnot == null || viewAnnot.value() == null) {
 			throw new IllegalArgumentException("Should use " + UsesView.class.getName() + " annotation to declare view class on " + handlerClass);
 		}
 	}
 
-	private void verifyEventBusMethods(Method m) {
+	protected void verifyEventBusMethods(Method m) {
 		verifyNoPrimitiveArguments(m);
 		verifyOnlyVoidMethod(m);
 	}
 
-	private void verifyOnlyVoidMethod(Method m) {
+	protected void verifyOnlyVoidMethod(Method m) {
 		if (m.getReturnType().getName() != "void") {
 			throw new IllegalArgumentException("Found a method " + m.getName() + " with non-void return type");
 		}
 	}
 
-	private void verifyNoPrimitiveArguments(Method m) {
+	protected void verifyNoPrimitiveArguments(Method m) {
 		for (Type t : m.getGenericParameterTypes()) {
 			if (t instanceof Class<?> && ((Class<?>) t).isPrimitive()) {
 				throw new IllegalArgumentException("Found a method " + m.getName() + " with primitive argument");

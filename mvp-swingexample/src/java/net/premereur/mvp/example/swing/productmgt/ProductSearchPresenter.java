@@ -5,10 +5,15 @@ import java.util.List;
 
 import net.premereur.mvp.core.UsesView;
 import net.premereur.mvp.example.domain.model.Product;
+import net.premereur.mvp.example.domain.repository.ProductRepository;
 import net.premereur.mvp.example.swing.application.ApplicationBus;
 
 @UsesView(ProductSearchPanel.class)
 public class ProductSearchPresenter extends ProductPresenterBase<ProductSearchPanel> {
+
+	public ProductSearchPresenter(ProductRepository repository) {
+		super(repository);
+	}
 
 	public void onProductMgtActivated() {
 		getEventBus(ApplicationBus.class).clearScreen();

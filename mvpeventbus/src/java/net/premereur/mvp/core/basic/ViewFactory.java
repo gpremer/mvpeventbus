@@ -1,4 +1,4 @@
-package net.premereur.mvp.core.impl;
+package net.premereur.mvp.core.basic;
 
 import static net.premereur.mvp.util.reflection.ReflectionUtil.uncheckedNewInstance;
 import net.premereur.mvp.core.EventBus;

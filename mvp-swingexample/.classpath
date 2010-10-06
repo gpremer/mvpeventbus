@@ -6,6 +6,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/mvpeventbus"/>
 	<classpathentry kind="lib" path="lib/test/junit.jar"/>
 	<classpathentry kind="lib" path="lib/test/mockito-all-1.8.5.jar"/>
+	<classpathentry kind="lib" path="lib/default/guice-2.0.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/mvp-demodomain"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

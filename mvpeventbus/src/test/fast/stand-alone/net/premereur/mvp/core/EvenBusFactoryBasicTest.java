@@ -2,63 +2,63 @@ package net.premereur.mvp.core;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 import org.junit.Test;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.never;
 
 public class EvenBusFactoryBasicTest extends EventBusFactoryTestBase {
-
+	
 	@Test
 	public void shouldCreateEventBus() throws Exception {
-		MyEventBus bus = EventBusFactory.createEventBus(MyEventBus.class);
+		MyEventBus bus = eventBusFactory.createEventBus(MyEventBus.class);
 		assertNotNull(bus);
 	}
 
 	@Test
 	public void shouldCreateEventBusThatImplementsMethodsFromInterface() {
-		MyEventBus bus = EventBusFactory.createEventBus(MyEventBus.class);
+		MyEventBus bus = eventBusFactory.createEventBus(MyEventBus.class);
 		bus.event();
 	}
 
 	@Test
 	public void shouldCreateEventBusThatCallsMethodsOnAnnotatedPresenter() {
-		MyEventBus bus = EventBusFactory.createEventBus(MyEventBus.class);
+		MyEventBus bus = eventBusFactory.createEventBus(MyEventBus.class);
 		bus.event();
 		verify(MyPresenter.eventCalls).invoke("event");
 	}
 
 	@Test
 	public void shouldCreateEventBusThatCallsMethodsHavingArgumentsOnAnnotatedPresenter() {
-		MyEventBus bus = EventBusFactory.createEventBus(MyEventBus.class);
+		MyEventBus bus = eventBusFactory.createEventBus(MyEventBus.class);
 		bus.eventWithArg(5);
 		verify(MyPresenter.eventCalls).invoke("5");
 	}
 
 	@Test
 	public void shouldAssignViewsToPresenters() {
-		MyEventBus bus = EventBusFactory.createEventBus(MyEventBus.class);
+		MyEventBus bus = eventBusFactory.createEventBus(MyEventBus.class);
 		bus.event();
 		verify(MyPresenter.viewSets).invoke("setView");
 	}
 
 	@Test
 	public void shouldDeferAssignViewsToPresentersUntilEventInvoked() {
-		EventBusFactory.createEventBus(MyEventBus.class);
+		eventBusFactory.createEventBus(MyEventBus.class);
 		verify(MyPresenter.viewSets, never()).invoke("setView");
 
 	}
 
 	@Test
 	public void shouldAssignEventBusToPresenters() {
-		MyEventBus bus = EventBusFactory.createEventBus(MyEventBus.class);
+		MyEventBus bus = eventBusFactory.createEventBus(MyEventBus.class);
 		bus.event();
 		verify(MyPresenter.busSets).invoke("setEventBus");
 	}
 
 	@Test
 	public void shouldDeferAssignEventBusToPresentersUntilEventInvoked() {
-		EventBusFactory.createEventBus(MyEventBus.class);
+		eventBusFactory.createEventBus(MyEventBus.class);
 		verify(MyPresenter.busSets, never()).invoke("setBus");
 	}
 
@@ -69,7 +69,7 @@ public class EvenBusFactoryBasicTest extends EventBusFactoryTestBase {
 	}
 
 	@UsesView(MyView.class)
-	static abstract class BaseHandler extends BasePresenter<MyView, EventBusDerivedHandler> {
+	public static abstract class BaseHandler extends BasePresenter<MyView, EventBusDerivedHandler> {
 		public void onEvent() {
 		}
 
@@ -82,7 +82,7 @@ public class EvenBusFactoryBasicTest extends EventBusFactoryTestBase {
 
 	@Test
 	public void shouldCopeWithHandlerMethodsDefinedOnSuperClass() throws Exception {
-		EventBusFactory.createEventBus(EventBusDerivedHandler.class).event();
+		eventBusFactory.createEventBus(EventBusDerivedHandler.class).event();
 	}
 
 	@UsesPresenter(MyPresenterForView.class)
@@ -123,7 +123,7 @@ public class EvenBusFactoryBasicTest extends EventBusFactoryTestBase {
 	@Test
 	public void shouldAssignPresenterToViewIfViewImplementsNeedsPresenterInterface() {
 		int presenterSets = MyViewWithPresenter.presenterSets;
-		MyEventbusWithViewAndPresenterThatKnowEachOther eventBus = EventBusFactory.createEventBus(MyEventbusWithViewAndPresenterThatKnowEachOther.class);
+		MyEventbusWithViewAndPresenterThatKnowEachOther eventBus = eventBusFactory.createEventBus(MyEventbusWithViewAndPresenterThatKnowEachOther.class);
 		eventBus.event();
 		assertEquals(presenterSets + 1, MyViewWithPresenter.presenterSets);
 	}

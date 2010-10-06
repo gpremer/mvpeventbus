@@ -1,4 +1,4 @@
-package net.premereur.mvp.core.impl;
+package net.premereur.mvp.core.basic;
 
 import static net.premereur.mvp.util.reflection.ReflectionUtil.uncheckedNewInstance;
 
@@ -32,7 +32,6 @@ public class PresenterFactory {
 	@SuppressWarnings("unchecked")
 	private static Presenter<View, ? extends EventBus> newHandler(Class<?> handlerClazz, EventBus eventBus) {
 		Presenter handler = (Presenter) uncheckedNewInstance(handlerClazz);
-
 		handler.setEventBus(eventBus);
 		handler.setView(viewFactory.newView(handlerClazz, eventBus, handler));
 		return handler;
