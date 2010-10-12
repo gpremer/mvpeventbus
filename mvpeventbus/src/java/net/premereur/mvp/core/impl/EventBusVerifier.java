@@ -1,5 +1,6 @@
 package net.premereur.mvp.core.impl;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
@@ -25,6 +26,18 @@ public class EventBusVerifier {
 		for (Class<? extends Presenter<? extends View, ? extends EventBus>> handlerClass : handlers) {
 			verifyHasUseViewAnnotation(handlerClass);
 			verifyIsConcrete(handlerClass);
+			verifyHasDefaultConstructor(handlerClass);
+		}
+	}
+
+	protected void verifyHasDefaultConstructor(Class<?> handlerClass) {
+		try {
+			Constructor<?> constructor = handlerClass.getConstructor();
+			System.out.println(constructor);
+		} catch (SecurityException e) {
+			throw new IllegalArgumentException("The handler has to have a default constructor");
+		} catch (NoSuchMethodException e) {
+			throw new IllegalArgumentException("The handler has to have a default constructor");
 		}
 	}
 

@@ -74,13 +74,13 @@ public class EventBusFactoryVerificationTest extends EventBusFactoryTestBase {
 		eventBusFactory.createEventBus(ClassEventBus.class);
 	}
 
-	static interface EventBusWithAbstractHandler extends EventBus {
+	public static interface EventBusWithAbstractHandler extends EventBus {
 		@Event(AbstractHandler.class)
 		void abstractClassEvent();
 	}
 
 	@UsesView(MyView.class)
-	static abstract class AbstractHandler extends BasePresenter<MyView, EventBusWithAbstractHandler> {
+	public static abstract class AbstractHandler extends BasePresenter<MyView, EventBusWithAbstractHandler> {
 		public void onEvent() {
 		}
 
@@ -90,5 +90,25 @@ public class EventBusFactoryVerificationTest extends EventBusFactoryTestBase {
 	public void shouldNotAllowAbstractHandlers() throws Exception {
 		eventBusFactory.createEventBus(EventBusWithAbstractHandler.class);
 	}
+	
+	public static interface EventBusWithPresenterWithoutDefaultConstructor extends EventBus {
+		@Event(PresenterWithoutDefaultConstructor.class)
+		void event();
+	}
+	
+	@UsesView(MyView.class)
+	public static class PresenterWithoutDefaultConstructor extends BasePresenter<MyView, EventBusWithPresenterWithoutDefaultConstructor> {
+		public PresenterWithoutDefaultConstructor(int i) {
+			
+		}
+		
+		public void onEvent() { }
+	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldNotAllowPresentersWithoutDefaultConstructor() throws Exception {
+		eventBusFactory.createEventBus(EventBusWithPresenterWithoutDefaultConstructor.class);
+	}
+	
+	
 }
