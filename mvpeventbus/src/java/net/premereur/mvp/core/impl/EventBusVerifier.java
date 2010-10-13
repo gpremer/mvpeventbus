@@ -1,6 +1,5 @@
 package net.premereur.mvp.core.impl;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
@@ -32,19 +31,18 @@ public class EventBusVerifier {
 
 	protected void verifyHasDefaultConstructor(Class<?> handlerClass) {
 		try {
-			Constructor<?> constructor = handlerClass.getConstructor();
-			System.out.println(constructor);
+			handlerClass.getConstructor();
 		} catch (SecurityException e) {
-			throw new IllegalArgumentException("The handler has to have a default constructor");
+			throw new IllegalArgumentException("The handler " + handlerClass + " has to have a default constructor");
 		} catch (NoSuchMethodException e) {
-			throw new IllegalArgumentException("The handler has to have a default constructor");
+			throw new IllegalArgumentException("The handler " + handlerClass + " has to have a default constructor");
 		}
 	}
 
 	protected void verifyIsConcrete(Class<?> handlerClass) {
 		int modifiers = handlerClass.getModifiers();
 		if (Modifier.isAbstract(modifiers) || Modifier.isInterface(modifiers)) {
-			throw new IllegalArgumentException("The handler has to be a concrete class");
+			throw new IllegalArgumentException("The handler " + handlerClass + " has to be a concrete class");
 		}
 	}
 
@@ -62,14 +60,14 @@ public class EventBusVerifier {
 
 	protected void verifyOnlyVoidMethod(Method m) {
 		if (m.getReturnType().getName() != "void") {
-			throw new IllegalArgumentException("Found a method " + m.getName() + " with non-void return type");
+			throw new IllegalArgumentException("Found a method " + m.getName() + " with non-void return type in "+m.getDeclaringClass());
 		}
 	}
 
 	protected void verifyNoPrimitiveArguments(Method m) {
 		for (Type t : m.getGenericParameterTypes()) {
 			if (t instanceof Class<?> && ((Class<?>) t).isPrimitive()) {
-				throw new IllegalArgumentException("Found a method " + m.getName() + " with primitive argument");
+				throw new IllegalArgumentException("Found a method " + m.getName() + " with primitive argument in "+m.getDeclaringClass());
 			}
 		}
 	}
