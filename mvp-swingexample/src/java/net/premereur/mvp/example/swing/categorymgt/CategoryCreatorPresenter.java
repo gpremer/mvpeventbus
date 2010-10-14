@@ -1,11 +1,17 @@
 package net.premereur.mvp.example.swing.categorymgt;
 
-import net.premereur.mvp.core.UsesView;
 import net.premereur.mvp.example.domain.model.Category;
+import net.premereur.mvp.example.domain.repository.CategoryRepository;
 import net.premereur.mvp.example.swing.application.ApplicationBus;
 
-@UsesView(CategoryCreatorPanel.class)
+import com.google.inject.Inject;
+
 public class CategoryCreatorPresenter extends SingleCategoryPresenterBase<CategoryCreatorPanel> {
+
+	@Inject
+	public CategoryCreatorPresenter(CategoryMgtBus eventBus, CategoryCreatorPanel view, CategoryRepository repository) {
+		super(eventBus, view, repository);
+	}
 
 	public void onActivateCategoryCreation()  {
 		CategoryCreatorPanel view = getView();

@@ -32,9 +32,7 @@ public class ProductSearchPresenterTest {
 		eventBus = mock(ProductMgtBus.class, withSettings().extraInterfaces(ApplicationBus.class));
 		appBus = (ApplicationBus) eventBus;
 		repo = mock(ProductRepository.class);
-		presenter = new ProductSearchPresenter(repo);
-		presenter.setView(view);
-		presenter.setEventBus(eventBus);
+		presenter = new ProductSearchPresenter(eventBus, view, repo);
 	}
 	
 	@Test

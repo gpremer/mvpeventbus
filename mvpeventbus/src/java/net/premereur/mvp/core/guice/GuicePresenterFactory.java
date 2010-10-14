@@ -21,7 +21,6 @@ public class GuicePresenterFactory extends PresenterFactory {
 	@Override
 	public Presenter<View, ? extends EventBus> getPresenter(Class<?> presenterClass, EventBus eventBus) {
 		Presenter<View, ? extends EventBus> presenter = (Presenter<View, ? extends EventBus>) injector.getInstance(presenterClass);
-		//((Presenter)presenter).setEventBus(eventBus);
 		return presenter;
 	}
 	

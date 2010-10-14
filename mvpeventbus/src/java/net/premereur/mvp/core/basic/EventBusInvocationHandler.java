@@ -4,6 +4,7 @@
 package net.premereur.mvp.core.basic;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import net.premereur.mvp.core.Event;
@@ -17,13 +18,10 @@ public class EventBusInvocationHandler implements InvocationHandler {
 
 	private final PresenterFactory presenterFactory;
 
-	private final EventBusVerifier verifier;
-
 	private static final EventBusVerifier VERIFIER = new EventBusVerifier();
 
 	protected EventBusInvocationHandler(Class<? extends EventBus>[] eventBusClasses, PresenterFactory presenterFactory, EventBusVerifier verifier) {
 		this.presenterFactory = presenterFactory;
-		this.verifier = verifier;
 		methodMapper = new EventMethodMapper();
 		for (Class<? extends EventBus> eventBusIntf : eventBusClasses) {
 			verifier.verify(eventBusIntf);
@@ -36,10 +34,16 @@ public class EventBusInvocationHandler implements InvocationHandler {
 	}
 
 	@Override
-	public Object invoke(Object proxy, Method eventMethod, Object[] args) throws Throwable {
+	public Object invoke(final Object proxy, final Method eventMethod, final Object[] args) throws Throwable {
 		for (EventMethodMapper.HandlerMethodPair handlerMethodPair : methodMapper.getHandlerEvents(eventMethod)) {
-			Object handler = presenterFactory.getPresenter(handlerMethodPair.getHandlerClass(), (EventBus) proxy);
-			handlerMethodPair.getMethod().invoke(handler, args);
+			final Object handler = presenterFactory.getPresenter(handlerMethodPair.getHandlerClass(), (EventBus) proxy);
+			final Method method = handlerMethodPair.getMethod();
+			try {
+				System.out.println("Invoking " + method.getName() + " on " + handler.getClass());
+				method.invoke(handler, args);
+			} catch (InvocationTargetException e) {
+				throw new InvocationTargetException(e, "While invoking " + method.getName() + " on " + handler.getClass());
+			}
 		}
 		return null;
 	}

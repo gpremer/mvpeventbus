@@ -4,9 +4,7 @@ import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.core.basic.PresenterFactory;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Provider;
 import com.google.inject.Provides;
-import com.google.inject.util.Providers;
 
 public class EventBusModule extends AbstractModule {
 

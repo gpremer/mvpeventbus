@@ -5,6 +5,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
+import net.premereur.mvp.core.basic.BasePresenter;
+
 import org.junit.Test;
 
 public class EvenBusFactoryBasicTest extends EventBusFactoryTestBase {

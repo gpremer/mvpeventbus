@@ -6,14 +6,20 @@ import java.awt.event.ActionListener;
 import javax.swing.JComponent;
 import javax.swing.Timer;
 
-import net.premereur.mvp.core.BasePresenter;
-import net.premereur.mvp.core.UsesView;
+import net.premereur.mvp.core.EventBus;
+import net.premereur.mvp.core.guice.BasePresenter;
 import net.premereur.mvp.example.support.ClickHandler;
 import net.premereur.mvp.example.swing.categorymgt.CategoryMgtBus;
 import net.premereur.mvp.example.swing.productmgt.ProductMgtBus;
 
-@UsesView(ApplicationFrame.class)
+import com.google.inject.Inject;
+
 public class ApplicationPresenter extends BasePresenter<ApplicationFrame, ApplicationBus> {
+
+	@Inject
+	public ApplicationPresenter(EventBus eventBus, ApplicationFrame view) {
+		super((ApplicationBus) eventBus, view);
+	}
 
 	public void onApplicationStarted() {
 		ApplicationFrame view = getView();

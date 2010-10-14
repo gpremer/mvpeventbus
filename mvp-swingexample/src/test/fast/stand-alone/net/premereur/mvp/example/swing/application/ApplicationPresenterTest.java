@@ -28,9 +28,7 @@ public class ApplicationPresenterTest {
 		view = mock(ApplicationFrame.class);
 		eventBus = mock(ApplicationBus.class, withSettings().extraInterfaces(CategoryMgtBus.class));
 		catBus = (CategoryMgtBus) eventBus;
-		presenter = new ApplicationPresenter();
-		presenter.setView(view);
-		presenter.setEventBus(eventBus);
+		presenter = new ApplicationPresenter(eventBus, view);
 	}
 
 	@Test

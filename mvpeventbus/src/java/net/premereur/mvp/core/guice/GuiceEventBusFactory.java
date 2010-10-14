@@ -1,5 +1,9 @@
 package net.premereur.mvp.core.guice;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.core.EventBusFactory;
 import net.premereur.mvp.core.basic.BasicEventBusFactory;
@@ -15,9 +19,11 @@ public class GuiceEventBusFactory extends BasicEventBusFactory implements EventB
 	final private Injector guiceInjector;
 	final private EventBusModule eventBusModule;
 
-	public GuiceEventBusFactory(Module module) {
+	public GuiceEventBusFactory(Module... modules) {
 		eventBusModule = new EventBusModule();
-		guiceInjector = Guice.createInjector(module, eventBusModule);
+		List<Module> moduleList = new ArrayList<Module>(Arrays.asList(modules));
+		moduleList.add(eventBusModule);
+		guiceInjector = Guice.createInjector(moduleList);
 	}
 	
 	@Override

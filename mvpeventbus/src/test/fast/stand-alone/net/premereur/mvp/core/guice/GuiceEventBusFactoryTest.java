@@ -42,12 +42,10 @@ public class GuiceEventBusFactoryTest {
 	static public class MyPresenter implements Presenter<MyView, MyEventBus> {
 
 		private MyEventBus eventBus;
-		private MyView view;
 		final private Dependency dependency;
 
 		@Override
 		public void setEventBus(MyEventBus eventBus) {
-			//this.eventBus = eventBus;
 		}
 
 		public MyEventBus getEventBus() {
@@ -56,13 +54,11 @@ public class GuiceEventBusFactoryTest {
 		
 		@Override
 		public void setView(MyView view) {
-			//this.view = view;
 		}
 
 		@Inject
 		public MyPresenter(EventBus eventBus, MyView view, Dependency dependency) {
 			this.eventBus = (MyEventBus) eventBus;
-			this.view = view;
 			this.dependency = dependency;
 		}
 

@@ -28,10 +28,7 @@ public class CategoryUpdatePresenterTest {
 		eventBus = mock(CategoryMgtBus.class, withSettings().extraInterfaces(ApplicationBus.class));
 		appBus = (ApplicationBus) eventBus;
 		repository = mock(CategoryRepository.class);
-		presenter = new CategoryUpdatePresenter();
-		presenter.setView(view);
-		presenter.setEventBus(eventBus);
-		presenter.setRepository(repository);
+		presenter = new CategoryUpdatePresenter(eventBus, view, repository);
 	}
 
 	@Test

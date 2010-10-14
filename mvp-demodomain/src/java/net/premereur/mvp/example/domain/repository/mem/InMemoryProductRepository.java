@@ -9,17 +9,11 @@ import net.premereur.mvp.example.domain.model.Product;
 import net.premereur.mvp.example.domain.repository.ProductRepository;
 
 public class InMemoryProductRepository implements ProductRepository {
-	private static final ProductRepository instance = new InMemoryProductRepository();
-
 	private final List<Product> products = new ArrayList<Product>(Arrays.asList(new Product[] { new Product("Cabriolet"), new Product("Minivan"),
 			new Product("Ink"), new Product("Maintenace"), new Product("Beer"), new Product("Eggs"), new Product("Cariage"), new Product("Installation"),
 			new Product("Insurance"), new Product("Income protection"), new Product("Hard disk") }));
 
-	public static ProductRepository instance() {
-		return instance;
-	}
-
-	private InMemoryProductRepository() {
+	public InMemoryProductRepository() {
 
 	}
 

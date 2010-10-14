@@ -1,14 +1,23 @@
-package net.premereur.mvp.core;
+package net.premereur.mvp.core.guice;
+
+import net.premereur.mvp.core.EventBus;
+import net.premereur.mvp.core.Presenter;
+import net.premereur.mvp.core.View;
 
 public abstract class BasePresenter<V extends View, E extends EventBus> implements Presenter<V, E> {
 
-	private E eventBus;
+	private final E eventBus;
 
-	private V view;
+	private final V view;
+
+	public BasePresenter(final E eventBus, final V view) {
+		this.eventBus = eventBus;
+		this.view = view;
+	}
 
 	@Override
 	public void setEventBus(E eventBus) {
-		this.eventBus = eventBus;
+		// To respect interface
 	}
 
 	protected E getEventBus() {
@@ -20,8 +29,10 @@ public abstract class BasePresenter<V extends View, E extends EventBus> implemen
 	 * given as an argument. This is meant to be used for composite busses that
 	 * actually use the requested bus segment.
 	 * 
-	 * @param <Bus> The type of the bus segment
-	 * @param eventBusClass The class of the type of the bus segment
+	 * @param <Bus>
+	 *            The type of the bus segment
+	 * @param eventBusClass
+	 *            The class of the type of the bus segment
 	 * @return the event bus
 	 */
 	@SuppressWarnings("unchecked")
@@ -31,10 +42,11 @@ public abstract class BasePresenter<V extends View, E extends EventBus> implemen
 
 	@Override
 	public void setView(V view) {
-		this.view = view;
+		// To respect interface
 	}
 
 	protected V getView() {
 		return view;
 	}
+
 }

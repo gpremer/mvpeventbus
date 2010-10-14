@@ -3,16 +3,18 @@ package net.premereur.mvp.example.swing.productmgt;
 import java.util.Collections;
 import java.util.List;
 
-import net.premereur.mvp.core.UsesView;
+import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.example.domain.model.Product;
 import net.premereur.mvp.example.domain.repository.ProductRepository;
 import net.premereur.mvp.example.swing.application.ApplicationBus;
 
-@UsesView(ProductSearchPanel.class)
+import com.google.inject.Inject;
+
 public class ProductSearchPresenter extends ProductPresenterBase<ProductSearchPanel> {
 
-	public ProductSearchPresenter(ProductRepository repository) {
-		super(repository);
+	@Inject
+	public ProductSearchPresenter(EventBus bus, ProductSearchPanel view, ProductRepository repository) {
+		super((ProductMgtBus) bus, view, repository);
 	}
 
 	public void onProductMgtActivated() {

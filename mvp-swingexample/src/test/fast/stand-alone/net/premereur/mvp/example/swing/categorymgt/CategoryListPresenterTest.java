@@ -8,6 +8,7 @@ import static org.mockito.Mockito.withSettings;
 import java.util.List;
 
 import net.premereur.mvp.example.domain.model.Category;
+import net.premereur.mvp.example.domain.repository.CategoryRepository;
 import net.premereur.mvp.example.swing.application.ApplicationBus;
 import net.premereur.mvp.example.swing.categorymgt.CategoryList;
 import net.premereur.mvp.example.swing.categorymgt.CategoryListPresenter;
@@ -22,15 +23,15 @@ public class CategoryListPresenterTest {
 	private CategoryList view;
 	private CategoryMgtBus eventBus;
 	private ApplicationBus appBus;
+	private CategoryRepository repository;
 
 	@Before
 	public void setUpPresenterWithMockView() {
 		view = mock(CategoryList.class);
+		repository = mock(CategoryRepository.class);
 		eventBus = mock(CategoryMgtBus.class, withSettings().extraInterfaces(ApplicationBus.class));
 		appBus = (ApplicationBus) eventBus;
-		presenter = new CategoryListPresenter();
-		presenter.setView(view);
-		presenter.setEventBus(eventBus);
+		presenter = new CategoryListPresenter(eventBus, view, repository);
 	}
 
 	@Test

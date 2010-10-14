@@ -1,5 +1,7 @@
 package net.premereur.mvp.core;
 
+import net.premereur.mvp.core.basic.BasePresenter;
+
 import org.junit.Test;
 
 public class EventBusFactoryVerificationTest extends EventBusFactoryTestBase {

@@ -1,18 +1,20 @@
 package net.premereur.mvp.example.swing.categorymgt;
 
-import net.premereur.mvp.core.UsesView;
+import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.example.domain.model.Category;
+import net.premereur.mvp.example.domain.repository.CategoryRepository;
 import net.premereur.mvp.example.swing.application.ApplicationBus;
 
-@UsesView(CategoryList.class)
-public class CategoryListPresenter extends CategoryPresenterBase<CategoryList> {
+import com.google.inject.Inject;
 
-	@Override
-	public void setView(CategoryList view) {	
-		super.setView(view);
+public class CategoryListPresenter extends CategoryPresenterBase<CategoryList> {
+	
+	@Inject
+	public CategoryListPresenter(EventBus eventBus, CategoryList view, CategoryRepository repository) {
+		super((CategoryMgtBus) eventBus, view, repository);
 		view.addSelectionListener(this);
 	}
-	
+
 	public void onCategoryMgtActivated() {
 		final CategoryList categoryList = getView();
 		categoryList.bind(getRepository().allCategories());

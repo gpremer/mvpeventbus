@@ -1,11 +1,18 @@
 package net.premereur.mvp.example.swing.categorymgt;
 
-import net.premereur.mvp.core.BasePresenter;
-import net.premereur.mvp.core.UsesView;
+import com.google.inject.Inject;
+
+import net.premereur.mvp.core.EventBus;
+import net.premereur.mvp.core.guice.BasePresenter;
 import net.premereur.mvp.example.swing.application.ApplicationBus;
 
-@UsesView(DefaultCategoryPanel.class)
+
 public class DefaultCategoryPanelPresenter extends BasePresenter<DefaultCategoryPanel, CategoryMgtBus>{
+
+	@Inject
+	public DefaultCategoryPanelPresenter(EventBus eventBus, DefaultCategoryPanel view) {
+		super((CategoryMgtBus) eventBus, view);
+	}
 
 	public void onDefaultCategoryPanelActivated() {
 		getView().setCreateButtonListener(this);

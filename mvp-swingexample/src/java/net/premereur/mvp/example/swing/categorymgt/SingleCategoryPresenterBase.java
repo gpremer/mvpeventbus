@@ -1,12 +1,12 @@
 package net.premereur.mvp.example.swing.categorymgt;
 
 import net.premereur.mvp.example.domain.model.Category;
+import net.premereur.mvp.example.domain.repository.CategoryRepository;
 
 public abstract class SingleCategoryPresenterBase<V extends CategoryPanelBase> extends CategoryPresenterBase<V> {
 
-	@Override
-	public void setView(V view) {
-		super.setView(view);
+	public SingleCategoryPresenterBase(CategoryMgtBus eventBus, V view, CategoryRepository repository) {
+		super(eventBus, view, repository);
 		view.setSaveButtonListener(this);
 		view.setCancelButtonListener(this);
 	}
