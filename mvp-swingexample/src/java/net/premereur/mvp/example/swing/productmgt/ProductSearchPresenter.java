@@ -9,7 +9,9 @@ import net.premereur.mvp.example.domain.repository.ProductRepository;
 import net.premereur.mvp.example.swing.application.ApplicationBus;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
+@Singleton
 public class ProductSearchPresenter extends ProductPresenterBase<ProductSearchPanel> {
 
 	@Inject

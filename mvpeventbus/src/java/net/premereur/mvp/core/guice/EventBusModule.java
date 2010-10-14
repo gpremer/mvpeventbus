@@ -9,25 +9,19 @@ import com.google.inject.Provides;
 public class EventBusModule extends AbstractModule {
 
 	private EventBus eventBus;
-	
+
 	public void setEventBus(EventBus eventBus) {
 		this.eventBus = eventBus;
 	}
 
-	
 	@Override
 	protected void configure() {
 		bind(PresenterFactory.class).to(GuicePresenterFactory.class);
-//		bind(EventBus.class).toProvider((Provider<? extends EventBus>) Providers.of(null));
-//		for (Class<? extends EventBus> eventBusIntf : eventBusIntfs ) {
-//		bind(((Key<EventBus>)(Key.get(eventBusIntf)))).toInstance(eventBus);
-//	}
 	}
-	
+
 	@Provides
 	public EventBus providesEventBus() {
 		return eventBus;
 	}
 
-	
 }

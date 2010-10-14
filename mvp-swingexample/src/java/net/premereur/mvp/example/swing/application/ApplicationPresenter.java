@@ -13,7 +13,9 @@ import net.premereur.mvp.example.swing.categorymgt.CategoryMgtBus;
 import net.premereur.mvp.example.swing.productmgt.ProductMgtBus;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
+@Singleton
 public class ApplicationPresenter extends BasePresenter<ApplicationFrame, ApplicationBus> {
 
 	@Inject

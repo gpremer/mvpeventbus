@@ -1,12 +1,13 @@
 package net.premereur.mvp.example.swing.categorymgt;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.core.guice.BasePresenter;
 import net.premereur.mvp.example.swing.application.ApplicationBus;
 
-
+@Singleton
 public class DefaultCategoryPanelPresenter extends BasePresenter<DefaultCategoryPanel, CategoryMgtBus>{
 
 	@Inject

@@ -6,7 +6,9 @@ import net.premereur.mvp.example.domain.repository.CategoryRepository;
 import net.premereur.mvp.example.swing.application.ApplicationBus;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
+@Singleton
 public class CategoryListPresenter extends CategoryPresenterBase<CategoryList> {
 	
 	@Inject
