@@ -1,8 +1,9 @@
-package net.premereur.mvp.core.impl;
+package net.premereur.mvp.core.basic;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -35,11 +36,11 @@ public class EventMethodMapper {
 
 	private final Map<String, List<HandlerMethodPair>> handlingMethodsByEventMethod = new HashMap<String, List<HandlerMethodPair>>();
 
-	public void addHandlerMethods(final Iterable<Method> eventBusEventMethods) {
+	public void addHandlerMethods(final Iterable<Method> eventBusEventMethods, final Collection<String> verificationErrors) {
 		for (final Method eventMethod : eventBusEventMethods) {
 			final Event eventAnt = eventMethod.getAnnotation(Event.class);
 			final String eventMethodSignature = eventMethodSignature(eventMethod);
-			final List<HandlerMethodPair> handlingMethods = createHandlerMethodPairsForEvent(eventMethod, eventAnt);
+			final List<HandlerMethodPair> handlingMethods = createHandlerMethodPairsForEvent(eventMethod, eventAnt, verificationErrors);
 			if (handlingMethodsByEventMethod.containsKey(eventMethodSignature)) {
 				handlingMethodsByEventMethod.get(eventMethodSignature).addAll(handlingMethods);
 			} else {
@@ -48,22 +49,25 @@ public class EventMethodMapper {
 		}
 	}
 
-	private static List<HandlerMethodPair> createHandlerMethodPairsForEvent(final Method eventMethod, final Event eventAnt) {
+	private static List<HandlerMethodPair> createHandlerMethodPairsForEvent(final Method eventMethod, final Event eventAnt,
+			final Collection<String> verificationErrors) {
 		final List<HandlerMethodPair> handlingMethods = new ArrayList<HandlerMethodPair>();
 		for (final Class<? extends Presenter<? extends View, ? extends EventBus>> presenter : eventAnt.value()) {
-			handlingMethods.add(new HandlerMethodPair(presenter, correspondingPresenterMethod(presenter, eventMethod)));
+			handlingMethods.add(new HandlerMethodPair(presenter, correspondingPresenterMethod(presenter, eventMethod, verificationErrors)));
 		}
 		return handlingMethods;
 	}
 
-	private static Method correspondingPresenterMethod(final Class<? extends Presenter<? extends View, ? extends EventBus>> presenter, final Method ebm) {
+	private static Method correspondingPresenterMethod(final Class<? extends Presenter<? extends View, ? extends EventBus>> presenter, final Method ebm,
+			final Collection<String> verificationErrors) {
 		for (final Method pm : presenter.getMethods()) {
 			if (presenterMethodCorrespondsWithEventBusMethod(pm, ebm)) {
 				return pm;
 			}
 		}
-		throw new IllegalArgumentException("Did not find corresponding public event handler on " + presenter.getName() + " for event bus method "
+		verificationErrors.add("Did not find corresponding public event handler on " + presenter.getName() + " for event bus method "
 				+ ebm.getName());
+		return null; // TODO change this so that a Method object is returned always
 	}
 
 	private static boolean presenterMethodCorrespondsWithEventBusMethod(final Method pm, final Method ebm) {

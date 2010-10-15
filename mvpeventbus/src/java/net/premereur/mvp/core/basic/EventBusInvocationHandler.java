@@ -6,11 +6,11 @@ package net.premereur.mvp.core.basic;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import net.premereur.mvp.core.Event;
 import net.premereur.mvp.core.EventBus;
-import net.premereur.mvp.core.impl.EventBusVerifier;
-import net.premereur.mvp.core.impl.EventMethodMapper;
 import net.premereur.mvp.util.reflection.ReflectionUtil;
 
 public class EventBusInvocationHandler implements InvocationHandler {
@@ -22,10 +22,14 @@ public class EventBusInvocationHandler implements InvocationHandler {
 
 	protected EventBusInvocationHandler(Class<? extends EventBus>[] eventBusClasses, PresenterFactory presenterFactory, EventBusVerifier verifier) {
 		this.presenterFactory = presenterFactory;
-		methodMapper = new EventMethodMapper();
+		this.methodMapper = new EventMethodMapper();
+		final Collection<String> verificationErrors = new ArrayList<String>();
 		for (Class<? extends EventBus> eventBusIntf : eventBusClasses) {
-			verifier.verify(eventBusIntf);
-			methodMapper.addHandlerMethods(ReflectionUtil.annotatedMethods(eventBusIntf, Event.class));
+			verifier.verify(eventBusIntf, verificationErrors);
+			methodMapper.addHandlerMethods(ReflectionUtil.annotatedMethods(eventBusIntf, Event.class), verificationErrors);
+		}
+		if (!verificationErrors.isEmpty()) {
+			throw new VerificationException(verificationErrors);
 		}
 	}
 

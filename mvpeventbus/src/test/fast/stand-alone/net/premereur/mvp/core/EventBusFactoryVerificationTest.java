@@ -1,6 +1,7 @@
 package net.premereur.mvp.core;
 
 import net.premereur.mvp.core.basic.BasePresenter;
+import net.premereur.mvp.core.basic.VerificationException;
 
 import org.junit.Test;
 
@@ -11,7 +12,7 @@ public class EventBusFactoryVerificationTest extends EventBusFactoryTestBase {
 		void event(int i);
 	}
 
-	@Test(expected = RuntimeException.class)
+	@Test(expected = VerificationException.class)
 	public void shouldNotAllowEventBusWithNonPrimitiveEventArguments() {
 		eventBusFactory.createEventBus(EventBusWithNonPrimitiveEventMethods.class);
 	}
@@ -21,7 +22,7 @@ public class EventBusFactoryVerificationTest extends EventBusFactoryTestBase {
 		int event();
 	}
 
-	@Test(expected = RuntimeException.class)
+	@Test(expected = VerificationException.class)
 	public void shouldNotAllowEventBusWithNonVoidEventMethods() {
 		eventBusFactory.createEventBus(EventBusWithNonVoidEventMethods.class);
 	}
@@ -43,7 +44,7 @@ public class EventBusFactoryVerificationTest extends EventBusFactoryTestBase {
 
 	}
 
-	@Test(expected = RuntimeException.class)
+	@Test(expected = VerificationException.class)
 	public void shouldNotAllowEventBusWithPresenterWithoutMatchingMethod() {
 		eventBusFactory.createEventBus(EventBusWithBadPresenter.class);
 	}
@@ -62,7 +63,7 @@ public class EventBusFactoryVerificationTest extends EventBusFactoryTestBase {
 		void event();
 	}
 
-	@Test(expected = RuntimeException.class)
+	@Test(expected = VerificationException.class)
 	public void shouldNotAllowEventBusWithPresenterWithoutUseViewAnnotation() {
 		eventBusFactory.createEventBus(MyOtherEventBus.class);
 	}
@@ -71,7 +72,7 @@ public class EventBusFactoryVerificationTest extends EventBusFactoryTestBase {
 
 	}
 
-	@Test(expected = RuntimeException.class)
+	@Test(expected = VerificationException.class)
 	public void shouldNotAllowEventBusThatIsClass() {
 		eventBusFactory.createEventBus(ClassEventBus.class);
 	}
@@ -83,12 +84,12 @@ public class EventBusFactoryVerificationTest extends EventBusFactoryTestBase {
 
 	@UsesView(MyView.class)
 	public static abstract class AbstractHandler extends BasePresenter<MyView, EventBusWithAbstractHandler> {
-		public void onEvent() {
+		public void onAbstractClassEvent() {
 		}
 
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = VerificationException.class)
 	public void shouldNotAllowAbstractHandlers() throws Exception {
 		eventBusFactory.createEventBus(EventBusWithAbstractHandler.class);
 	}
@@ -107,7 +108,7 @@ public class EventBusFactoryVerificationTest extends EventBusFactoryTestBase {
 		public void onEvent() { }
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = VerificationException.class)
 	public void shouldNotAllowPresentersWithoutDefaultConstructor() throws Exception {
 		eventBusFactory.createEventBus(EventBusWithPresenterWithoutDefaultConstructor.class);
 	}
