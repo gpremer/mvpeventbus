@@ -52,7 +52,6 @@ public class EventBusInvocationHandler implements InvocationHandler {
 			final Object handler = presenterFactory.getPresenter(handlerMethodPair.getHandlerClass(), (EventBus) proxy);
 			final Method method = handlerMethodPair.getMethod();
 			try {
-				System.out.println("Invoking " + method.getName() + " on " + handler.getClass());
 				method.invoke(handler, args);
 			} catch (InvocationTargetException e) {
 				throw new InvocationTargetException(e, "While invoking " + method.getName() + " on " + handler.getClass());
