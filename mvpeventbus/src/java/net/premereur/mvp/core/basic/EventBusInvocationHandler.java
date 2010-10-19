@@ -29,7 +29,8 @@ public class EventBusInvocationHandler implements InvocationHandler {
 		throwVerificationIfNeeded(verificationErrors);
 	}
 
-	private void registerAllEventMethods(final Class<? extends EventBus>[] eventBusClasses, final EventBusVerifier verifier, final Collection<String> verificationErrors) {
+	private void registerAllEventMethods(final Class<? extends EventBus>[] eventBusClasses, final EventBusVerifier verifier,
+			final Collection<String> verificationErrors) {
 		for (final Class<? extends EventBus> eventBusIntf : eventBusClasses) {
 			verifier.verify(eventBusIntf, verificationErrors);
 			methodMapper.addHandlerMethods(ReflectionUtil.annotatedMethods(eventBusIntf, Event.class), verificationErrors);
