@@ -20,26 +20,35 @@ public class EventBusInvocationHandler implements InvocationHandler {
 
 	private static final EventBusVerifier VERIFIER = new EventBusVerifier();
 
-	protected EventBusInvocationHandler(Class<? extends EventBus>[] eventBusClasses, PresenterFactory presenterFactory, EventBusVerifier verifier) {
+	protected EventBusInvocationHandler(final Class<? extends EventBus>[] eventBusClasses, final PresenterFactory presenterFactory,
+			final EventBusVerifier verifier) {
 		this.presenterFactory = presenterFactory;
 		this.methodMapper = new EventMethodMapper();
 		final Collection<String> verificationErrors = new ArrayList<String>();
-		for (Class<? extends EventBus> eventBusIntf : eventBusClasses) {
+		registerAllEventMethods(eventBusClasses, verifier, verificationErrors);
+		throwVerificationIfNeeded(verificationErrors);
+	}
+
+	private void registerAllEventMethods(final Class<? extends EventBus>[] eventBusClasses, final EventBusVerifier verifier, final Collection<String> verificationErrors) {
+		for (final Class<? extends EventBus> eventBusIntf : eventBusClasses) {
 			verifier.verify(eventBusIntf, verificationErrors);
 			methodMapper.addHandlerMethods(ReflectionUtil.annotatedMethods(eventBusIntf, Event.class), verificationErrors);
 		}
+	}
+
+	protected void throwVerificationIfNeeded(final Collection<String> verificationErrors) {
 		if (!verificationErrors.isEmpty()) {
 			throw new VerificationException(verificationErrors);
 		}
 	}
 
-	public EventBusInvocationHandler(Class<? extends EventBus>[] eventBusClasses) {
+	public EventBusInvocationHandler(final Class<? extends EventBus>[] eventBusClasses) {
 		this(eventBusClasses, new PresenterFactory(), VERIFIER);
 	}
 
 	@Override
 	public Object invoke(final Object proxy, final Method eventMethod, final Object[] args) throws Throwable {
-		for (EventMethodMapper.HandlerMethodPair handlerMethodPair : methodMapper.getHandlerEvents(eventMethod)) {
+		for (final EventMethodMapper.HandlerMethodPair handlerMethodPair : methodMapper.getHandlerEvents(eventMethod)) {
 			final Object handler = presenterFactory.getPresenter(handlerMethodPair.getHandlerClass(), (EventBus) proxy);
 			final Method method = handlerMethodPair.getMethod();
 			try {
