@@ -9,8 +9,8 @@ import java.lang.annotation.Target;
  * Event annotations are used to mark methods on {@link EventBus}es. Calling
  * these event methods will cause the corresponding method in all
  * {@link Presenter}s enumerated in the Event annotation's argument to be
- * called. The corresponding method is a method with same arguments and the name
- * prefixed with on (+capitalised).
+ * called. The corresponding method is a method with same arguments with its
+ * name uppercased and prefixed with on.
  * 
  * E.g. method
  * 
