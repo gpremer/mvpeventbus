@@ -16,7 +16,7 @@ import com.google.inject.Inject;
 import com.google.inject.Module;
 import com.google.inject.Singleton;
 
-public class ConcurrencyTests extends TestBase {
+public class ConcurrencyTest extends TestBase {
 
 	static class Capturer {
 		MyPresenter target;
