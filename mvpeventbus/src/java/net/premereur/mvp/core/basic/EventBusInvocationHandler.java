@@ -58,7 +58,14 @@ public class EventBusInvocationHandler implements InvocationHandler {
 				throw new InvocationTargetException(e, "While invoking " + method.getName() + " on " + handler.getClass());
 			}
 		}
-		return null;
+		return handleSpecialMethods(proxy, eventMethod, args);
+	}
+
+	protected Object handleSpecialMethods(Object proxy, Method method, Object[] args) {
+		if ( method.getName().equals("hashCode")) {
+			return hashCode(); // The hash code of the handler
+		}
+		return null;		
 	}
 
 }

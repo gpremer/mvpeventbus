@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
+import net.premereur.mvp.TestBase;
 import net.premereur.mvp.core.Event;
 import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.core.Presenter;
@@ -16,13 +17,12 @@ import net.premereur.mvp.core.View;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Module;
 
-public class GuiceEventBusFactoryTest {
+public class GuiceEventBusFactoryTest extends TestBase {
 
 	static interface MyEventBus extends EventBus {
 		@Event(MyPresenter.class)
@@ -51,7 +51,7 @@ public class GuiceEventBusFactoryTest {
 		public MyEventBus getEventBus() {
 			return eventBus;
 		}
-		
+
 		@Override
 		public void setView(MyView view) {
 		}
@@ -65,7 +65,7 @@ public class GuiceEventBusFactoryTest {
 		public void onEvent() {
 			this.dependency.f();
 		}
-		
+
 		public void onEventBusCall() {
 			this.dependency.receiveEventBus(this.eventBus);
 		}
@@ -82,14 +82,10 @@ public class GuiceEventBusFactoryTest {
 		rootLogger.setLevel(Level.FINEST);
 		rootLogger.addHandler(new ConsoleHandler());
 	}
-	
-	@Mock Dependency dependency;
-	
-	@Before
-	public void initMocks() {
-		MockitoAnnotations.initMocks(this);
-	}
-	
+
+	private @Mock
+	Dependency dependency;
+
 	Module testModule = new AbstractModule() {
 		@Override
 		protected void configure() {
@@ -108,7 +104,9 @@ public class GuiceEventBusFactoryTest {
 	public void shouldInjectedEventbusInPresenter() {
 		MyEventBus eventBus = new GuiceEventBusFactory(testModule).createEventBus(MyEventBus.class);
 		eventBus.eventBusCall();
-		verify(dependency).receiveEventBus(any(MyEventBus.class)); // It could still be null
+		verify(dependency).receiveEventBus(any(MyEventBus.class)); // It could
+		// still be
+		// null
 	}
 
 }
