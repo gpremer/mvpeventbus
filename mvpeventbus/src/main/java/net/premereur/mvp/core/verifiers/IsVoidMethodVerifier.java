@@ -6,8 +6,16 @@ import static java.util.Collections.emptyList;
 import java.lang.reflect.Method;
 import java.util.Collection;
 
-public class IsVoidMethodVerifier implements MethodVerifier {
+/**
+ * Makes sure that a method is void.
+ * @author gpremer
+ *
+ */
+public final class IsVoidMethodVerifier implements MethodVerifier {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Collection<String> verifyMethod(final Method m) {
         if (m.getReturnType().getName() != "void") {

@@ -16,6 +16,7 @@ subprojects {
 
     checkstyleTest {
         ignoreFailures = true
+	configFile = file("${rootDir}/config/checkstyle/junit.xml")
     }
 
     version = '1.0'
