@@ -5,10 +5,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import net.premereur.mvp.core.basic.BasicEventBusFactory;
-
 /**
- * Used on MVP {@link Presenter}s so that the {@link BasicEventBusFactory} knows which view to inject in the Presenter.
+ * Used on MVP {@link Presenter}s so that the {@link net.premereur.mvp.core.EventBusFactory} knows which view to inject in the Presenter.
  * 
  * @author gpremer
  * 
@@ -17,5 +15,8 @@ import net.premereur.mvp.core.basic.BasicEventBusFactory;
 @Target(ElementType.TYPE)
 public @interface UsesView {
 
+    /**
+     * The view the presenter manages.
+     */
     Class<? extends View> value();
 }
