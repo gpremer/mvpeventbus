@@ -2,6 +2,7 @@ package net.premereur.mvp.core.guice;
 
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
+import junit.framework.Assert;
 import net.premereur.mvp.TestBase;
 import net.premereur.mvp.core.Event;
 import net.premereur.mvp.core.EventBus;

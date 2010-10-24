@@ -1,0 +1,26 @@
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'eclipse'
+    apply plugin: 'code-quality'
+
+    dependencies {
+        testCompile fileTree(dir:"${rootDir}/lib/default", include:'*.jar')
+	compile fileTree(dir: "${rootDir}/lib/test", include:'*.jar')
+    }
+
+    checkstyleConfigFileName = "${rootDir}/config/checkstyle/sun_checks.xml"
+
+    checkstyleMain {
+        ignoreFailures = true
+    }
+
+    checkstyleTest {
+        ignoreFailures = true
+    }
+
+    version = '1.0'
+
+    jar {
+        manifest.attributes provider: 'ICTects'
+    }
+}

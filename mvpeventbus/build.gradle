@@ -1,0 +1,7 @@
+apply plugin: 'java'
+//apply plugin: 'code-quality'
+
+dependencies {
+  compile fileTree(dir:'lib/default', include:'*.jar')
+  //testCompile fileTree(dir:'lib/test', include:'*.jar')
+}

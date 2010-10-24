@@ -1,0 +1,4 @@
+dependencies {
+    compile project(':mvpeventbus')
+    compile project(':mvp-demodomain')
+}
