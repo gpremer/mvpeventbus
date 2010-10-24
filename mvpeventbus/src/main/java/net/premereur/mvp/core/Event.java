@@ -35,11 +35,15 @@ import java.lang.annotation.Target;
  * @author gpremer
  * 
  */
-
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Event {
 
+	/**
+	 * The {@link Presenter}s to forward this event to
+	 * 
+	 * @return presenters
+	 */
 	Class<? extends Presenter<? extends View, ? extends EventBus>>[] value();
 
 }
