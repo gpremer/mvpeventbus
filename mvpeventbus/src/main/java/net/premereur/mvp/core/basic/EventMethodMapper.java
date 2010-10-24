@@ -14,8 +14,20 @@ import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.core.Presenter;
 import net.premereur.mvp.core.View;
 
+/**
+ * Maintains the connection between an event and the presenter methods that the event should be forwarded to.
+ * 
+ * @author gpremer
+ * 
+ */
 public class EventMethodMapper {
 
+    /**
+     * Combines a presenter with an event handler method within that presenter. The class cannot be derived from the method because of possible inheritance.
+     * 
+     * @author gpremer
+     * 
+     */
     public static class HandlerMethodPair {
         private final Class<?> handlerClass;
         private final Method method;
@@ -25,10 +37,18 @@ public class EventMethodMapper {
             this.method = method;
         }
 
+        /**
+         * Returns the presenter class.
+         * @return a class of of presenters.
+         */
         public Class<?> getHandlerClass() {
             return handlerClass;
         }
 
+        /**
+         * The event handling method.
+         * @return a method.
+         */
         public Method getMethod() {
             return method;
         }
@@ -36,6 +56,11 @@ public class EventMethodMapper {
 
     private final Map<String, List<HandlerMethodPair>> handlingMethodsByEventMethod = new HashMap<String, List<HandlerMethodPair>>();
 
+    /**
+     * Adds and verifies methods annotated with @Event on an event bus interface. 
+     * @param eventBusEventMethods an number of event bus event methods
+     * @param verificationErrors a collection to add possible verification errors to
+     */
     public void addHandlerMethods(final Iterable<Method> eventBusEventMethods, final Collection<String> verificationErrors) {
         for (final Method eventMethod : eventBusEventMethods) {
             final Event eventAnt = eventMethod.getAnnotation(Event.class);
@@ -97,6 +122,11 @@ public class EventMethodMapper {
 
     private static final List<HandlerMethodPair> NO_METHODS = Collections.emptyList();
 
+    /**
+     * Returns all event handler methods (and the owing presenter classes) for the given event.
+     * @param eventMethod an event bus event method
+     * @return all matching event handler methods (and classes)
+     */
     public Iterable<HandlerMethodPair> getHandlerEvents(final Method eventMethod) {
         final Iterable<HandlerMethodPair> methods = this.handlingMethodsByEventMethod.get(eventMethodSignature(eventMethod));
         return methods == null ? NO_METHODS : methods;
