@@ -6,8 +6,8 @@ import net.premereur.mvp.core.basic.PresenterFactory;
 
 public class GuiceEventBusInvocationHandler extends EventBusInvocationHandler {
 
-	public GuiceEventBusInvocationHandler(Class<? extends EventBus>[] eventBusClasses, PresenterFactory presenterFactory) {
-		super(eventBusClasses, presenterFactory, new GuiceEventBusVerifier());
-	}
+    public GuiceEventBusInvocationHandler(Class<? extends EventBus>[] eventBusClasses, PresenterFactory presenterFactory) {
+        super(eventBusClasses, presenterFactory, new GuiceEventBusVerifier());
+    }
 
 }

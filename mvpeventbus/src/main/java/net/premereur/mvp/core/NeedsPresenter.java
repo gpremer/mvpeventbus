@@ -1,11 +1,9 @@
 package net.premereur.mvp.core;
 
 /**
- * The interface views need to implements if they want their managing presenter
- * injected.
+ * The interface views need to implements if they want their managing presenter injected.
  * 
- * Try to avoid using this, but make the presenter pass itself for GUI event
- * call backs and such.
+ * Try to avoid using this, but make the presenter pass itself for GUI event call backs and such.
  * 
  * @author gpremer
  * 
@@ -14,5 +12,5 @@ package net.premereur.mvp.core;
  */
 public interface NeedsPresenter<P extends Presenter<? extends View, ?>> {
 
-	void setPresenter(P p);
+    void setPresenter(P p);
 }

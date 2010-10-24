@@ -15,5 +15,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface UsesPresenter {
 
-	Class<? extends Presenter<?, ?>> value();
+    Class<? extends Presenter<?, ?>> value();
 }

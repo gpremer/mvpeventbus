@@ -6,10 +6,10 @@ import net.premereur.mvp.core.verifiers.HandlerVerifier;
 
 public class GuiceEventBusVerifier extends EventBusVerifier {
 
-	private static final HandlerVerifier[] HANDLER_VERIFIERS = { new ConcreteClassVerifier(), };
+    private static final HandlerVerifier[] HANDLER_VERIFIERS = { new ConcreteClassVerifier(), };
 
-	protected HandlerVerifier[] getHandlerVerifiers() {
-		return HANDLER_VERIFIERS;
-	}
+    protected HandlerVerifier[] getHandlerVerifiers() {
+        return HANDLER_VERIFIERS;
+    }
 
 }

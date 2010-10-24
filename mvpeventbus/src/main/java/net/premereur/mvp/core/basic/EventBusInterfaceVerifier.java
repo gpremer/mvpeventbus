@@ -12,5 +12,5 @@ import net.premereur.mvp.core.EventBus;
  */
 public interface EventBusInterfaceVerifier {
 
-	Collection<String> verifyInterface(Class<? extends EventBus> eventBusClass);
+    Collection<String> verifyInterface(Class<? extends EventBus> eventBusClass);
 }

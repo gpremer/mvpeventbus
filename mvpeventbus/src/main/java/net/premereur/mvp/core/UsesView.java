@@ -8,8 +8,7 @@ import java.lang.annotation.Target;
 import net.premereur.mvp.core.basic.BasicEventBusFactory;
 
 /**
- * Used on MVP {@link Presenter}s so that the {@link BasicEventBusFactory} knows
- * which view to inject in the Presenter.
+ * Used on MVP {@link Presenter}s so that the {@link BasicEventBusFactory} knows which view to inject in the Presenter.
  * 
  * @author gpremer
  * 
@@ -18,5 +17,5 @@ import net.premereur.mvp.core.basic.BasicEventBusFactory;
 @Target(ElementType.TYPE)
 public @interface UsesView {
 
-	Class<? extends View> value();
+    Class<? extends View> value();
 }
