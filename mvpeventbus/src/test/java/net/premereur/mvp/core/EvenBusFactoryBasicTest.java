@@ -87,7 +87,6 @@ public class EvenBusFactoryBasicTest extends EventBusFactoryTestBase {
 		eventBusFactory.createEventBus(EventBusDerivedHandler.class).event();
 	}
 
-	@UsesPresenter(MyPresenterForView.class)
 	public static class MyViewWithPresenter implements View, NeedsPresenter<MyPresenterForView> {
 		static int presenterSets = 0;
 
