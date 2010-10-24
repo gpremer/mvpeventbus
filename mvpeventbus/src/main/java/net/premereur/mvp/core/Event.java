@@ -39,11 +39,11 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface Event {
 
-	/**
-	 * The {@link Presenter}s to forward this event to
-	 * 
-	 * @return presenters
-	 */
-	Class<? extends Presenter<? extends View, ? extends EventBus>>[] value();
+    /**
+     * The {@link Presenter}s to forward this event to.
+     * 
+     * @return presenters
+     */
+    Class<? extends Presenter<? extends View, ? extends EventBus>>[] value();
 
 }
