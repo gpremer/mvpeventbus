@@ -24,3 +24,9 @@ subprojects {
         manifest.attributes provider: 'ICTects'
     }
 }
+
+task fixupTestDatesForHudson << {
+    testReportFiles = fileTree(dir: '.', include: '**/build/test-results/TEST*.xml')
+    testReportFiles.each { it.setLastModified(System.currentTimeMillis()) }
+}
+
