@@ -17,6 +17,13 @@ import net.premereur.mvp.core.verifiers.IsVoidMethodVerifier;
 import net.premereur.mvp.core.verifiers.MethodVerifier;
 import net.premereur.mvp.util.reflection.ReflectionUtil;
 
+/**
+ * A verifier for the basic {@link net.premereur.mvp.core.EventBusFactory}. Verifies as much as possible at event bus construction time that the set up is
+ * correct.
+ * 
+ * @author gpremer
+ * 
+ */
 public class EventBusVerifier {
 
     private static final HandlerVerifier[] HANDLER_VERIFIERS = { new HasDefaultConstructorVerifier(), new ConcreteClassVerifier(),
@@ -24,7 +31,13 @@ public class EventBusVerifier {
     private static final MethodVerifier[] METHOD_VERIFIERS = { new HasNoPrimitiveAgrumentsVerifier(), new IsVoidMethodVerifier() };
     private static final EventBusInterfaceVerifier[] EVENT_BUS_VERIFIERS = { new IsInterfaceVerfier() };
 
-    public <E extends EventBus> void verify(final Class<? extends EventBus> eventBusIntf, final Collection<String> verificationErrors) {
+    /**
+     * Verifies the given event bus recording the results in the supplied collection.
+     * 
+     * @param eventBusIntf the actual event bus class
+     * @param verificationErrors to add errors to
+     */
+    public void verify(final Class<? extends EventBus> eventBusIntf, final Collection<String> verificationErrors) {
         for (final Method eventMethod : ReflectionUtil.annotatedMethods(eventBusIntf, Event.class)) {
             final Event eventAnt = eventMethod.getAnnotation(Event.class);
             verifyHandlers(eventAnt.value(), verificationErrors);
@@ -53,14 +66,29 @@ public class EventBusVerifier {
         }
     }
 
+    /**
+     * The set of {@link HandlerVerifier}s this event bus verifier uses.
+     * 
+     * @return an array of {@link HandlerVerifier}s
+     */
     protected HandlerVerifier[] getHandlerVerifiers() {
         return HANDLER_VERIFIERS;
     }
 
+    /**
+     * The set of {@link MethodVerifier}s this event bus verifier uses.
+     * 
+     * @return an array of {@link MethodVerifier}s
+     */
     protected MethodVerifier[] getMethodVerifiers() {
         return METHOD_VERIFIERS;
     }
 
+    /**
+     * The set of {@link EventBusInterfaceVerifier}s this event bus verifier uses.
+     * 
+     * @return an array of {@link EventBusInterfaceVerifier}s
+     */
     protected EventBusInterfaceVerifier[] getEventBusInterfaceVerifiers() {
         return EVENT_BUS_VERIFIERS;
     }
