@@ -4,9 +4,10 @@
 	<classpathentry kind="src" path="src/test/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/mvpeventbus"/>
-	<classpathentry kind="lib" path="lib/test/junit.jar"/>
-	<classpathentry kind="lib" path="lib/test/mockito-all-1.8.5.jar"/>
-	<classpathentry kind="lib" path="lib/default/guice-2.0.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/mvp-demodomain"/>
+	<classpathentry kind="var" path="PROJECT_LIB_JAVA/aopalliance.jar"/>
+	<classpathentry kind="var" path="PROJECT_LIB_JAVA/guice-2.0.jar"/>
+	<classpathentry kind="var" path="PROJECT_LIB_TEST/junit.jar"/>
+	<classpathentry kind="var" path="PROJECT_LIB_TEST/mockito-all-1.8.5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
