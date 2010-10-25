@@ -16,7 +16,7 @@ import net.premereur.mvp.core.verifiers.MethodVerifier;
  * @author gpremer
  * 
  */
-public class EventBusVerifier extends net.premereur.mvp.core.verifiers.EventBusVerifier {
+public final class EventBusVerifier extends net.premereur.mvp.core.verifiers.EventBusVerifier {
 
     private static final HandlerVerifier[] HANDLER_VERIFIERS = {new HasDefaultConstructorVerifier(), new ConcreteClassVerifier(),
             new HasUseViewAnnotationVerifier()};

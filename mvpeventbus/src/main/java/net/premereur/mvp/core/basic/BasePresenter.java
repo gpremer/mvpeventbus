@@ -4,18 +4,34 @@ import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.core.Presenter;
 import net.premereur.mvp.core.View;
 
+/**
+ * A basic implementation of the {@link Presenter} interface that can be used by many presenter implementations.
+ * 
+ * @author gpremer
+ * 
+ * @param <V> The type of the view the presenter is managing
+ * @param <E> The type of the event bus segment the presenter is mainly sending events to
+ */
 public abstract class BasePresenter<V extends View, E extends EventBus> implements Presenter<V, E> {
 
     private E eventBus;
 
     private V view;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void setEventBus(E eventBus) {
-        this.eventBus = eventBus;
+    public final void setEventBus(final E mainEventBusSegment) {
+        this.eventBus = mainEventBusSegment;
     }
 
-    protected E getEventBus() {
+    /**
+     * The event bus this presenter is associated with cast to the segment type specified as a generic type.
+     * 
+     * @return the event bus
+     */
+    protected final E getEventBus() {
         return eventBus;
     }
 
@@ -28,16 +44,24 @@ public abstract class BasePresenter<V extends View, E extends EventBus> implemen
      * @return the event bus
      */
     @SuppressWarnings("unchecked")
-    protected <Bus extends EventBus> Bus getEventBus(Class<Bus> eventBusClass) {
+    protected final <Bus extends EventBus> Bus getEventBus(final Class<Bus> eventBusClass) {
         return (Bus) getEventBus();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void setView(V view) {
-        this.view = view;
+    public final void setView(final V managedView) {
+        this.view = managedView;
     }
 
-    protected V getView() {
+    /**
+     * The view the presenter is managing.
+     * 
+     * @return the managed view
+     */
+    protected final V getView() {
         return view;
     }
 }

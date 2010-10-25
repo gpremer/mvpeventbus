@@ -21,7 +21,7 @@ public class EventBusInvocationHandler implements InvocationHandler {
     private static final EventBusVerifier VERIFIER = new EventBusVerifier();
 
     protected EventBusInvocationHandler(final Class<? extends EventBus>[] eventBusClasses, final PresenterFactory presenterFactory,
-            final EventBusVerifier verifier) {
+            final net.premereur.mvp.core.verifiers.EventBusVerifier verifier) {
         this.presenterFactory = presenterFactory;
         this.methodMapper = new EventMethodMapper();
         final Collection<String> verificationErrors = new ArrayList<String>();
@@ -29,7 +29,7 @@ public class EventBusInvocationHandler implements InvocationHandler {
         throwVerificationIfNeeded(verificationErrors);
     }
 
-    private void registerAllEventMethods(final Class<? extends EventBus>[] eventBusClasses, final EventBusVerifier verifier,
+    private void registerAllEventMethods(final Class<? extends EventBus>[] eventBusClasses, final net.premereur.mvp.core.verifiers.EventBusVerifier verifier,
             final Collection<String> verificationErrors) {
         for (final Class<? extends EventBus> eventBusIntf : eventBusClasses) {
             verifier.verify(eventBusIntf, verificationErrors);
