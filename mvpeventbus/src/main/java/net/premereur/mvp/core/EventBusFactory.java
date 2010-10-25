@@ -2,7 +2,8 @@ package net.premereur.mvp.core;
 
 /**
  * 
- * EventBusFactories create event bus implementations. These implementations are synthetic classes that are typically generated on the fly.
+ * EventBusFactories create event bus implementations. These implementations are synthetic classes that are typically generated on the fly. The factory
+ * implementations are meant to be cached for performance, though it is not strictly necessary.
  * 
  * @author gpremer
  * 

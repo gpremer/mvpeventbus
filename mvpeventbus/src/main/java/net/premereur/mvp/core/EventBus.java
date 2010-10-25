@@ -7,7 +7,7 @@ package net.premereur.mvp.core;
  * invocation will be forwarded to. By design, a method <i>event</i> on the EventBus will forward to a method <i><b>on</b>Event</i> on each associated
  * Presenter.
  * 
- * Concrete implementations of an EventBus are created by an {@link net.premereur.mvp.core.basic.BasicEventBusFactory.BasicEventBusFactory}.
+ * Concrete implementations of an EventBus are created by an {@link net.premereur.mvp.core.basic.AbstractEventBusFactory.BasicEventBusFactory}.
  * 
  * EventBusses can be combined with other {@link EventBus}ses. Each EventBus interface then becomes a segment of a greater event bus. Events sent to one event
  * bus will also be handled by other event buses as long as that other bus declares the same event method. Strictly speaking there is no "master" event bus
