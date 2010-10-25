@@ -1,7 +1,7 @@
 package net.premereur.mvp.core.guice;
 
 import net.premereur.mvp.core.EventBus;
-import net.premereur.mvp.core.basic.PresenterFactory;
+import net.premereur.mvp.core.base.PresenterFactory;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;

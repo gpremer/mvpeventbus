@@ -1,4 +1,4 @@
-package net.premereur.mvp.core.basic;
+package net.premereur.mvp.core.base;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
@@ -21,6 +21,8 @@ import net.premereur.mvp.core.View;
  * 
  */
 public class EventMethodMapper {
+
+    private static final int AFTER_PREFIX_POS = 2;
 
     /**
      * Combines a presenter with an event handler method within that presenter. The class cannot be derived from the method because of possible inheritance.
@@ -59,7 +61,7 @@ public class EventMethodMapper {
     private final Map<String, List<HandlerMethodPair>> handlingMethodsByEventMethod = new HashMap<String, List<HandlerMethodPair>>();
 
     /**
-     * Adds and verifies methods annotated with
+     * Adds and verifies methods annotated with {@link Event}.
      * 
      * @Event on an event bus interface.
      * @param eventBusEventMethods an number of event bus event methods
@@ -117,8 +119,8 @@ public class EventMethodMapper {
     }
 
     private static void addNameWithoutPrefix(final StringBuilder sb, final String name) {
-        if (name.startsWith("on") && name.length() > 2) {
-            sb.append(name.substring(2, 3).toLowerCase()).append(name.substring(3, name.length()));
+        if (name.startsWith("on") && name.length() > AFTER_PREFIX_POS) {
+            sb.append(name.substring(AFTER_PREFIX_POS, AFTER_PREFIX_POS + 1).toLowerCase()).append(name.substring(AFTER_PREFIX_POS + 1, name.length()));
         } else {
             sb.append(name);
         }
@@ -132,7 +134,7 @@ public class EventMethodMapper {
      * @param eventMethod an event bus event method
      * @return all matching event handler methods (and classes)
      */
-    public Iterable<HandlerMethodPair> getHandlerEvents(final Method eventMethod) {
+    public final Iterable<HandlerMethodPair> getHandlerEvents(final Method eventMethod) {
         final Iterable<HandlerMethodPair> methods = this.handlingMethodsByEventMethod.get(eventMethodSignature(eventMethod));
         return methods == null ? NO_METHODS : methods;
     }

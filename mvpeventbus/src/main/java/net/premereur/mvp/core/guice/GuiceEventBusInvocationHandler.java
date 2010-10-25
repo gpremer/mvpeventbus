@@ -2,7 +2,7 @@ package net.premereur.mvp.core.guice;
 
 import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.core.base.AbstractEventBusInvocationHandler;
-import net.premereur.mvp.core.basic.PresenterFactory;
+import net.premereur.mvp.core.base.PresenterFactory;
 
 /**
  * Invocation handler for guice-supported event busses.

@@ -1,4 +1,4 @@
-package net.premereur.mvp.core.basic;
+package net.premereur.mvp.core.verifiers;
 
 import java.util.Collection;
 

@@ -1,7 +1,7 @@
 package net.premereur.mvp.core;
 
+import net.premereur.mvp.core.base.VerificationException;
 import net.premereur.mvp.core.basic.BasePresenter;
-import net.premereur.mvp.core.basic.VerificationException;
 
 import org.junit.Test;
 

@@ -8,10 +8,6 @@ import java.util.Collection;
 
 import net.premereur.mvp.core.Event;
 import net.premereur.mvp.core.EventBus;
-import net.premereur.mvp.core.basic.EventMethodMapper;
-import net.premereur.mvp.core.basic.PresenterFactory;
-import net.premereur.mvp.core.basic.VerificationException;
-import net.premereur.mvp.core.verifiers.EventBusVerifier;
 import net.premereur.mvp.util.reflection.ReflectionUtil;
 
 /**

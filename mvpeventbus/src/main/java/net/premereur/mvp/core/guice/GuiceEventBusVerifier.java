@@ -1,10 +1,11 @@
 package net.premereur.mvp.core.guice;
 
-import net.premereur.mvp.core.basic.EventBusInterfaceVerifier;
+import net.premereur.mvp.core.base.EventBusVerifier;
 import net.premereur.mvp.core.verifiers.ConcreteClassVerifier;
-import net.premereur.mvp.core.verifiers.EventBusVerifier;
+import net.premereur.mvp.core.verifiers.EventBusInterfaceVerifier;
 import net.premereur.mvp.core.verifiers.HandlerVerifier;
 import net.premereur.mvp.core.verifiers.HasNoPrimitiveAgrumentsVerifier;
+import net.premereur.mvp.core.verifiers.IsInterfaceVerfier;
 import net.premereur.mvp.core.verifiers.IsVoidMethodVerifier;
 import net.premereur.mvp.core.verifiers.MethodVerifier;
 

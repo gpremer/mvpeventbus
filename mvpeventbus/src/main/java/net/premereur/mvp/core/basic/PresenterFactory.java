@@ -9,16 +9,26 @@ import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.core.Presenter;
 import net.premereur.mvp.core.View;
 
-public class PresenterFactory {
+/**
+ * A {@link net.premereur.mvp.core.base.PresenterFactory} that uses only standard J2SE libraries and has limited injection possibilities (only the view).
+ * 
+ * @author gpremer
+ * 
+ */
+public final class PresenterFactory implements net.premereur.mvp.core.base.PresenterFactory {
 
     private final Map<Class<?>, Presenter<View, ? extends EventBus>> handlerInstancesByClass = new HashMap<Class<?>, Presenter<View, ? extends EventBus>>();
-    private static final ViewFactory viewFactory = new ViewFactory();
+    private static final ViewFactory VIEW_FACTORY = new ViewFactory();
 
-    public Presenter<View, ? extends EventBus> getPresenter(Class<?> presenterClass, EventBus eventBus) {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Presenter<View, ? extends EventBus> getPresenter(final Class<?> presenterClass, final EventBus eventBus) {
         return getHandlerInstance(presenterClass, eventBus);
     }
 
-    private Presenter<View, ? extends EventBus> getHandlerInstance(Class<?> handlerClazz, EventBus eventBus) {
+    private Presenter<View, ? extends EventBus> getHandlerInstance(final Class<?> handlerClazz, final EventBus eventBus) {
         synchronized (handlerInstancesByClass) {
             Presenter<View, ? extends EventBus> handlerInstance = (Presenter<View, ? extends EventBus>) handlerInstancesByClass.get(handlerClazz);
             if (handlerInstance == null) {
@@ -30,10 +40,10 @@ public class PresenterFactory {
     }
 
     @SuppressWarnings("unchecked")
-    private static Presenter<View, ? extends EventBus> newHandler(Class<?> handlerClazz, EventBus eventBus) {
+    private static Presenter<View, ? extends EventBus> newHandler(final Class<?> handlerClazz, final EventBus eventBus) {
         Presenter handler = (Presenter) uncheckedNewInstance(handlerClazz);
         handler.setEventBus(eventBus);
-        handler.setView(viewFactory.newView(handlerClazz, eventBus, handler));
+        handler.setView(VIEW_FACTORY.newView(handlerClazz, eventBus, handler));
         return handler;
     }
 

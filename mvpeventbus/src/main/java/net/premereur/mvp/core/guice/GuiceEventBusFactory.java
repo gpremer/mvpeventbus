@@ -8,7 +8,7 @@ import java.util.List;
 
 import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.core.base.AbstractEventBusFactory;
-import net.premereur.mvp.core.basic.PresenterFactory;
+import net.premereur.mvp.core.base.PresenterFactory;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;

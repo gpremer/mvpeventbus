@@ -7,12 +7,12 @@ import java.util.WeakHashMap;
 import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.core.Presenter;
 import net.premereur.mvp.core.View;
-import net.premereur.mvp.core.basic.PresenterFactory;
+import net.premereur.mvp.core.base.PresenterFactory;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
-public class GuicePresenterFactory extends PresenterFactory {
+public class GuicePresenterFactory implements PresenterFactory {
 
     final private Injector injector;
     final private WeakHashMap<EventBus, Map<Class<?>, Presenter<View, ? extends EventBus>>> cache = new WeakHashMap<EventBus, Map<Class<?>, Presenter<View, ? extends EventBus>>>();

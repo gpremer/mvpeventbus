@@ -1,4 +1,4 @@
-package net.premereur.mvp.core.guice;
+package net.premereur.mvp.core.verifiers;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -7,7 +7,6 @@ import java.lang.reflect.Modifier;
 import java.util.Collection;
 
 import net.premereur.mvp.core.EventBus;
-import net.premereur.mvp.core.basic.EventBusInterfaceVerifier;
 
 public class IsInterfaceVerfier implements EventBusInterfaceVerifier {
 

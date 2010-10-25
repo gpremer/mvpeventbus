@@ -1,4 +1,4 @@
-package net.premereur.mvp.core.verifiers;
+package net.premereur.mvp.core.base;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -7,7 +7,9 @@ import net.premereur.mvp.core.Event;
 import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.core.Presenter;
 import net.premereur.mvp.core.View;
-import net.premereur.mvp.core.basic.EventBusInterfaceVerifier;
+import net.premereur.mvp.core.verifiers.EventBusInterfaceVerifier;
+import net.premereur.mvp.core.verifiers.HandlerVerifier;
+import net.premereur.mvp.core.verifiers.MethodVerifier;
 import net.premereur.mvp.util.reflection.ReflectionUtil;
 
 /**
