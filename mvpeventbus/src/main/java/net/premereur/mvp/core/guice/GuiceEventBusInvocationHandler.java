@@ -10,7 +10,7 @@ import net.premereur.mvp.core.base.PresenterFactory;
  * @author gpremer
  * 
  */
-public class GuiceEventBusInvocationHandler extends AbstractEventBusInvocationHandler {
+public final class GuiceEventBusInvocationHandler extends AbstractEventBusInvocationHandler {
 
     private static final GuiceEventBusVerifier GUICE_EVENT_BUS_VERIFIER = new GuiceEventBusVerifier();
 
@@ -20,7 +20,7 @@ public class GuiceEventBusInvocationHandler extends AbstractEventBusInvocationHa
      * @param eventBusClasses the classes to proxy
      * @param presenterFactory the factory to create presenter instances with
      */
-    public GuiceEventBusInvocationHandler(Class<? extends EventBus>[] eventBusClasses, PresenterFactory presenterFactory) {
+    public GuiceEventBusInvocationHandler(final Class<? extends EventBus>[] eventBusClasses, final PresenterFactory presenterFactory) {
         super(eventBusClasses, presenterFactory, GUICE_EVENT_BUS_VERIFIER);
     }
 

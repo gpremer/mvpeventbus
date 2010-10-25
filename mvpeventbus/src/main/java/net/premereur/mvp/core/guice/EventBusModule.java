@@ -6,11 +6,17 @@ import net.premereur.mvp.core.base.PresenterFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
-public class EventBusModule extends AbstractModule {
+/**
+ * A Guice module that registers the {@link PresenterFactory}.
+ * 
+ * @author gpremer
+ * 
+ */
+public final class EventBusModule extends AbstractModule {
 
     private EventBus eventBus;
 
-    public void setEventBus(EventBus eventBus) {
+    public void setEventBus(final EventBus eventBus) {
         this.eventBus = eventBus;
     }
 

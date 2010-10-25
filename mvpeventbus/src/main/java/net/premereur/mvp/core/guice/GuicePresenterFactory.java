@@ -12,19 +12,24 @@ import net.premereur.mvp.core.base.PresenterFactory;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
-public class GuicePresenterFactory implements PresenterFactory {
+/**
+ * A {@link PresenterFactory} that uses Guice to inject dependencies in the {@link Presenter}s it creates.
+ * @author gpremer
+ *
+ */
+public final class GuicePresenterFactory implements PresenterFactory {
 
-    final private Injector injector;
-    final private WeakHashMap<EventBus, Map<Class<?>, Presenter<View, ? extends EventBus>>> cache = new WeakHashMap<EventBus, Map<Class<?>, Presenter<View, ? extends EventBus>>>();
+    private final Injector injector;
+    private final WeakHashMap<EventBus, Map<Class<?>, Presenter<View, ? extends EventBus>>> cache = new WeakHashMap<EventBus, Map<Class<?>, Presenter<View, ? extends EventBus>>>();
 
     @Inject
-    public GuicePresenterFactory(Injector injector) {
+    public GuicePresenterFactory(final Injector injector) {
         this.injector = injector;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public Presenter<View, ? extends EventBus> getPresenter(Class<?> presenterClass, EventBus eventBus) {
+    public Presenter<View, ? extends EventBus> getPresenter(final Class<?> presenterClass, final EventBus eventBus) {
         // There should be no 2 threads requiring the same event bus, just to be
         // on the safe side
         synchronized (eventBus) {

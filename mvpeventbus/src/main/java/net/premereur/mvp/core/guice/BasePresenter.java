@@ -4,22 +4,40 @@ import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.core.Presenter;
 import net.premereur.mvp.core.View;
 
+/**
+ * An abstract base implementation for {@link Presenter}s that are dependency-managed by Guice.
+ * 
+ * @author gpremer
+ * 
+ * @param <V> The type of View the Presenter manages
+ * @param <E> The type of EventBus (segment) most events are sent to
+ */
 public abstract class BasePresenter<V extends View, E extends EventBus> implements Presenter<V, E> {
 
     private final E eventBus;
 
     private final V view;
 
+    /**
+     * Creates a base presenter for the given event bus segment and view.
+     * @param eventBus an event bus segment
+     * @param view the managed view
+     */
     public BasePresenter(final E eventBus, final V view) {
         this.eventBus = eventBus;
         this.view = view;
     }
 
     @Override
-    public void setEventBus(E eventBus) {
+    public void setEventBus(final E eventBus) {
         // To respect interface
     }
 
+    /**
+     * Returns the default event bus segment.
+     * 
+     * @return an event bus
+     */
     protected E getEventBus() {
         return eventBus;
     }
@@ -38,7 +56,7 @@ public abstract class BasePresenter<V extends View, E extends EventBus> implemen
     }
 
     @Override
-    public void setView(V view) {
+    public void setView(final V view) {
         // To respect interface
     }
 

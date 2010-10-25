@@ -9,9 +9,15 @@ import net.premereur.mvp.core.verifiers.IsInterfaceVerfier;
 import net.premereur.mvp.core.verifiers.IsVoidMethodVerifier;
 import net.premereur.mvp.core.verifiers.MethodVerifier;
 
-public class GuiceEventBusVerifier extends EventBusVerifier {
+/**
+ * An {@link EventBusVerifier} for Guice-backed event busses.
+ * 
+ * @author gpremer
+ * 
+ */
+public final class GuiceEventBusVerifier extends EventBusVerifier {
 
-    private static final HandlerVerifier[] HANDLER_VERIFIERS = {new ConcreteClassVerifier(),};
+    private static final HandlerVerifier[] HANDLER_VERIFIERS = {new ConcreteClassVerifier()};
     private static final MethodVerifier[] METHOD_VERIFIERS = {new HasNoPrimitiveAgrumentsVerifier(), new IsVoidMethodVerifier()};
     private static final EventBusInterfaceVerifier[] EVENT_BUS_VERIFIERS = {new IsInterfaceVerfier()};
 

@@ -22,15 +22,15 @@ import com.google.inject.Module;
  */
 public final class GuiceEventBusFactory extends AbstractEventBusFactory {
 
-    final private Injector guiceInjector;
-    final private EventBusModule eventBusModule;
+    private final Injector guiceInjector;
+    private final EventBusModule eventBusModule;
 
     /**
      * Creates a GuiceEventBusFactory.
      * 
      * @param modules the modules containing configuration information for objects that need to be injected.
      */
-    public GuiceEventBusFactory(Module... modules) {
+    public GuiceEventBusFactory(final Module... modules) {
         eventBusModule = new EventBusModule();
         List<Module> moduleList = new ArrayList<Module>(Arrays.asList(modules));
         moduleList.add(eventBusModule);
@@ -49,8 +49,8 @@ public final class GuiceEventBusFactory extends AbstractEventBusFactory {
      * {@inheritDoc}
      */
     @Override
-    protected Object createProxy(Class<? extends EventBus>[] eventBusIntfs, InvocationHandler handler) {
-        Object proxy = Proxy.newProxyInstance(GuiceEventBusFactory.class.getClassLoader(), eventBusIntfs, handler);
+    protected Object createProxy(final Class<? extends EventBus>[] eventBusIntfs, final InvocationHandler handler) {
+        final Object proxy = Proxy.newProxyInstance(GuiceEventBusFactory.class.getClassLoader(), eventBusIntfs, handler);
         eventBusModule.setEventBus((EventBus) proxy);
         return proxy;
     }
