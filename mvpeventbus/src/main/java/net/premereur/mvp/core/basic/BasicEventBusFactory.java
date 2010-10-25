@@ -12,19 +12,19 @@ import net.premereur.mvp.core.base.AbstractEventBusFactory;
  * @author gpremer
  * 
  */
-public class BasicEventBusFactory extends AbstractEventBusFactory {
+public final class BasicEventBusFactory extends AbstractEventBusFactory {
 
     /**
      * {@inheritDoc}
      */
-    protected final Object createProxy(Class<? extends EventBus>[] eventBusIntfs, InvocationHandler handler) {
+    protected Object createProxy(final Class<? extends EventBus>[] eventBusIntfs, final InvocationHandler handler) {
         return Proxy.newProxyInstance(BasicEventBusFactory.class.getClassLoader(), eventBusIntfs, handler);
     }
 
     /**
      * {@inheritDoc}
      */
-    protected EventBusInvocationHandler createHandler(Class<? extends EventBus>[] eventBusIntfs) {
+    protected EventBusInvocationHandler createHandler(final Class<? extends EventBus>[] eventBusIntfs) {
         return new EventBusInvocationHandler(eventBusIntfs);
     }
 

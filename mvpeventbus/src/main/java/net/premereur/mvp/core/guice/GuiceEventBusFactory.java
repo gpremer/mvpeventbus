@@ -20,7 +20,7 @@ import com.google.inject.Module;
  * @author gpremer
  * 
  */
-public class GuiceEventBusFactory extends AbstractEventBusFactory {
+public final class GuiceEventBusFactory extends AbstractEventBusFactory {
 
     final private Injector guiceInjector;
     final private EventBusModule eventBusModule;

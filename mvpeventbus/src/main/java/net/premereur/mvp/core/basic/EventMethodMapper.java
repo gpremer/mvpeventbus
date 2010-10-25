@@ -28,17 +28,18 @@ public class EventMethodMapper {
      * @author gpremer
      * 
      */
-    public static class HandlerMethodPair {
+    public static final class HandlerMethodPair {
         private final Class<?> handlerClass;
         private final Method method;
 
-        HandlerMethodPair(Class<?> presenterClass, Method method) {
+        HandlerMethodPair(final Class<?> presenterClass, final Method method) {
             this.handlerClass = presenterClass;
             this.method = method;
         }
 
         /**
          * Returns the presenter class.
+         * 
          * @return a class of of presenters.
          */
         public Class<?> getHandlerClass() {
@@ -47,6 +48,7 @@ public class EventMethodMapper {
 
         /**
          * The event handling method.
+         * 
          * @return a method.
          */
         public Method getMethod() {
@@ -57,11 +59,13 @@ public class EventMethodMapper {
     private final Map<String, List<HandlerMethodPair>> handlingMethodsByEventMethod = new HashMap<String, List<HandlerMethodPair>>();
 
     /**
-     * Adds and verifies methods annotated with @Event on an event bus interface. 
+     * Adds and verifies methods annotated with
+     * 
+     * @Event on an event bus interface.
      * @param eventBusEventMethods an number of event bus event methods
      * @param verificationErrors a collection to add possible verification errors to
      */
-    public void addHandlerMethods(final Iterable<Method> eventBusEventMethods, final Collection<String> verificationErrors) {
+    public final void addHandlerMethods(final Iterable<Method> eventBusEventMethods, final Collection<String> verificationErrors) {
         for (final Method eventMethod : eventBusEventMethods) {
             final Event eventAnt = eventMethod.getAnnotation(Event.class);
             final String eventMethodSignature = eventMethodSignature(eventMethod);
@@ -124,6 +128,7 @@ public class EventMethodMapper {
 
     /**
      * Returns all event handler methods (and the owing presenter classes) for the given event.
+     * 
      * @param eventMethod an event bus event method
      * @return all matching event handler methods (and classes)
      */
