@@ -51,7 +51,7 @@ public abstract class BasePresenter<V extends View, E extends EventBus> implemen
      * @return the event bus
      */
     @SuppressWarnings("unchecked")
-    protected <Bus extends EventBus> Bus getEventBus(Class<Bus> eventBusClass) {
+    protected <Bus extends EventBus> Bus getEventBus(final Class<Bus> eventBusClass) {
         return (Bus) getEventBus();
     }
 
