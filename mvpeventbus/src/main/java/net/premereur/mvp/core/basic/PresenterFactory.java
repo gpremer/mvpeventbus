@@ -43,7 +43,7 @@ public final class PresenterFactory implements net.premereur.mvp.core.base.Prese
     private static Presenter<View, ? extends EventBus> newHandler(final Class<?> handlerClazz, final EventBus eventBus) {
         Presenter handler = (Presenter) uncheckedNewInstance(handlerClazz);
         handler.setEventBus(eventBus);
-        handler.setView(VIEW_FACTORY.newView(handlerClazz, eventBus, handler));
+        handler.setView(VIEW_FACTORY.newView(handlerClazz, handler));
         return handler;
     }
 
