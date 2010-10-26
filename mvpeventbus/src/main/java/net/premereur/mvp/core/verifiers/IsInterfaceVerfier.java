@@ -8,10 +8,19 @@ import java.util.Collection;
 
 import net.premereur.mvp.core.EventBus;
 
-public class IsInterfaceVerfier implements EventBusInterfaceVerifier {
+/**
+ * Verifies that the given class type is an interface.
+ * 
+ * @author gpremer
+ * 
+ */
+public final class IsInterfaceVerfier implements EventBusInterfaceVerifier {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Collection<String> verifyInterface(Class<? extends EventBus> eventBusClass) {
+    public Collection<String> verifyInterface(final Class<? extends EventBus> eventBusClass) {
         int modifiers = eventBusClass.getModifiers();
         if (!Modifier.isInterface(modifiers)) {
             return asList("The handler " + eventBusClass + " has to be an interface");
