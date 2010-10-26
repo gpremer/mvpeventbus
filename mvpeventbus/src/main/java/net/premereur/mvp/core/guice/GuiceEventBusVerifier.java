@@ -4,7 +4,7 @@ import net.premereur.mvp.core.base.EventBusVerifier;
 import net.premereur.mvp.core.verifiers.ConcreteClassVerifier;
 import net.premereur.mvp.core.verifiers.EventBusInterfaceVerifier;
 import net.premereur.mvp.core.verifiers.HandlerVerifier;
-import net.premereur.mvp.core.verifiers.HasNoPrimitiveAgrumentsVerifier;
+import net.premereur.mvp.core.verifiers.HasNoPrimitiveArgumentsVerifier;
 import net.premereur.mvp.core.verifiers.IsInterfaceVerfier;
 import net.premereur.mvp.core.verifiers.IsVoidMethodVerifier;
 import net.premereur.mvp.core.verifiers.MethodVerifier;
@@ -18,7 +18,7 @@ import net.premereur.mvp.core.verifiers.MethodVerifier;
 public final class GuiceEventBusVerifier extends EventBusVerifier {
 
     private static final HandlerVerifier[] HANDLER_VERIFIERS = {new ConcreteClassVerifier()};
-    private static final MethodVerifier[] METHOD_VERIFIERS = {new HasNoPrimitiveAgrumentsVerifier(), new IsVoidMethodVerifier()};
+    private static final MethodVerifier[] METHOD_VERIFIERS = {new HasNoPrimitiveArgumentsVerifier(), new IsVoidMethodVerifier()};
     private static final EventBusInterfaceVerifier[] EVENT_BUS_VERIFIERS = {new IsInterfaceVerfier()};
 
     /**

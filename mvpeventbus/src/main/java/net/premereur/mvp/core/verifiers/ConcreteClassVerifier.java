@@ -8,11 +8,17 @@ import java.util.Collection;
 
 import net.premereur.mvp.core.Presenter;
 
-public class ConcreteClassVerifier implements HandlerVerifier {
+/**
+ * Checks that a class is concrete, i.e. not an interface or abstract class.
+ * 
+ * @author gpremer
+ * 
+ */
+public final class ConcreteClassVerifier implements HandlerVerifier {
 
     @Override
     public Collection<String> verify(@SuppressWarnings("unchecked")
-    Class<? extends Presenter> handlerClass) {
+    final Class<? extends Presenter> handlerClass) {
         int modifiers = handlerClass.getModifiers();
         if (Modifier.isAbstract(modifiers) || Modifier.isInterface(modifiers)) {
             return asList("The handler " + handlerClass + " has to be a concrete class");

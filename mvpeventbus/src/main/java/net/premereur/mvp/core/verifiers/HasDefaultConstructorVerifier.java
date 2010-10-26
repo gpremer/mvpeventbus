@@ -7,18 +7,26 @@ import java.util.Collection;
 
 import net.premereur.mvp.core.Presenter;
 
-public class HasDefaultConstructorVerifier implements HandlerVerifier {
+/**
+ * Verifies that the class a constructor without arguments.
+ * 
+ * @author gpremer
+ * 
+ */
+public final class HasDefaultConstructorVerifier implements HandlerVerifier {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Collection<String> verify(@SuppressWarnings("unchecked")
-    Class<? extends Presenter> handlerClass) {
+    final Class<? extends Presenter> handlerClass) {
         try {
             handlerClass.getConstructor();
             return emptyList();
-        } catch (SecurityException e) {
-        } catch (NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
+            return asList("The handler " + handlerClass + " has to have a default constructor");
         }
-        return asList("The handler " + handlerClass + " has to have a default constructor");
     }
 
 }
