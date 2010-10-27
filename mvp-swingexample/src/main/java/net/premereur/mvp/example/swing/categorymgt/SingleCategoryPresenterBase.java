@@ -18,7 +18,7 @@ public abstract class SingleCategoryPresenterBase<V extends CategoryPanelBase> e
         view.setCancelButtonListener(this);
     }
 
-    public void cancelClicked() {
+    public final void cancelClicked() {
         getEventBus().defaultCategoryPanelActivated();
     }
 

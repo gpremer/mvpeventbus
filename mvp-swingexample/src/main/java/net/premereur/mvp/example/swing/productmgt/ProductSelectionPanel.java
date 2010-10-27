@@ -70,6 +70,14 @@ public class ProductSelectionPanel extends JPanel {
         private Boolean selected = false;
         private Product product;
 
+        public Boolean getSelected() {
+            return selected;
+        }
+
+        public Product getProduct() {
+            return product;
+        }
+
     }
 
     private static final String[] COLUMN_NAMES = {" ", "Name"};
