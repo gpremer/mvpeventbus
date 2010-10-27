@@ -10,30 +10,30 @@ import com.google.inject.Singleton;
 
 @Singleton
 public class CategoryListPresenter extends CategoryPresenterBase<CategoryList> {
-	
-	@Inject
-	public CategoryListPresenter(EventBus eventBus, CategoryList view, CategoryRepository repository) {
-		super((CategoryMgtBus) eventBus, view, repository);
-		view.addSelectionListener(this);
-	}
 
-	public void onCategoryMgtActivated() {
-		final CategoryList categoryList = getView();
-		categoryList.bind(getRepository().allCategories());
-		getEventBus(ApplicationBus.class).setLeftComponent(categoryList);
-		getEventBus().defaultCategoryPanelActivated();
-	}
-	
-	public void onCategoryChanged(final Category category) {
-		getView().refreshList();
-	}
-	
-	public void onCategoryAdded(Category category) {
-		getView().bind(getRepository().allCategories());
-	}
+    @Inject
+    public CategoryListPresenter(final EventBus eventBus, final CategoryList view, final CategoryRepository repository) {
+        super((CategoryMgtBus) eventBus, view, repository);
+        view.addSelectionListener(this);
+    }
 
-	public void categorySelected(Category selectedCategory) {
-		getEventBus().categorySelected(selectedCategory);		
-	}
+    public final void onCategoryMgtActivated() {
+        final CategoryList categoryList = getView();
+        categoryList.bind(getRepository().allCategories());
+        getEventBus(ApplicationBus.class).setLeftComponent(categoryList);
+        getEventBus().defaultCategoryPanelActivated();
+    }
+
+    public final void onCategoryChanged(final Category category) {
+        getView().refreshList();
+    }
+
+    public final void onCategoryAdded(final Category category) {
+        getView().bind(getRepository().allCategories());
+    }
+
+    public final void categorySelected(final Category selectedCategory) {
+        getEventBus().categorySelected(selectedCategory);
+    }
 
 }

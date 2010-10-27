@@ -14,24 +14,24 @@ import com.google.inject.Singleton;
 @Singleton
 public class ProductSearchPresenter extends ProductPresenterBase<ProductSearchPanel> {
 
-	@Inject
-	public ProductSearchPresenter(EventBus bus, ProductSearchPanel view, ProductRepository repository) {
-		super((ProductMgtBus) bus, view, repository);
-	}
+    @Inject
+    public ProductSearchPresenter(final EventBus bus, final ProductSearchPanel view, final ProductRepository repository) {
+        super((ProductMgtBus) bus, view, repository);
+    }
 
-	public void onProductMgtActivated() {
-		getEventBus(ApplicationBus.class).clearScreen();
-		getEventBus(ApplicationBus.class).setCenterComponent(getView());
-		getView().setNameChangeListener(this);
-	}
+    public final void onProductMgtActivated() {
+        getEventBus(ApplicationBus.class).clearScreen();
+        getEventBus(ApplicationBus.class).setCenterComponent(getView());
+        getView().setNameChangeListener(this);
+    }
 
-	public void searchForName(String text) {
-		if (text.length() > 1) {
-			getView().setProducts(getProductRepository().searchProducts(text));
-		} else {
-			final List<Product> emptyList = Collections.emptyList();
-			getView().setProducts(emptyList);
-		}
+    public final void searchForName(final String text) {
+        if (text.length() > 1) {
+            getView().setProducts(getProductRepository().searchProducts(text));
+        } else {
+            final List<Product> emptyList = Collections.emptyList();
+            getView().setProducts(emptyList);
+        }
 
-	}
+    }
 }

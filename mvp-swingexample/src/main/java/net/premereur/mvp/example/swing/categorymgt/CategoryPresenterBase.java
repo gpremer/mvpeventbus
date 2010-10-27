@@ -6,15 +6,15 @@ import net.premereur.mvp.example.domain.repository.CategoryRepository;
 
 public abstract class CategoryPresenterBase<V extends View> extends BasePresenter<V, CategoryMgtBus> {
 
-	private CategoryRepository repository;
+    private CategoryRepository repository;
 
-	public CategoryPresenterBase(CategoryMgtBus eventBus, V view, CategoryRepository repository) {
-		super(eventBus, view);
-		this.repository = repository;
-	}
+    public CategoryPresenterBase(final CategoryMgtBus eventBus, final V view, final CategoryRepository repository) {
+        super(eventBus, view);
+        this.repository = repository;
+    }
 
-	public CategoryRepository getRepository() {
-		return repository;
-	}
+    public final CategoryRepository getRepository() {
+        return repository;
+    }
 
 }

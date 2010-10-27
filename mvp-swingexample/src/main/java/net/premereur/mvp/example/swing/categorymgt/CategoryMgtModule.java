@@ -7,9 +7,9 @@ import com.google.inject.AbstractModule;
 
 public class CategoryMgtModule extends AbstractModule {
 
-	@Override
-	protected void configure() {
-		bind(CategoryRepository.class).to(InMemoryCategoryRepository.class);
-	}
+    @Override
+    protected final void configure() {
+        bind(CategoryRepository.class).to(InMemoryCategoryRepository.class);
+    }
 
 }

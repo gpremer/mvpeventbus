@@ -6,15 +6,15 @@ import net.premereur.mvp.example.domain.repository.ProductRepository;
 
 public abstract class ProductPresenterBase<V extends View> extends BasePresenter<V, ProductMgtBus> {
 
-	private final ProductRepository repository;
+    private final ProductRepository repository;
 
-	public ProductPresenterBase (ProductMgtBus bus, V view, ProductRepository repository) {
-		super(bus, view);
-		this.repository = repository;
-	}
-	
-	public ProductRepository getProductRepository() {
-		return repository;
-	}
-	
+    public ProductPresenterBase(final ProductMgtBus bus, final V view, final ProductRepository repository) {
+        super(bus, view);
+        this.repository = repository;
+    }
+
+    public final ProductRepository getProductRepository() {
+        return repository;
+    }
+
 }

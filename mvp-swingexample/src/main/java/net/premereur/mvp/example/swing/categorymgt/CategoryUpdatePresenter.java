@@ -8,24 +8,24 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class CategoryUpdatePresenter extends SingleCategoryPresenterBase<CategoryUpdaterPanel> {		
-	
-	@Inject
-	public CategoryUpdatePresenter(CategoryMgtBus eventBus, CategoryUpdaterPanel view, CategoryRepository repository) {
-		super(eventBus, view, repository);
-	}
+public class CategoryUpdatePresenter extends SingleCategoryPresenterBase<CategoryUpdaterPanel> {
 
-	public void onCategorySelected(Category selectedCategory) {
-		CategoryUpdaterPanel view = getView();
-		view.bind(selectedCategory);
-		getEventBus(ApplicationBus.class).setCenterComponent(view);
-	}
-		
-	public void saveClicked(Category category) {
-		getRepository().save(category);
-		getEventBus().defaultCategoryPanelActivated();
-		getEventBus().categoryChanged(category);
-		getEventBus(ApplicationBus.class).setFeedback("Category updated");
-	}
+    @Inject
+    public CategoryUpdatePresenter(final CategoryMgtBus eventBus, final CategoryUpdaterPanel view, final CategoryRepository repository) {
+        super(eventBus, view, repository);
+    }
+
+    public final void onCategorySelected(final Category selectedCategory) {
+        CategoryUpdaterPanel view = getView();
+        view.bind(selectedCategory);
+        getEventBus(ApplicationBus.class).setCenterComponent(view);
+    }
+
+    public final void saveClicked(final Category category) {
+        getRepository().save(category);
+        getEventBus().defaultCategoryPanelActivated();
+        getEventBus().categoryChanged(category);
+        getEventBus(ApplicationBus.class).setFeedback("Category updated");
+    }
 
 }

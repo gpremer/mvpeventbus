@@ -7,9 +7,9 @@ import com.google.inject.AbstractModule;
 
 public class ProductMgtModule extends AbstractModule {
 
-	@Override
-	protected void configure() {
-		bind(ProductRepository.class).to(InMemoryProductRepository.class);
-	}
+    @Override
+    protected final void configure() {
+        bind(ProductRepository.class).to(InMemoryProductRepository.class);
+    }
 
 }

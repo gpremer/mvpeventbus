@@ -16,89 +16,89 @@ import net.premereur.mvp.core.View;
 import net.premereur.mvp.example.domain.model.Category;
 
 public class CategoryList extends JPanel implements View {
-	/**
-	 * Class version.
-	 */
-	private static final long serialVersionUID = 1L;
-	private TableModel dataModel;
-	private JTable table;
-	private List<Category> data = new ArrayList<Category>();
+    /**
+     * Class version.
+     */
+    private static final long serialVersionUID = 1L;
+    private TableModel dataModel;
+    private JTable table;
+    private List<Category> data = new ArrayList<Category>();
 
-	public CategoryList() {
-		init();
-	}
+    public CategoryList() {
+        init();
+    }
 
-	private void init() {
-		dataModel = new TableModel();
-		table = new JTable(dataModel);
-		table.setPreferredScrollableViewportSize(new Dimension(150, 270));
-		table.setFillsViewportHeight(true);
-		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		JScrollPane scrollPane = new JScrollPane(table);
-		add(scrollPane);
-		setOpaque(true); // Otherwise it doesn't show
-	}
+    private void init() {
+        dataModel = new TableModel();
+        table = new JTable(dataModel);
+        table.setPreferredScrollableViewportSize(new Dimension(150, 270));
+        table.setFillsViewportHeight(true);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        JScrollPane scrollPane = new JScrollPane(table);
+        add(scrollPane);
+        setOpaque(true); // Otherwise it doesn't show
+    }
 
-	public void bind(List<Category> list) {
-		this.data = new ArrayList<Category>(list);
-		dataModel.fireTableDataChanged();
-	}
+    public void bind(final List<Category> list) {
+        this.data = new ArrayList<Category>(list);
+        dataModel.fireTableDataChanged();
+    }
 
-	class TableModel extends AbstractTableModel {
-		private static final long serialVersionUID = 1L;
+    private class TableModel extends AbstractTableModel {
+        private static final long serialVersionUID = 1L;
 
-		@Override
-		public String getColumnName(int column) {
-			return "Name";
-		}
+        @Override
+        public String getColumnName(final int column) {
+            return "Name";
+        }
 
-		@Override
-		public int getColumnCount() {
-			return 1;
-		}
+        @Override
+        public int getColumnCount() {
+            return 1;
+        }
 
-		@Override
-		public int getRowCount() {
-			return data.size();
-		}
+        @Override
+        public int getRowCount() {
+            return data.size();
+        }
 
-		@Override
-		public Object getValueAt(int rowIndex, int columnIndex) {
-			return data.get(rowIndex).getName();
-		}
+        @Override
+        public Object getValueAt(final int rowIndex, final int columnIndex) {
+            return data.get(rowIndex).getName();
+        }
 
-		@Override
-		public boolean isCellEditable(int rowIndex, int columnIndex) {
-			return false;
-		}
-	}
+        @Override
+        public boolean isCellEditable(final int rowIndex, final int columnIndex) {
+            return false;
+        }
+    }
 
-	public void refreshList() {
-		dataModel.fireTableDataChanged();
-	}
+    public void refreshList() {
+        dataModel.fireTableDataChanged();
+    }
 
-	public void addSelectionListener(final CategoryListPresenter presenter) {
-		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+    public void addSelectionListener(final CategoryListPresenter presenter) {
+        table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				if (e.getValueIsAdjusting() == false) {
-					Category selectedCategory = getSelectedCategory();
-					if (selectedCategory != null) {
-						presenter.categorySelected(selectedCategory);
-					}
-				}
-			}
+            @Override
+            public void valueChanged(final ListSelectionEvent e) {
+                if (e.getValueIsAdjusting() == false) {
+                    Category selectedCategory = getSelectedCategory();
+                    if (selectedCategory != null) {
+                        presenter.categorySelected(selectedCategory);
+                    }
+                }
+            }
 
-		});
+        });
 
-	}
+    }
 
-	private Category getSelectedCategory() {
-		int selectedRow = table.getSelectedRow();
-		if (selectedRow == -1) {
-			return null;
-		}
-		return data.get(selectedRow);
-	}
+    private Category getSelectedCategory() {
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow == -1) {
+            return null;
+        }
+        return data.get(selectedRow);
+    }
 }

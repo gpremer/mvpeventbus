@@ -5,7 +5,7 @@ import net.premereur.mvp.core.EventBus;
 
 public interface ProductMgtBus extends EventBus {
 
-	@Event(ProductSearchPresenter.class)
-	void productMgtActivated();
+    @Event(ProductSearchPresenter.class)
+    void productMgtActivated();
 
 }

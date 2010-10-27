@@ -5,17 +5,23 @@ import java.awt.event.ActionListener;
 
 import net.premereur.mvp.example.support.ClickHandler;
 
-public class ClickHandlerActionListener implements ActionListener {
+/**
+ * A swing action listener that forwards it's clicks to a non-swing {@link ClickHandler}.
+ * 
+ * @author gpremer
+ * 
+ */
+public final class ClickHandlerActionListener implements ActionListener {
 
-	private ClickHandler handler;
+    private ClickHandler handler;
 
-	public ClickHandlerActionListener(ClickHandler handler) {
-		this.handler = handler;
-	}
+    public ClickHandlerActionListener(final ClickHandler handler) {
+        this.handler = handler;
+    }
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		handler.click();
-	}
+    @Override
+    public final void actionPerformed(final ActionEvent e) {
+        handler.click();
+    }
 
 }

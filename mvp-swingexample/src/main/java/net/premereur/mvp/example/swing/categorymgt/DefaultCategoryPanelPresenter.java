@@ -8,20 +8,20 @@ import net.premereur.mvp.core.guice.BasePresenter;
 import net.premereur.mvp.example.swing.application.ApplicationBus;
 
 @Singleton
-public class DefaultCategoryPanelPresenter extends BasePresenter<DefaultCategoryPanel, CategoryMgtBus>{
+public class DefaultCategoryPanelPresenter extends BasePresenter<DefaultCategoryPanel, CategoryMgtBus> {
 
-	@Inject
-	public DefaultCategoryPanelPresenter(EventBus eventBus, DefaultCategoryPanel view) {
-		super((CategoryMgtBus) eventBus, view);
-	}
+    @Inject
+    public DefaultCategoryPanelPresenter(final EventBus eventBus, final DefaultCategoryPanel view) {
+        super((CategoryMgtBus) eventBus, view);
+    }
 
-	public void onDefaultCategoryPanelActivated() {
-		getView().setCreateButtonListener(this);
-		getEventBus(ApplicationBus.class).setCenterComponent(getView());
-	}
+    public final void onDefaultCategoryPanelActivated() {
+        getView().setCreateButtonListener(this);
+        getEventBus(ApplicationBus.class).setCenterComponent(getView());
+    }
 
-	public void createNewCategory() {
-		getEventBus().activateCategoryCreation();
-	}
-	
+    public final void createNewCategory() {
+        getEventBus().activateCategoryCreation();
+    }
+
 }

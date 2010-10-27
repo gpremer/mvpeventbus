@@ -10,22 +10,22 @@ import com.google.inject.Singleton;
 @Singleton
 public class CategoryCreatorPresenter extends SingleCategoryPresenterBase<CategoryCreatorPanel> {
 
-	@Inject
-	public CategoryCreatorPresenter(CategoryMgtBus eventBus, CategoryCreatorPanel view, CategoryRepository repository) {
-		super(eventBus, view, repository);
-	}
+    @Inject
+    public CategoryCreatorPresenter(final CategoryMgtBus eventBus, final CategoryCreatorPanel view, final CategoryRepository repository) {
+        super(eventBus, view, repository);
+    }
 
-	public void onActivateCategoryCreation()  {
-		CategoryCreatorPanel view = getView();
-		view.bind(new Category(""));
-		getEventBus(ApplicationBus.class).setCenterComponent(view);
-	}
-	
-	public void saveClicked(Category category) {
-		getRepository().save(category);
-		getEventBus().defaultCategoryPanelActivated();
-		getEventBus().categoryAdded(category);
-		getEventBus(ApplicationBus.class).setFeedback("Category saved");
-	}
+    public void onActivateCategoryCreation() {
+        CategoryCreatorPanel view = getView();
+        view.bind(new Category(""));
+        getEventBus(ApplicationBus.class).setCenterComponent(view);
+    }
+
+    public void saveClicked(final Category category) {
+        getRepository().save(category);
+        getEventBus().defaultCategoryPanelActivated();
+        getEventBus().categoryAdded(category);
+        getEventBus(ApplicationBus.class).setFeedback("Category saved");
+    }
 
 }

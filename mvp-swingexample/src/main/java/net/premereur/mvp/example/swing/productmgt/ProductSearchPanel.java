@@ -11,58 +11,57 @@ import net.premereur.mvp.example.domain.model.Product;
 
 public class ProductSearchPanel extends JPanel implements View {
 
-	private final List<Product> products = new ArrayList<Product>();
+    private final List<Product> products = new ArrayList<Product>();
 
-	private class ProductListTabelModel extends AbstractTableModel {
+    private class ProductListTabelModel extends AbstractTableModel {
 
-		private static final long serialVersionUID = 1L;
-				
-		@Override
-		public int getColumnCount() {
-			return 1;
-		}
+        private static final long serialVersionUID = 1L;
 
-		@Override
-		public int getRowCount() {
-			return products.size();
-		}
+        @Override
+        public int getColumnCount() {
+            return 1;
+        }
 
-		@Override
-		public String getColumnName(int column) {
-			return "name";
-		}
+        @Override
+        public int getRowCount() {
+            return products.size();
+        }
 
-		@Override
-		public Object getValueAt(int rowIndex, int columnIndex) {
-			return products.get(rowIndex).getName();
-		}
+        @Override
+        public String getColumnName(final int column) {
+            return "name";
+        }
 
-	}
-	
-	private static final long serialVersionUID = 1L;
+        @Override
+        public Object getValueAt(final int rowIndex, final int columnIndex) {
+            return products.get(rowIndex).getName();
+        }
 
-	private ProductListTabelModel productListTableModel = new ProductListTabelModel();
-	
-	public ProductSearchPanel() {
-		initComponents();
-	}
+    }
 
-	public void setNameChangeListener(final ProductSearchPresenter presenter) {
+    private static final long serialVersionUID = 1L;
+
+    private ProductListTabelModel productListTableModel = new ProductListTabelModel();
+
+    public ProductSearchPanel() {
+        initComponents();
+    }
+
+    public void setNameChangeListener(final ProductSearchPresenter presenter) {
         nameField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
+            public void keyReleased(final java.awt.event.KeyEvent evt) {
                 presenter.searchForName(nameField.getText());
             }
         });
 
-	}
+    }
 
-	public void setProducts(List<Product> products) {
-		this.products.clear();
-		this.products.addAll(products);
-		productListTableModel.fireTableDataChanged();
-	}
-	
-	
+    public void setProducts(final List<Product> products) {
+        this.products.clear();
+        this.products.addAll(products);
+        productListTableModel.fireTableDataChanged();
+    }
+
     private void initComponents() {
         titleLabel = new javax.swing.JLabel();
         nameLabel = new javax.swing.JLabel();
@@ -84,46 +83,30 @@ public class ProductSearchPanel extends JPanel implements View {
 
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
-		resultTable.setModel(productListTableModel);
+        resultTable.setModel(productListTableModel);
         resultTable.setName("resultTable"); // NOI18N
         jScrollPane1.setViewportView(resultTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(12, 12, 12)
-                                .addComponent(nameLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(titleLabel)
-                            .addComponent(resultLabel)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(24, 24, 24)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(titleLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(nameLabel)
-                    .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(resultLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+        layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                layout.createSequentialGroup().addGroup(
+                        layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                                layout.createSequentialGroup().addContainerGap().addGroup(
+                                        layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                                                layout.createSequentialGroup().addGap(12, 12, 12).addComponent(nameLabel).addPreferredGap(
+                                                        javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(nameField,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)).addComponent(
+                                                titleLabel).addComponent(resultLabel))).addGroup(
+                                layout.createSequentialGroup().addGap(24, 24, 24).addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 364,
+                                        Short.MAX_VALUE))).addContainerGap()));
+        layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                layout.createSequentialGroup().addContainerGap().addComponent(titleLabel).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(
+                                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(nameLabel).addComponent(nameField,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18).addComponent(resultLabel).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(
+                                jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE).addContainerGap()));
     }
 
     private javax.swing.JLabel resultLabel;
@@ -133,4 +116,4 @@ public class ProductSearchPanel extends JPanel implements View {
     private javax.swing.JTable resultTable;
     private javax.swing.JLabel titleLabel;
 
- }
+}

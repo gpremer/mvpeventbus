@@ -18,72 +18,72 @@ import com.google.inject.Singleton;
 @Singleton
 public class ApplicationPresenter extends BasePresenter<ApplicationFrame, ApplicationBus> {
 
-	@Inject
-	public ApplicationPresenter(EventBus eventBus, ApplicationFrame view) {
-		super((ApplicationBus) eventBus, view);
-	}
+    @Inject
+    public ApplicationPresenter(final EventBus eventBus, final ApplicationFrame view) {
+        super((ApplicationBus) eventBus, view);
+    }
 
-	public void onApplicationStarted() {
-		ApplicationFrame view = getView();
+    public final void onApplicationStarted() {
+        ApplicationFrame view = getView();
 
-		getEventBus(CategoryMgtBus.class).categoryMgtActivated();
-		view.pack();
-		view.setVisible(true);
-		view.setExitListener(getExitClickHandler());
-		view.setCategoryListener(getCategoryClickHandler());
-		view.setProductListener(getProductClickHandler());
-	}
+        getEventBus(CategoryMgtBus.class).categoryMgtActivated();
+        view.pack();
+        view.setVisible(true);
+        view.setExitListener(getExitClickHandler());
+        view.setCategoryListener(getCategoryClickHandler());
+        view.setProductListener(getProductClickHandler());
+    }
 
-	public void onSetLeftComponent(JComponent component) {
-		getView().setLeftComponent(component);
-	}
+    public final void onSetLeftComponent(final JComponent component) {
+        getView().setLeftComponent(component);
+    }
 
-	public void onClearScreen() {
-		getView().clearLeftComponent();
-		getView().clearCentralComponent();
-	}
+    public final void onClearScreen() {
+        getView().clearLeftComponent();
+        getView().clearCentralComponent();
+    }
 
-	public void onSetCenterComponent(JComponent component) {
-		getView().setCentralComponent(component);
-	}
+    public final void onSetCenterComponent(final JComponent component) {
+        getView().setCentralComponent(component);
+    }
 
-	public void onSetFeedback(final String text) {
-		getView().setFeedback(text);
-		Timer timer = new Timer(3000, new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				getView().setFeedback("");
+    public final void onSetFeedback(final String text) {
+        getView().setFeedback(text);
+        Timer timer = new Timer(3000, new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                getView().setFeedback("");
 
-			}
-		});
-		timer.setRepeats(false);
-		timer.start();
-	}
+            }
+        });
+        timer.setRepeats(false);
+        timer.start();
+    }
 
-	public ClickHandler getExitClickHandler() {
-		return new ClickHandler() {
-			@Override
-			public void click() {
-				System.exit(0);
-			}
-		};
-	}
+    public final ClickHandler getExitClickHandler() {
+        return new ClickHandler() {
+            @Override
+            public void click() {
+                System.exit(0);
+            }
+        };
+    }
 
-	public ClickHandler getCategoryClickHandler() {
-		return new ClickHandler() {
-			@Override
-			public void click() {
-				getEventBus(CategoryMgtBus.class).categoryMgtActivated();
-			}
-		};
-	}
-	
-	public ClickHandler getProductClickHandler() {
-		return new ClickHandler() {
-			@Override
-			public void click() {
-				getEventBus(ProductMgtBus.class).productMgtActivated();
-			}
-		};		
-	}
+    public final ClickHandler getCategoryClickHandler() {
+        return new ClickHandler() {
+            @Override
+            public void click() {
+                getEventBus(CategoryMgtBus.class).categoryMgtActivated();
+            }
+        };
+    }
+
+    public final ClickHandler getProductClickHandler() {
+        return new ClickHandler() {
+            @Override
+            public void click() {
+                getEventBus(ProductMgtBus.class).productMgtActivated();
+            }
+        };
+    }
 }

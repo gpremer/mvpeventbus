@@ -4,13 +4,13 @@ import net.premereur.mvp.core.View;
 
 public class CategoryCreatorPanel extends CategoryPanelBase implements View {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public CategoryCreatorPanel() {
-		super("Make new category");
-	}
+    public CategoryCreatorPanel() {
+        super("Make new category");
+    }
 
-	protected void init() {
-	}
+    protected void init() {
+    }
 
 }
