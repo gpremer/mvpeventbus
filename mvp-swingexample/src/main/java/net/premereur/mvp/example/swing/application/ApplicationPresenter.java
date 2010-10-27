@@ -15,6 +15,12 @@ import net.premereur.mvp.example.swing.productmgt.ProductMgtBus;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+/**
+ * Presenter for the main application window.
+ * 
+ * @author gpremer
+ * 
+ */
 @Singleton
 public class ApplicationPresenter extends BasePresenter<ApplicationFrame, ApplicationBus> {
 
@@ -50,12 +56,12 @@ public class ApplicationPresenter extends BasePresenter<ApplicationFrame, Applic
     public final void onSetFeedback(final String text) {
         getView().setFeedback(text);
         Timer timer = new Timer(3000, new ActionListener() { // NOCS MAGIC 0
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                getView().setFeedback("");
+                    @Override
+                    public void actionPerformed(final ActionEvent e) {
+                        getView().setFeedback("");
 
-            }
-        });
+                    }
+                });
         timer.setRepeats(false);
         timer.start();
     }
