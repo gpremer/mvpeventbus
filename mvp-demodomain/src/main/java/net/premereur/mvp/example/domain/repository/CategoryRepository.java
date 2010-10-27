@@ -4,10 +4,26 @@ import java.util.List;
 
 import net.premereur.mvp.example.domain.model.Category;
 
+/**
+ * Manages persistence of {@link Category} instances.
+ * 
+ * @author gpremer
+ * 
+ */
 public interface CategoryRepository {
 
-	public List<Category> allCategories();
+    /**
+     * Lists all categories.
+     * 
+     * @return a List of categories
+     */
+    List<Category> allCategories();
 
-	public void save(Category category);
+    /**
+     * Persists a category.
+     * 
+     * @param category the category to persist
+     */
+    void save(Category category);
 
 }

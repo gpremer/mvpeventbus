@@ -197,6 +197,13 @@
         <module name="TodoComment"/>
         <module name="UpperEll"/>
 
+	<!-- To enable suppression by means of comments -->
+	<module name="FileContentsHolder"/>
     </module>
 
+    <module name="SuppressWithNearbyCommentFilter">
+      <property name="commentFormat" value="CHECKSTYLE IGNORE EXTENSION"/>
+      <property name="checkFormat" value="DesignForExtensionCheck"/>
+      <property name="influenceFormat" value="2"/>
+    </module>
 </module>
