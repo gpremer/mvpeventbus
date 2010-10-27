@@ -20,7 +20,7 @@ public class DefaultCategoryPanel extends JPanel implements View {
 
     private static final long serialVersionUID = 1L;
 
-    JButton createBtn = new JButton("Add category");
+    private JButton createBtn = new JButton("Add category");
 
     public DefaultCategoryPanel() {
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));

@@ -88,7 +88,7 @@ public class CategoryList extends JPanel implements View {
 
             @Override
             public void valueChanged(final ListSelectionEvent e) {
-                if (e.getValueIsAdjusting() == false) {
+                if (!e.getValueIsAdjusting()) {
                     Category selectedCategory = getSelectedCategory();
                     if (selectedCategory != null) {
                         presenter.categorySelected(selectedCategory);
