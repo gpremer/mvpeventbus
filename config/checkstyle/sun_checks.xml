@@ -80,9 +80,11 @@
         <module name="JavadocType"/>
 	<module name="JavadocVariable">
 	  <property name="scope" value="public"/>
+	  <property name="severity" value="warning"/>
 	</module>
-        <module name="JavadocStyle"/>
-
+        <module name="JavadocStyle">
+	  <property name="severity" value="warning"/>
+	</module>
 
         <!-- Checks for Naming Conventions.                  -->
         <!-- See http://checkstyle.sf.net/config_naming.html -->
@@ -119,7 +121,9 @@
         <!-- See http://checkstyle.sf.net/config_import.html -->
         <module name="AvoidStarImport"/>
         <module name="IllegalImport"/> <!-- defaults to sun.* packages -->
-        <module name="RedundantImport"/>
+        <module name="RedundantImport">
+	  <property name="severity" value="warning"/>
+	</module>
         <module name="UnusedImports"/>
 
 
@@ -149,7 +153,9 @@
         <!-- Modifier Checks                                    -->
         <!-- See http://checkstyle.sf.net/config_modifiers.html -->
         <module name="ModifierOrder"/>
-        <module name="RedundantModifier"/>
+        <module name="RedundantModifier">
+	  <property name="severity" value="warning"/>	  
+	</module>
 
 
         <!-- Checks for blocks. You know, those {}'s         -->
@@ -209,5 +215,10 @@
       <property name="commentFormat" value="CHECKSTYLE IGNORE EXTENSION"/>
       <property name="checkFormat" value="DesignForExtensionCheck"/>
       <property name="influenceFormat" value="2"/>
+    </module>
+    <module name="SuppressWithNearbyCommentFilter">
+      <property name="commentFormat" value="NOCS MAGIC (\d+)"/>
+      <property name="checkFormat" value="MagicNumberCheck"/>
+      <property name="influenceFormat" value="$1"/>
     </module>
 </module>

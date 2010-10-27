@@ -49,7 +49,7 @@ public class ApplicationPresenter extends BasePresenter<ApplicationFrame, Applic
 
     public final void onSetFeedback(final String text) {
         getView().setFeedback(text);
-        Timer timer = new Timer(3000, new ActionListener() {
+        Timer timer = new Timer(3000, new ActionListener() { // NOCS MAGIC 0
             @Override
             public void actionPerformed(final ActionEvent e) {
                 getView().setFeedback("");

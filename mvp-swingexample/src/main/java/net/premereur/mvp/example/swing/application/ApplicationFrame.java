@@ -47,7 +47,7 @@ public class ApplicationFrame extends JFrame implements View {
     private void initComponents() {
         initMenu();
         initStatusArea();
-        setMinimumSize(new Dimension(600, 400));
+        setMinimumSize(new Dimension(600, 400)); // NOCS MAGIC 0
     }
 
     private void initMenu() {

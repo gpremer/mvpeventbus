@@ -31,7 +31,7 @@ public class CategoryList extends JPanel implements View {
     private void init() {
         dataModel = new TableModel();
         table = new JTable(dataModel);
-        table.setPreferredScrollableViewportSize(new Dimension(150, 270));
+        table.setPreferredScrollableViewportSize(new Dimension(150, 270)); // NOCS MAGIC 0
         table.setFillsViewportHeight(true);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane scrollPane = new JScrollPane(table);

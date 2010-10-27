@@ -10,7 +10,7 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
 import net.premereur.mvp.example.domain.model.Product;
-
+//NOCS MAGIC 400
 public class ProductSelectionPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;

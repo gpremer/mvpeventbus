@@ -19,7 +19,7 @@ public class DefaultCategoryPanel extends JPanel implements View {
     public DefaultCategoryPanel() {
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         JPanel buttonPnl = new JPanel();
-        buttonPnl.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        buttonPnl.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10)); // NOCS MAGIC 0 
         buttonPnl.add(createBtn);
         add(buttonPnl);
     }

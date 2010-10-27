@@ -9,6 +9,7 @@ import javax.swing.table.AbstractTableModel;
 import net.premereur.mvp.core.View;
 import net.premereur.mvp.example.domain.model.Product;
 
+//NOCS MAGIC 400
 public class ProductSearchPanel extends JPanel implements View {
 
     private final List<Product> products = new ArrayList<Product>();

@@ -20,7 +20,7 @@ public final class ClickHandlerActionListener implements ActionListener {
     }
 
     @Override
-    public final void actionPerformed(final ActionEvent e) {
+    public void actionPerformed(final ActionEvent e) {
         handler.click();
     }
 
