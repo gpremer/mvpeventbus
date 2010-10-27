@@ -5,9 +5,15 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Some reflection-related utilities.
+ * 
+ * @author gpremer
+ * 
+ */
 public final class ReflectionUtil {
 
-    public static <T> T uncheckedNewInstance(Class<T> clazz) {
+    public static <T> T uncheckedNewInstance(final Class<T> clazz) {
         try {
             return clazz.newInstance();
         } catch (InstantiationException e) {

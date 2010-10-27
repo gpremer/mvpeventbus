@@ -38,7 +38,7 @@ public abstract class BasePresenter<V extends View, E extends EventBus> implemen
      * 
      * @return an event bus
      */
-    protected E getEventBus() {
+    protected final E getEventBus() {
         return eventBus;
     }
 
@@ -51,7 +51,7 @@ public abstract class BasePresenter<V extends View, E extends EventBus> implemen
      * @return the event bus
      */
     @SuppressWarnings("unchecked")
-    protected <Bus extends EventBus> Bus getEventBus(final Class<Bus> eventBusClass) {
+    protected final <Bus extends EventBus> Bus getEventBus(final Class<Bus> eventBusClass) {
         return (Bus) getEventBus();
     }
 
@@ -60,7 +60,7 @@ public abstract class BasePresenter<V extends View, E extends EventBus> implemen
         // To respect interface
     }
 
-    protected V getView() {
+    protected final V getView() {
         return view;
     }
 
