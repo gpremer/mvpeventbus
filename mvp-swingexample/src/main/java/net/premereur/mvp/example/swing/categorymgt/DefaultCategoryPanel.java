@@ -10,6 +10,12 @@ import javax.swing.JPanel;
 
 import net.premereur.mvp.core.View;
 
+/**
+ * The work view to show when no single category is selected. I.e. an empty panel.
+ * 
+ * @author gpremer
+ * 
+ */
 public class DefaultCategoryPanel extends JPanel implements View {
 
     private static final long serialVersionUID = 1L;
@@ -19,7 +25,7 @@ public class DefaultCategoryPanel extends JPanel implements View {
     public DefaultCategoryPanel() {
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         JPanel buttonPnl = new JPanel();
-        buttonPnl.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10)); // NOCS MAGIC 0 
+        buttonPnl.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10)); // NOCS MAGIC 0
         buttonPnl.add(createBtn);
         add(buttonPnl);
     }

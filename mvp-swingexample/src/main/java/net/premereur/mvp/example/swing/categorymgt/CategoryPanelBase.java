@@ -13,7 +13,13 @@ import javax.swing.LayoutStyle;
 import net.premereur.mvp.core.View;
 import net.premereur.mvp.example.domain.model.Category;
 
-//NOCS MAGIC 400
+/**
+ * Base class for views that update single Categories.
+ * 
+ * @author gpremer
+ * 
+ */
+// NOCS MAGIC 400
 public abstract class CategoryPanelBase extends JPanel implements View {
     private Category category;
     private JButton cancelButton = new JButton("Cancel");

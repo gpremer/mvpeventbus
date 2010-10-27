@@ -1,6 +1,7 @@
 package net.premereur.mvp.example.swing.productmgt;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
 import javax.swing.GroupLayout;
@@ -10,7 +11,14 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
 import net.premereur.mvp.example.domain.model.Product;
-//NOCS MAGIC 400
+
+/**
+ * Shows a selectable list of Products. Not used yet.
+ * 
+ * @author gpremer
+ * 
+ */
+// NOCS MAGIC 400
 public class ProductSelectionPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;

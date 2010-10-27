@@ -11,6 +11,12 @@ import net.premereur.mvp.example.swing.application.ApplicationBus;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+/**
+ * Manages the {@link ProductSearchPanel}.
+ * 
+ * @author gpremer
+ * 
+ */
 @Singleton
 public class ProductSearchPresenter extends ProductPresenterBase<ProductSearchPanel> {
 

@@ -5,6 +5,12 @@ import net.premereur.mvp.example.domain.repository.mem.InMemoryCategoryRepositor
 
 import com.google.inject.AbstractModule;
 
+/**
+ * Guice module for Category management dependencies.
+ * 
+ * @author gpremer
+ * 
+ */
 public class CategoryMgtModule extends AbstractModule {
 
     @Override

@@ -5,6 +5,12 @@ import net.premereur.mvp.example.domain.repository.mem.InMemoryProductRepository
 
 import com.google.inject.AbstractModule;
 
+/**
+ * Guice module for Product management dependencies.
+ * 
+ * @author gpremer
+ * 
+ */
 public class ProductMgtModule extends AbstractModule {
 
     @Override

@@ -8,6 +8,12 @@ import net.premereur.mvp.example.swing.application.ApplicationBus;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+/**
+ * Manages the category list.
+ * 
+ * @author gpremer
+ * 
+ */
 @Singleton
 public class CategoryListPresenter extends CategoryPresenterBase<CategoryList> {
 

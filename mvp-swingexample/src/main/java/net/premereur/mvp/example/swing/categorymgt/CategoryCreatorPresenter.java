@@ -7,6 +7,12 @@ import net.premereur.mvp.example.swing.application.ApplicationBus;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+/**
+ * Presenter for Category creation.
+ * 
+ * @author gpremer
+ * 
+ */
 @Singleton
 public class CategoryCreatorPresenter extends SingleCategoryPresenterBase<CategoryCreatorPanel> {
 

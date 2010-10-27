@@ -4,6 +4,12 @@ import net.premereur.mvp.core.Event;
 import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.example.domain.model.Category;
 
+/**
+ * Event bus segment for presenters and views related to Category management.
+ * 
+ * @author gpremer
+ * 
+ */
 public interface CategoryMgtBus extends EventBus {
     @Event(CategoryListPresenter.class)
     void categoryMgtActivated();

@@ -7,6 +7,12 @@ import net.premereur.mvp.example.swing.application.ApplicationBus;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+/**
+ * Manages the Category update view.
+ * 
+ * @author gpremer
+ * 
+ */
 @Singleton
 public class CategoryUpdatePresenter extends SingleCategoryPresenterBase<CategoryUpdaterPanel> {
 

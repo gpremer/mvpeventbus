@@ -15,6 +15,12 @@ import javax.swing.table.AbstractTableModel;
 import net.premereur.mvp.core.View;
 import net.premereur.mvp.example.domain.model.Category;
 
+/**
+ * Shows a list of categories.
+ * 
+ * @author gpremer
+ * 
+ */
 public class CategoryList extends JPanel implements View {
     /**
      * Class version.

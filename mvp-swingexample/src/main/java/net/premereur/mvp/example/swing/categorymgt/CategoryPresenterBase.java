@@ -4,6 +4,13 @@ import net.premereur.mvp.core.View;
 import net.premereur.mvp.core.guice.BasePresenter;
 import net.premereur.mvp.example.domain.repository.CategoryRepository;
 
+/**
+ * Base class for presenters that need a {@link CategoryRepository}.
+ * 
+ * @author gpremer
+ * 
+ * @param <V> The view class for the presenter
+ */
 public abstract class CategoryPresenterBase<V extends View> extends BasePresenter<V, CategoryMgtBus> {
 
     private CategoryRepository repository;

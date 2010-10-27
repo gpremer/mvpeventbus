@@ -7,6 +7,12 @@ import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.core.guice.BasePresenter;
 import net.premereur.mvp.example.swing.application.ApplicationBus;
 
+/**
+ * The presenter for the {@link DefaultCategoryPanel} view.
+ * 
+ * @author gpremer
+ * 
+ */
 @Singleton
 public class DefaultCategoryPanelPresenter extends BasePresenter<DefaultCategoryPanel, CategoryMgtBus> {
 
