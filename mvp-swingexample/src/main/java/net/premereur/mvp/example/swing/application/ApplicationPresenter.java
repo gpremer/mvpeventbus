@@ -69,6 +69,11 @@ public class ApplicationPresenter extends BasePresenter<ApplicationFrame, Applic
         getView().setCentralComponent(component);
     }
 
+    /**
+     * Handles setting the feedback message.
+     * 
+     * @param text the text of the message
+     */
     public final void onSetFeedback(final String text) {
         getView().setFeedback(text);
         Timer timer = new Timer(3000, new ActionListener() { // NOCS MAGIC 0

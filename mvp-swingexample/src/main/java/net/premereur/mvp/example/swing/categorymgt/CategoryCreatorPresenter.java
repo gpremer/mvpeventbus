@@ -21,12 +21,18 @@ public class CategoryCreatorPresenter extends SingleCategoryPresenterBase<Catego
         super(eventBus, view, repository);
     }
 
+    /**
+     * Handles activating the category creation.
+     */
     public void onActivateCategoryCreation() {
         CategoryCreatorPanel view = getView();
         view.bind(new Category(""));
         getEventBus(ApplicationBus.class).setCenterComponent(view);
     }
 
+    /**
+     * Call back method for when the view receives a save request.
+     */
     public void saveClicked(final Category category) {
         getRepository().save(category);
         getEventBus().defaultCategoryPanelActivated();

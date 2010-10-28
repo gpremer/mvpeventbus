@@ -18,9 +18,18 @@ public abstract class SingleCategoryPresenterBase<V extends CategoryPanelBase> e
         view.setCancelButtonListener(this);
     }
 
+    /**
+     * Call back method for when the view receives a cancel request.
+     * 
+     */
     public final void cancelClicked() {
         getEventBus().defaultCategoryPanelActivated();
     }
 
+    /**
+     * Call back method for when the view receives a save request.
+     * 
+     * @param category The category that is saved.
+     */
     public abstract void saveClicked(Category category);
 }

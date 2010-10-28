@@ -70,6 +70,11 @@ public abstract class CategoryPanelBase extends JPanel implements View {
         nameField.setText(this.category.getName());
     }
 
+    /**
+     * Registers the presenter as a call back when the save button is clicked.
+     * 
+     * @param presenter the object that receives the call back.
+     */
     public void setSaveButtonListener(final SingleCategoryPresenterBase<? extends CategoryPanelBase> presenter) {
         this.saveButton.addActionListener(new ActionListener() {
 
@@ -85,6 +90,11 @@ public abstract class CategoryPanelBase extends JPanel implements View {
         presenter.saveClicked(category);
     }
 
+    /**
+     * Registers the presenter as a call back when the cancel button is clicked.
+     * 
+     * @param presenter the object that receives the call back.
+     */
     public void setCancelButtonListener(final SingleCategoryPresenterBase<? extends CategoryPanelBase> presenter) {
         this.cancelButton.addActionListener(new ActionListener() {
 
