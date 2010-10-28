@@ -1,0 +1,7 @@
+apply plugin: 'java'
+
+checkstyleConfigFileName = "${rootDir}/config/checkstyle/api_checks.xml"
+
+dependencies {
+  compile fileTree(dir:'lib/default', include:'*.jar')
+}
