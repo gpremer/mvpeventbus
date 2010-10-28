@@ -8,7 +8,7 @@ subprojects {
 	compile fileTree(dir: "${rootDir}/lib/test", include:'*.jar')
     }
 
-    checkstyleConfigFileName = "${rootDir}/config/checkstyle/sun_checks.xml"
+    checkstyleConfigFileName = "${rootDir}/config/checkstyle/application_checks.xml"
 
     checkstyleMain {
         ignoreFailures = true

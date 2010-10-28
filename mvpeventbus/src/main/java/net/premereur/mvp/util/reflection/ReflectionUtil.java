@@ -13,6 +13,12 @@ import java.util.List;
  */
 public final class ReflectionUtil {
 
+    /**
+     * Creates a new instance of the given class, converting the checked exceptions to run-time exceptions.
+     * 
+     * @param <T> the type to create an instance of
+     * @param clazz the class to create an instance of
+     */
     public static <T> T uncheckedNewInstance(final Class<T> clazz) {
         try {
             return clazz.newInstance();
@@ -23,6 +29,12 @@ public final class ReflectionUtil {
         }
     }
 
+    /**
+     * Returns all methods of a class that are annotated with the given annotation.
+     * 
+     * @param clazz the class to introspect
+     * @param annot the annotation to look for
+     */
     public static Iterable<Method> annotatedMethods(final Class<?> clazz, final Class<? extends Annotation> annot) {
         Method[] methods = clazz.getMethods();
         List<Method> annotatedMethods = new ArrayList<Method>(methods.length);

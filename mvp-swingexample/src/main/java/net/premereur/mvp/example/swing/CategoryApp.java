@@ -11,10 +11,15 @@ import net.premereur.mvp.example.swing.productmgt.ProductMgtModule;
  * The demo application itself.
  * 
  * @author gpremer
- * 
+ *
  */
 public final class CategoryApp {
 
+    /**
+     * Starts the application.
+     *
+     * @param args the command line arguments
+     */
     public static void main(final String[] args) {
         // Schedule a job for the event-dispatching thread:
         // creating and showing this application's GUI.

@@ -19,14 +19,23 @@ public final class InMemoryProductRepository implements ProductRepository {
             new Product("Ink"), new Product("Maintenace"), new Product("Beer"), new Product("Eggs"), new Product("Cariage"), new Product("Installation"),
             new Product("Insurance"), new Product("Income protection"), new Product("Hard disk")}));
 
+    /**
+     * Creates a {@link ProductRepository} with a fixed set of initial products.
+     */
     public InMemoryProductRepository() {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public List<Product> allProducts() {
         return Collections.unmodifiableList(products);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public List<Product> searchProducts(final String prefix) {
         List<Product> matches = new ArrayList<Product>();
         for (Product p : allProducts()) {
@@ -38,6 +47,9 @@ public final class InMemoryProductRepository implements ProductRepository {
         return Collections.unmodifiableList(matches);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void save(final Product product) {
         if (!products.contains(product)) {
             products.add(product);

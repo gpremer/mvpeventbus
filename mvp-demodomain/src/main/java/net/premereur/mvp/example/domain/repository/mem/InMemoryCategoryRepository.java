@@ -30,6 +30,9 @@ public final class InMemoryCategoryRepository implements CategoryRepository {
         return Collections.unmodifiableList(categories);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void save(final Category category) {
         if (!categories.contains(category)) {
             categories.add(category);

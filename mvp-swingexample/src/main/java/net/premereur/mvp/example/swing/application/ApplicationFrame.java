@@ -89,10 +89,20 @@ public class ApplicationFrame extends JFrame implements View {
         add(feedbackLbl, BorderLayout.PAGE_END);
     }
 
+    /**
+     * Sets the value of the text of the feedback area.
+     * 
+     * @param text the feedback text
+     */
     public void setFeedback(final String text) {
         feedbackLbl.setText(text);
     }
 
+    /**
+     * Sets the left part of the application frame to the given component.
+     * 
+     * @param component the component to attach
+     */
     public synchronized void setLeftComponent(final JComponent component) {
         clearLeftComponent();
         leftComponent = component;
@@ -100,6 +110,9 @@ public class ApplicationFrame extends JFrame implements View {
         pack();
     }
 
+    /**
+     * Removes any component from the left part of the application frame.
+     */
     public synchronized void clearLeftComponent() {
         if (leftComponent != null) {
             getContentPane().remove(leftComponent);
@@ -107,6 +120,11 @@ public class ApplicationFrame extends JFrame implements View {
         }
     }
 
+    /**
+     * Sets the central part of the application frame to the given component.
+     * 
+     * @param component the component to attach
+     */
     public synchronized void setCentralComponent(final JComponent component) {
         clearCentralComponent();
         centralComponent = component;
@@ -114,6 +132,9 @@ public class ApplicationFrame extends JFrame implements View {
         pack();
     }
 
+    /**
+     * Removes any component from the central part of the application frame.
+     */
     public void clearCentralComponent() {
         if (centralComponent != null) {
             getContentPane().remove(centralComponent);
@@ -121,14 +142,29 @@ public class ApplicationFrame extends JFrame implements View {
         }
     }
 
+    /**
+     * Registers a handler for exit events.
+     * 
+     * @param handler the handler to register
+     */
     public void setExitListener(final ClickHandler handler) {
         exitMenuItem.addActionListener(new ClickHandlerActionListener(handler));
     }
 
+    /**
+     * Registers a handler for category management selection.
+     * 
+     * @param handler the handler to register
+     */
     public void setCategoryListener(final ClickHandler handler) {
         catMenuItem.addActionListener(new ClickHandlerActionListener(handler));
     }
 
+    /**
+     * Registers a handler for product management selection.
+     * 
+     * @param handler the handler to register
+     */
     public void setProductListener(final ClickHandler handler) {
         productMenuItem.addActionListener(new ClickHandlerActionListener(handler));
     }

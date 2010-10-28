@@ -8,6 +8,9 @@ package net.premereur.mvp.example.support;
  */
 public interface ClickHandler {
 
+    /**
+     * Invoked when the associated component is clicked on.
+     */
     void click();
 
 }

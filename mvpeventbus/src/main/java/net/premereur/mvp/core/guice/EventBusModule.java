@@ -25,6 +25,10 @@ public final class EventBusModule extends AbstractModule {
         bind(PresenterFactory.class).to(GuicePresenterFactory.class);
     }
 
+    /**
+     * Yields the stored event bus.
+     * 
+     */
     @Provides
     public EventBus providesEventBus() {
         return eventBus;

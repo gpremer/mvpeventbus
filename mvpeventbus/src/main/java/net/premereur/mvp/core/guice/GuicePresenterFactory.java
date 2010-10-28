@@ -14,19 +14,28 @@ import com.google.inject.Injector;
 
 /**
  * A {@link PresenterFactory} that uses Guice to inject dependencies in the {@link Presenter}s it creates.
+ * 
  * @author gpremer
- *
+ * 
  */
 public final class GuicePresenterFactory implements PresenterFactory {
 
     private final Injector injector;
     private final WeakHashMap<EventBus, Map<Class<?>, Presenter<View, ? extends EventBus>>> cache = new WeakHashMap<EventBus, Map<Class<?>, Presenter<View, ? extends EventBus>>>();
 
+    /**
+     * Creates a factory for Presenters that initialised by a Guice injector.
+     * 
+     * @param injector the Guice injector to resolve dependencies with
+     */
     @Inject
     public GuicePresenterFactory(final Injector injector) {
         this.injector = injector;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @SuppressWarnings("unchecked")
     @Override
     public Presenter<View, ? extends EventBus> getPresenter(final Class<?> presenterClass, final EventBus eventBus) {

@@ -20,7 +20,6 @@ public class EventBusInvocationHandler extends AbstractEventBusInvocationHandler
      * Constructor.
      * 
      * @param eventBusClasses the classes to proxy
-     * @param presenterFactory the factory to create presenter instances with
      */
     public EventBusInvocationHandler(final Class<? extends EventBus>[] eventBusClasses) {
         super(eventBusClasses, new PresenterFactory(), VERIFIER);
