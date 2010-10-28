@@ -29,6 +29,9 @@ public class ApplicationPresenter extends BasePresenter<ApplicationFrame, Applic
         super((ApplicationBus) eventBus, view);
     }
 
+    /**
+     * Handles application start events.
+     */
     public final void onApplicationStarted() {
         ApplicationFrame view = getView();
 
@@ -40,15 +43,28 @@ public class ApplicationPresenter extends BasePresenter<ApplicationFrame, Applic
         view.setProductListener(getProductClickHandler());
     }
 
+    /**
+     * Handles the set left component event.
+     * 
+     * @param component the component to attach
+     */
     public final void onSetLeftComponent(final JComponent component) {
         getView().setLeftComponent(component);
     }
 
+    /**
+     * Clears the application frame.
+     */
     public final void onClearScreen() {
         getView().clearLeftComponent();
         getView().clearCentralComponent();
     }
 
+    /**
+     * Handles the set central component event.
+     * 
+     * @param component the component to attach
+     */
     public final void onSetCenterComponent(final JComponent component) {
         getView().setCentralComponent(component);
     }
