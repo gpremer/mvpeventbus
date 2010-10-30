@@ -70,13 +70,13 @@ public class CategoryUpdatePresenterTest {
 	public void shouldClearMainPanelWhenCategoryUpdated() throws Exception {
 		Category category = new Category("cat");
 		presenter.saveClicked(category);
-		verify(eventBus).defaultCategoryPanelActivated();
+		verify(eventBus).noCategorySelected();
 	}
 
 	@Test
 	public void shouldClearMainPanelWhenCancelled() throws Exception {
 		presenter.cancelClicked();
-		verify(eventBus).defaultCategoryPanelActivated();
+		verify(eventBus).noCategorySelected();
 	}
 
 	@Test

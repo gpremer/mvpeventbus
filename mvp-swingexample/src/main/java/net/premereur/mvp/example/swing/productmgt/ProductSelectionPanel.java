@@ -53,6 +53,9 @@ public class ProductSelectionPanel extends JPanel {
         productList.getColumnModel().getColumn(1).setPreferredWidth(60);
     }
 
+    /**
+     * Assigns the products that are the result of a search operation.
+     */
     public final void setProducts(final List<Product> products) {
         productSelections.clear();
         for (Product product : products) {

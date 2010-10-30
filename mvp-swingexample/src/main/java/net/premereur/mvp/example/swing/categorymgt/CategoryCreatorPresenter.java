@@ -35,7 +35,7 @@ public class CategoryCreatorPresenter extends SingleCategoryPresenterBase<Catego
      */
     public void saveClicked(final Category category) {
         getRepository().save(category);
-        getEventBus().defaultCategoryPanelActivated();
+        getEventBus().noCategorySelected();
         getEventBus().categoryAdded(category);
         getEventBus(ApplicationBus.class).setFeedback("Category saved");
     }

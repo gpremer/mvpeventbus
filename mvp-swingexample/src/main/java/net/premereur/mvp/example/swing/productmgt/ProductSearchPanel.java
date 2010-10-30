@@ -54,15 +54,21 @@ public class ProductSearchPanel extends JPanel implements View {
         initComponents();
     }
 
+    /**
+     * Sets the presenter that will receive changes in the name search field.
+     */
     public void setNameChangeListener(final ProductSearchPresenter presenter) {
         nameField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(final java.awt.event.KeyEvent evt) {
-                presenter.searchForName(nameField.getText());
+                presenter.newSearchName(nameField.getText());
             }
         });
 
     }
 
+    /**
+     * Sets the products that are the result of a search query.
+     */
     public void setProducts(final List<Product> products) {
         this.products.clear();
         this.products.addAll(products);

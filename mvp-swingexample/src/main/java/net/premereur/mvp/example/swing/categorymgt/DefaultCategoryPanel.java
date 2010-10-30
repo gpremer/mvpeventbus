@@ -30,6 +30,9 @@ public class DefaultCategoryPanel extends JPanel implements View {
         add(buttonPnl);
     }
 
+    /**
+     * Sets the presenter that will receive clicks on the create button.
+     */
     public final void setCreateButtonListener(final DefaultCategoryPanelPresenter presenter) {
         for (ActionListener listener : createBtn.getActionListeners()) {
             createBtn.removeActionListener(listener);
@@ -44,6 +47,4 @@ public class DefaultCategoryPanel extends JPanel implements View {
         });
     }
 
-    protected void init() {
-    }
 }

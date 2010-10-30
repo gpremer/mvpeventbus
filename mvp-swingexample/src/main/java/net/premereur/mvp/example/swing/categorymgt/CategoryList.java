@@ -45,8 +45,13 @@ public class CategoryList extends JPanel implements View {
         setOpaque(true); // Otherwise it doesn't show
     }
 
-    public void bind(final List<Category> list) {
-        this.data = new ArrayList<Category>(list);
+    /**
+     * Sets the backing data.
+     * 
+     * @param categories the categories
+     */
+    public void bind(final List<Category> categories) {
+        this.data = new ArrayList<Category>(categories);
         dataModel.fireTableDataChanged();
     }
 
@@ -79,10 +84,18 @@ public class CategoryList extends JPanel implements View {
         }
     }
 
+    /**
+     * Refreshes the list with the current state of the backing data.
+     */
     public void refreshList() {
         dataModel.fireTableDataChanged();
     }
 
+    /**
+     * Makes the given presenter receives selection events.
+     * 
+     * @param presenter the presenter to send events to
+     */
     public void addSelectionListener(final CategoryListPresenter presenter) {
         table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 

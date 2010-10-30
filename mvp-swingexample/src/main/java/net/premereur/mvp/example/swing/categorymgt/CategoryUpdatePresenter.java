@@ -21,15 +21,21 @@ public class CategoryUpdatePresenter extends SingleCategoryPresenterBase<Categor
         super(eventBus, view, repository);
     }
 
+    /**
+     * See {@link CategoryMgtBus#categorySelected(Category)}.
+     */
     public final void onCategorySelected(final Category selectedCategory) {
         CategoryUpdaterPanel view = getView();
         view.bind(selectedCategory);
         getEventBus(ApplicationBus.class).setCenterComponent(view);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final void saveClicked(final Category category) {
         getRepository().save(category);
-        getEventBus().defaultCategoryPanelActivated();
+        getEventBus().noCategorySelected();
         getEventBus().categoryChanged(category);
         getEventBus(ApplicationBus.class).setFeedback("Category updated");
     }

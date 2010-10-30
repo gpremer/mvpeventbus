@@ -21,11 +21,17 @@ public class DefaultCategoryPanelPresenter extends BasePresenter<DefaultCategory
         super((CategoryMgtBus) eventBus, view);
     }
 
-    public final void onDefaultCategoryPanelActivated() {
+    /**
+     * See {@link CategoryMgtBus#noCategorySelected()}.
+     */
+    public final void onNoCategorySelected() {
         getView().setCreateButtonListener(this);
         getEventBus(ApplicationBus.class).setCenterComponent(getView());
     }
 
+    /**
+     * Converts the category create UI event to the corresponding bus event.
+     */
     public final void createNewCategory() {
         getEventBus().activateCategoryCreation();
     }

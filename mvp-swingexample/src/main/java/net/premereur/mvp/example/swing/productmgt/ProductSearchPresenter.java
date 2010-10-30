@@ -25,13 +25,19 @@ public class ProductSearchPresenter extends ProductPresenterBase<ProductSearchPa
         super((ProductMgtBus) bus, view, repository);
     }
 
+    /**
+     * See {@link ProductMgtBus#productMgtActivated()}.
+     */
     public final void onProductMgtActivated() {
         getEventBus(ApplicationBus.class).clearScreen();
         getEventBus(ApplicationBus.class).setCenterComponent(getView());
         getView().setNameChangeListener(this);
     }
 
-    public final void searchForName(final String text) {
+    /**
+     * Call back for new search names entered in the view.
+     */
+    public final void newSearchName(final String text) {
         if (text.length() > 1) {
             getView().setProducts(getProductRepository().searchProducts(text));
         } else {

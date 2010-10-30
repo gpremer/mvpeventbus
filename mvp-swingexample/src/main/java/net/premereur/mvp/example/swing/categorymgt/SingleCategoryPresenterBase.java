@@ -23,7 +23,7 @@ public abstract class SingleCategoryPresenterBase<V extends CategoryPanelBase> e
      * 
      */
     public final void cancelClicked() {
-        getEventBus().defaultCategoryPanelActivated();
+        getEventBus().noCategorySelected();
     }
 
     /**

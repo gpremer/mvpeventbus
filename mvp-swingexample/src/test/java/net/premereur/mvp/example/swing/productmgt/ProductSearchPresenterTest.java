@@ -20,67 +20,67 @@ import org.junit.Test;
 
 public class ProductSearchPresenterTest {
 
-	private ProductSearchPresenter presenter;
-	private ProductSearchPanel view;
-	private ProductMgtBus eventBus;
-	private ApplicationBus appBus;
-	private ProductRepository repo;
+    private ProductSearchPresenter presenter;
+    private ProductSearchPanel view;
+    private ProductMgtBus eventBus;
+    private ApplicationBus appBus;
+    private ProductRepository repo;
 
-	@Before
-	public void setUpPresenterWithMockView() {
-		view = mock(ProductSearchPanel.class);
-		eventBus = mock(ProductMgtBus.class, withSettings().extraInterfaces(ApplicationBus.class));
-		appBus = (ApplicationBus) eventBus;
-		repo = mock(ProductRepository.class);
-		presenter = new ProductSearchPresenter(eventBus, view, repo);
-	}
-	
-	@Test
-	public void shouldClearApplicationFrameWhenActivated() throws Exception {
-		presenter.onProductMgtActivated();
-		verify(appBus).clearScreen();
-	} 
+    @Before
+    public void setUpPresenterWithMockView() {
+        view = mock(ProductSearchPanel.class);
+        eventBus = mock(ProductMgtBus.class, withSettings().extraInterfaces(ApplicationBus.class));
+        appBus = (ApplicationBus) eventBus;
+        repo = mock(ProductRepository.class);
+        presenter = new ProductSearchPresenter(eventBus, view, repo);
+    }
 
-	@Test
-	public void shouldAddSearchPanelWhenActivated() throws Exception {
-		presenter.onProductMgtActivated();
-		verify(appBus).setCenterComponent(view);
-	} 
+    @Test
+    public void shouldClearApplicationFrameWhenActivated() throws Exception {
+        presenter.onProductMgtActivated();
+        verify(appBus).clearScreen();
+    }
 
-	@Test
-	public void shouldSetItselfAsNameSearchListenerWhenActivated() throws Exception {
-		presenter.onProductMgtActivated();
-		verify(view).setNameChangeListener(presenter);
-	} 
+    @Test
+    public void shouldAddSearchPanelWhenActivated() throws Exception {
+        presenter.onProductMgtActivated();
+        verify(appBus).setCenterComponent(view);
+    }
 
-	@Test
-	public void shouldAskRepositoryForProductsWhenNameChanges() {
-		presenter.searchForName("pro");
-		verify(repo).searchProducts("pro");
-	}
+    @Test
+    public void shouldSetItselfAsNameSearchListenerWhenActivated() throws Exception {
+        presenter.onProductMgtActivated();
+        verify(view).setNameChangeListener(presenter);
+    }
 
-	@Test
-	public void shouldUseProductsFromRepositoryWhenNameChanges() {
-		List<Product> searchResults = Arrays.asList(new Product("prod1"));
-		when(repo.searchProducts("pro")).thenReturn(searchResults);
-		presenter.searchForName("pro");
-		verify(view).setProducts(searchResults);
-	}
+    @Test
+    public void shouldAskRepositoryForProductsWhenNameChanges() {
+        presenter.newSearchName("pro");
+        verify(repo).searchProducts("pro");
+    }
 
-	@Test
-	public void shouldNotAskRepositoryForProductsWhenNameIsShort() {
-		presenter.searchForName("p");
-		verifyZeroInteractions(repo);
-	}
+    @Test
+    public void shouldUseProductsFromRepositoryWhenNameChanges() {
+        List<Product> searchResults = Arrays.asList(new Product("prod1"));
+        when(repo.searchProducts("pro")).thenReturn(searchResults);
+        presenter.newSearchName("pro");
+        verify(view).setProducts(searchResults);
+    }
 
-	@Test
-	public void shouldReturnEmptyListWhenNameIsShort() {
-		presenter.searchForName("p");
-		verify(view).setProducts(emptyList());
-	}
+    @Test
+    public void shouldNotAskRepositoryForProductsWhenNameIsShort() {
+        presenter.newSearchName("p");
+        verifyZeroInteractions(repo);
+    }
 
-	private <T extends Product> List<T> emptyList() {
-		return argThat(new IsEmptyList<T>());
-	}
+    @Test
+    public void shouldReturnEmptyListWhenNameIsShort() {
+        presenter.newSearchName("p");
+        verify(view).setProducts(emptyList());
+    }
+
+    private <T extends Product> List<T> emptyList() {
+        return argThat(new IsEmptyList<T>());
+    }
 
 }

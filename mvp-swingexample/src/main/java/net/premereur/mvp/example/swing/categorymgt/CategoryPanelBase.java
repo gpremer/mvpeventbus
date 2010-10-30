@@ -65,6 +65,9 @@ public abstract class CategoryPanelBase extends JPanel implements View {
                         .addContainerGap()));
     }
 
+    /**
+     * Sets the category that is going to be edited.
+     */
     public void bind(final Category selectedCategory) {
         this.category = selectedCategory;
         nameField.setText(this.category.getName());
@@ -72,8 +75,6 @@ public abstract class CategoryPanelBase extends JPanel implements View {
 
     /**
      * Registers the presenter as a call back when the save button is clicked.
-     * 
-     * @param presenter the object that receives the call back.
      */
     public void setSaveButtonListener(final SingleCategoryPresenterBase<? extends CategoryPanelBase> presenter) {
         this.saveButton.addActionListener(new ActionListener() {
@@ -85,6 +86,10 @@ public abstract class CategoryPanelBase extends JPanel implements View {
         });
     }
 
+    /**
+     * Registers the presenter as a call back when the cancel button is clicked.
+     * TODO fold in listener.
+     */
     protected void saveButtonClicked(final SingleCategoryPresenterBase<? extends CategoryPanelBase> presenter) {
         category.setName(nameField.getText());
         presenter.saveClicked(category);
@@ -92,8 +97,6 @@ public abstract class CategoryPanelBase extends JPanel implements View {
 
     /**
      * Registers the presenter as a call back when the cancel button is clicked.
-     * 
-     * @param presenter the object that receives the call back.
      */
     public void setCancelButtonListener(final SingleCategoryPresenterBase<? extends CategoryPanelBase> presenter) {
         this.cancelButton.addActionListener(new ActionListener() {
