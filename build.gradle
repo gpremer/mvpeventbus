@@ -63,7 +63,10 @@ subprojects {
                                    format:'html', 
                                    datafile: cobSerFile,
                                    srcdir:"src/main/java")
-                                   //srcdir: sourceSets.main.java.srcDirs)
+            ant.'cobertura-report'(destdir:"${project.buildDirName}/reports/coverage-results", 
+                                   format:'xml', 
+                                   datafile: cobSerFile,
+                                   srcdir:"src/main/java")
         }
 
     }
