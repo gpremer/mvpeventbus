@@ -33,7 +33,6 @@ subprojects {
     def cobSerFile = "${project.buildDir}/cobertura.ser"
 
     test.doFirst {
-        println project.computeCoverage
         if ( project.computeCoverage ) {
             ant {
                 delete(file:cobSerFile, failonerror:false) // delete from previous run
