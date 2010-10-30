@@ -5,7 +5,8 @@ subprojects {
 
     dependencies {
         testCompile fileTree(dir:"${rootDir}/lib/default", include:'*.jar')
-	compile fileTree(dir: "${rootDir}/lib/test", include:'*.jar')
+        testRuntime fileTree(dir: "${rootDir}/lib/coverage", include:'*.jar')
+        compile fileTree(dir: "${rootDir}/lib/test", include:'*.jar')
     }
 
     checkstyleConfigFileName = "${rootDir}/config/checkstyle/application_checks.xml"
@@ -16,7 +17,7 @@ subprojects {
 
     checkstyleTest {
         ignoreFailures = true
-	configFile = file("${rootDir}/config/checkstyle/junit.xml")
+        configFile = file("${rootDir}/config/checkstyle/junit.xml")
     }
 
     version = '1.0'
@@ -24,6 +25,49 @@ subprojects {
     jar {
         manifest.attributes provider: 'ICTects'
     }
+
+    def instrumentationDir = sourceSets.main.classesDir
+    def uninstrumentedDir = "${sourceSets.main.classesDir}-orig"
+    def cobSerFile = "${project.buildDir}/cobertura.ser"
+
+    test.doFirst {
+        if ( project.computeCoverage.toBoolean() ) {
+            ant {
+                delete(file:cobSerFile, failonerror:false) // delete from previous run
+                delete(dir: uninstrumentedDir, failonerror:false) // clean backup
+                copy(toDir: uninstrumentedDir) { fileset(dir: instrumentationDir) } // make backup
+                taskdef(resource:'tasks.properties', classpath: configurations.testRuntime.asPath)
+                'cobertura-instrument'(datafile:cobSerFile) {
+                  fileset(dir: instrumentationDir, includes:"**/*.class")
+                }
+            }
+        }
+    }
+
+    test {
+        ignoreFailures = true
+        systemProperties ["net.sourceforge.cobertura.datafile"] = cobSerFile
+    }
+
+    test.doLast {
+        if ( project.computeCoverage.toBoolean() && new File(uninstrumentedDir).exists() && new File(cobSerFile).exists()) {
+            ant {
+               delete(file: instrumentationDir) // remove work directory
+               move(file: uninstrumentedDir, tofile: instrumentationDir) // put original back
+            }
+            // create cobertura reports
+            ant.'cobertura-report'(destdir:"${project.buildDirName}/reports/coverage-results", 
+                                   format:'html', 
+                                   datafile: cobSerFile,
+                                   srcdir:"src/main/java")
+                                   //srcdir: sourceSets.main.java.srcDirs)
+        }
+
+    }
+}
+
+task coverage << {
+     project.computeCoverage = true
 }
 
 task fixupTestDatesForHudson << {

@@ -6,3 +6,4 @@
 publish
 */.gradle/*
 .gradle/*
+gradle-app.setting
