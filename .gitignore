@@ -2,6 +2,7 @@
 *.class
 *~
 */build/*
+build/*
 */bin/*
 publish
 */.gradle/*
