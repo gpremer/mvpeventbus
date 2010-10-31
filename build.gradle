@@ -55,15 +55,12 @@ subprojects {
       ant {
         delete(file: instrumentationDir) // remove work directory
         move(file: uninstrumentedDir, tofile: instrumentationDir) // put original back
-	'cobertura-report'(destdir: outputDir, 
-			   format:'html', 
-			   datafile: cobSerFile) { 
-	  sourceSets.main.allJava.addToAntBuilder(ant, 'fileset')
-	}
-	'cobertura-report'(destdir: outputDir, 
-			   format:'xml', 
-			   datafile: cobSerFile) { 
-	  sourceSets.main.allJava.addToAntBuilder(ant, 'fileset')
+	['xml', 'html'].each {repFormat ->
+	  'cobertura-report'(destdir: outputDir, 
+			     format: repFormat, 
+			     datafile: cobSerFile) { 
+	    sourceSets.main.allJava.addToAntBuilder(ant, 'fileset')
+	  }
 	}
       }
     }
@@ -102,10 +99,12 @@ task assembleCoverage(dependsOn: coverage) << {
     'cobertura-merge'(datafile: dataFile) {
       fileset(dir: '.', includes: "**/cobertura.ser")
     }
-    'cobertura-report'(destdir: destDir, 
-                       format:'html', 
-                       datafile: dataFile) {
-      subprojects.each { subproject -> subproject.sourceSets.main.allJava.addToAntBuilder(ant, 'fileset') }
+    ['xml', 'html'].each {repFormat ->
+      'cobertura-report'(destdir: destDir, 
+			 format: repFormat, 
+			 datafile: dataFile) {
+	subprojects.each { subproject -> subproject.sourceSets.main.allJava.addToAntBuilder(ant, 'fileset') }
+      }
     }
   }
 }
