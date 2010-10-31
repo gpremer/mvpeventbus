@@ -75,3 +75,9 @@ For a complete example, look at the included mvp-swingexample project.
 
 The interface of the framework was heavily inspired by the [mvp4g](http://code.google.com/p/mvp4g/) project.
 
+Building
+--------
+
+The sources can be built using gradle 0.9-rc2. Assuming gradle 0.9 is in the path, invoking `gradle build` should build everything quite nicely.
+
+All dependencies are packaged in the source tree. For now, the only run-time dependency is guice 2.0.
