@@ -3,5 +3,7 @@ apply plugin: 'java'
 checkstyleConfigFileName = "${rootDir}/config/checkstyle/api_checks.xml"
 
 dependencies {
-  compile fileTree(dir:'lib/default', include:'*.jar')
+  compile module('com.google.code.guice:guice:2.0.1') {
+    dependency ('aopalliance:aopalliance:1.0')
+  }
 }

@@ -3,11 +3,11 @@
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="src" path="src/test/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/mvpeventbus"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/mvp-demodomain"/>
-	<classpathentry kind="var" path="PROJECT_LIB_JAVA/aopalliance.jar"/>
-	<classpathentry kind="var" path="PROJECT_LIB_JAVA/guice-2.0.jar"/>
-	<classpathentry kind="var" path="PROJECT_LIB_TEST/junit.jar"/>
-	<classpathentry kind="var" path="PROJECT_LIB_TEST/mockito-all-1.8.5.jar"/>
+	<classpathentry kind="var" path="GRADLE_CACHE/aopalliance/aopalliance/jars/aopalliance-1.0.jar"/>
+	<classpathentry kind="var" path="GRADLE_CACHE/org.mockito/mockito-core/jars/mockito-core-1.8.5.jar"/>
+	<classpathentry kind="var" path="GRADLE_CACHE/com.google.code.guice/guice/jars/guice-2.0.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

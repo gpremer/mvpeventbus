@@ -2,11 +2,32 @@ subprojects {
   apply plugin: 'java'
   apply plugin: 'eclipse'
   apply plugin: 'code-quality'
+  apply plugin: 'project-report'
+
+  configurations {
+    tools {
+      description = 'Needed for build file tasks'
+    }
+  }
+
+  repositories {
+    mavenCentral()
+    mavenRepo urls: 'http://guice-maven.googlecode.com/svn/trunk'
+    mavenRepo urls: 'http://repository.opencastproject.org/nexus/content/groups/public/net/sourceforge'
+  }
 
   dependencies {
-    testCompile fileTree(dir:"${rootDir}/lib/default", include:'*.jar')
-    testRuntime fileTree(dir: "${rootDir}/lib/coverage", include:'*.jar')
-    compile fileTree(dir: "${rootDir}/lib/test", include:'*.jar')
+    testCompile module('junit:junit:4.5')
+    testCompile module('org.mockito:mockito-core:1.8.5') {
+      dependency('org.objenesis:objenesis:1.0')
+    }
+    tools module('cobertura:cobertura:1.9.4.1') {
+      dependency('oro:oro:2.0.8')  
+      dependency('asm:asm:3.0')  
+      dependency('asm:asm-tree:3.0')  
+      dependency('log4j:log4j:1.2.9')  
+    }
+    testRuntime module('cobertura:cobertura:1.9.4.1')
   }
 
   checkstyleConfigFileName = "${rootDir}/config/checkstyle/application_checks.xml"
@@ -32,11 +53,11 @@ subprojects {
 
   test.doFirst {
     if ( project.computeCoverage ) {
-      ant.taskdef(resource:'tasks.properties', classpath: configurations.testRuntime.asPath)
       ant {
         delete(file:cobSerFile, failonerror:false) // delete from previous run
         delete(dir: uninstrumentedDir, failonerror:false) // clean backup
         copy(toDir: uninstrumentedDir) { fileset(dir: instrumentationDir) } // make backup
+        taskdef(resource:'tasks.properties', classpath: configurations.tools.asPath)
         'cobertura-instrument'(datafile:cobSerFile) {
           fileset(dir: instrumentationDir, includes:"**/*.class")
         }
@@ -76,15 +97,21 @@ configurations {
 }
 
 repositories {
-  flatDir name: 'localRepository', dirs: 'lib/coverage'
+  mavenCentral()
+  mavenRepo urls: 'http://repository.opencastproject.org/nexus/content/groups/public/net/sourceforge'
 }
 
 dependencies {
-  tools fileTree(dir: "${rootDir}/lib/coverage", include:'*.jar')
+  tools module('cobertura:cobertura:1.9.4.1') {
+    dependency('oro:oro:2.0.8')  
+    dependency('asm:asm:3.0')  
+    dependency('asm:asm-tree:3.0')  
+    dependency('log4j:log4j:1.2.9')  
+  }
 }
 
 task setupCobertura << {
-  prepareCoberturaTargets()
+  ant.taskdef(resource:'tasks.properties', classpath: configurations.tools.asPath)
 }
 
 task coverage(dependsOn: setupCobertura) << {
@@ -107,10 +134,6 @@ task assembleCoverage(dependsOn: coverage) << {
       }
     }
   }
-}
-
-def prepareCoberturaTargets() {
-  ant.taskdef(resource:'tasks.properties', classpath: configurations.tools.asPath)
 }
 
 // Hudson expects the test results to be newer than the build start time, but gradle skips executing tests if the main source was not changed
