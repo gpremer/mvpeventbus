@@ -3,6 +3,8 @@
 	<name>mvp-vaadin-example</name>
 	<comment></comment>
 	<projects>
+		<project>mvpeventbus</project>
+		<project>mvp-demodomain</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

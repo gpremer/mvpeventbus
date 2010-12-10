@@ -6,6 +6,18 @@
         <dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/var/GRADLE_CACHE/com.vaadin/vaadin/jars/vaadin-6.4.8.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="mvpeventbus.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/mvpeventbus/mvpeventbus">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="mvp-demodomain.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/mvp-demodomain/mvp-demodomain">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/var/GRADLE_CACHE/aopalliance/aopalliance/jars/aopalliance-1.0.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/var/GRADLE_CACHE/com.google.code.guice/guice/jars/guice-2.0.1.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <property name="java-output-path" value="/mvp-vaadin-example/bin/classes"/>
         <property name="context-root" value="vaadin"/>
     </wb-module>

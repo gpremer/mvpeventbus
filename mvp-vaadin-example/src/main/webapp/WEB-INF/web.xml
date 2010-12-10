@@ -15,7 +15,7 @@
 		<init-param>
 			<description>Vaadin application class to start</description>
 			<param-name>application</param-name>
-			<param-value>net.premereur.mvp.example.vaadin.app.SampleApplication</param-value>
+			<param-value>net.premereur.mvp.example.vaadin.SampleApplication</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>
