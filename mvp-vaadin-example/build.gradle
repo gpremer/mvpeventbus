@@ -1,0 +1,12 @@
+apply plugin: 'war'
+apply plugin: 'jetty'
+
+dependencies {
+  compile project(':mvpeventbus')
+  compile project(':mvp-demodomain')
+  compile module('com.vaadin:vaadin:6.4.8')
+  providedCompile 'javax.servlet:servlet-api:2.5'
+  testCompile 'org.scalatra:scalatra-scalatest_2.8.0:2.0.0.M2'
+}
+
+jettyRun.contextPath = '/'

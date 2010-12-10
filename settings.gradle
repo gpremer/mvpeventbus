@@ -1,1 +1,1 @@
-include "mvpeventbus" , "mvp-demodomain", "mvp-swingexample"
+include "mvpeventbus" , "mvp-demodomain", "mvp-swingexample", "mvp-vaadin-example"
