@@ -1,7 +1,9 @@
 package net.premereur.mvp.example.vaadin.app;
 
+import net.premereur.mvp.core.EventBus;
+import net.premereur.mvp.core.guice.BasePresenter;
+
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.vaadin.Application;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.Window;
@@ -9,10 +11,6 @@ import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Window.CloseEvent;
 
-import net.premereur.mvp.core.EventBus;
-import net.premereur.mvp.core.guice.BasePresenter;
-
-@Singleton
 public final class ApplicationPresenter extends
 		BasePresenter<ApplicationWindow, ApplicationBus> {
 
