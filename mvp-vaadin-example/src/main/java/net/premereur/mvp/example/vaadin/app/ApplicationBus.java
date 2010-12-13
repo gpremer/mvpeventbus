@@ -9,4 +9,7 @@ public interface ApplicationBus extends EventBus {
 
 	@Event(ApplicationPresenter.class)
 	void init(Application app);
+
+	@Event(ApplicationPresenter.class)
+	void close(Application app);
 }
