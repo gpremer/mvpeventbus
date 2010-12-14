@@ -29,7 +29,7 @@ public final class ApplicationPresenter extends
 
 	@SuppressWarnings("serial")
 	private void addAppListener(final Application application,
-			ApplicationWindow main) {
+			final ApplicationWindow main) {
 		main.addListener(new Window.CloseListener() {
 
 			@Override
@@ -45,21 +45,21 @@ public final class ApplicationPresenter extends
 		main.addComponent(menuBar);
 		final MenuItem appItem = menuBar.addItem("Application", null);
 		appItem.addItem("Categories", new Command() {
-			
+
 			@Override
 			public void menuSelected(MenuItem selectedItem) {
-				// TODO send to event bus				
+				// TODO send to event bus
 			}
 		});
 		appItem.addItem("Products", new Command() {
-			
+
 			@Override
 			public void menuSelected(MenuItem selectedItem) {
-				// TODO send to event bus				
+				// TODO send to event bus
 			}
 		});
 	}
-	
+
 	public void onClose(final Application application) {
 		application.close();
 	}
