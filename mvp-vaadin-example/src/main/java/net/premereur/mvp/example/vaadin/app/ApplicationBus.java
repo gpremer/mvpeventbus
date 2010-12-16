@@ -12,4 +12,8 @@ public interface ApplicationBus extends EventBus {
 
 	@Event(ApplicationPresenter.class)
 	void close(Application app);
+
+	@Event(ApplicationPresenter.class)
+	void selectCategoryMgt();
+	
 }

@@ -2,13 +2,11 @@ package net.premereur.mvp.example.vaadin.app;
 
 import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.core.guice.BasePresenter;
+import net.premereur.mvp.example.vaadin.categorymgt.CategoryMgtBus;
 
 import com.google.inject.Inject;
 import com.vaadin.Application;
-import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.MenuBar.Command;
-import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Window.CloseEvent;
 
 public final class ApplicationPresenter extends
@@ -24,9 +22,16 @@ public final class ApplicationPresenter extends
 		ApplicationWindow main = getView();
 		application.setMainWindow(main);
 		addAppListener(application, main);
-		addMenu(main);
 	}
 
+	public void onClose(final Application application) {
+		application.close();
+	}
+
+	public void onSelectCategoryMgt() {
+		((CategoryMgtBus) getEventBus()).activate(getView());
+	}
+	
 	@SuppressWarnings("serial")
 	private void addAppListener(final Application application,
 			final ApplicationWindow main) {
@@ -39,28 +44,5 @@ public final class ApplicationPresenter extends
 		});
 	}
 
-	@SuppressWarnings("serial")
-	private void addMenu(final ApplicationWindow main) {
-		final MenuBar menuBar = new MenuBar();
-		main.addComponent(menuBar);
-		final MenuItem appItem = menuBar.addItem("Application", null);
-		appItem.addItem("Categories", new Command() {
 
-			@Override
-			public void menuSelected(MenuItem selectedItem) {
-				// TODO send to event bus
-			}
-		});
-		appItem.addItem("Products", new Command() {
-
-			@Override
-			public void menuSelected(MenuItem selectedItem) {
-				// TODO send to event bus
-			}
-		});
-	}
-
-	public void onClose(final Application application) {
-		application.close();
-	}
 }
