@@ -1,27 +1,28 @@
 package net.premereur.mvp.example.vaadin.app;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import net.premereur.mvp.example.vaadin.MockTestBase;
 import net.premereur.mvp.example.vaadin.SampleApplication;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 
-import com.vaadin.ui.MenuBar;
+import com.vaadin.ui.Window;
 
-public class ApplicationPresenterTest {
+public class ApplicationPresenterTest extends MockTestBase {
 
 	private ApplicationPresenter presenter;
+	@Mock
 	private ApplicationWindow view;
+	@Mock
 	private SampleApplication application;
+	@Mock
 	private ApplicationBus eventBus;
 
 	@Before
 	public void setUpPresenterWithMockView() throws Exception {
-		view = mock(ApplicationWindow.class);
-		eventBus = mock(ApplicationBus.class);
-		application = mock(SampleApplication.class);
 		presenter = new ApplicationPresenter(eventBus, view);
 	}
 
@@ -32,9 +33,9 @@ public class ApplicationPresenterTest {
 	}
 
 	@Test
-	public void shouldAddMenuToMainWindow() throws Exception {
+	public void shouldAddACloseListenerToWindow() throws Exception {
 		presenter.onInit(application);
-		verify(view).addComponent(any(MenuBar.class));
+		verify(view).addListener(any(Window.CloseListener.class));
 	}
 
 	@Test
