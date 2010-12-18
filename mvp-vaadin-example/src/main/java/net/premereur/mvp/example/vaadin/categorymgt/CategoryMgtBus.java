@@ -6,6 +6,6 @@ import net.premereur.mvp.example.vaadin.app.ApplicationWindow;
 
 public interface CategoryMgtBus extends EventBus {
 
-	@Event(CategoryMgtPresenter.class)
-	void activate(ApplicationWindow window);
+    @Event(CategoryMgtPresenter.class)
+    void activate(ApplicationWindow window);
 }

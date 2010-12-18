@@ -13,55 +13,56 @@ import com.vaadin.ui.VerticalLayout;
 
 public class CategoryMgtView extends SplitPanel implements View {
 
-	/**
-	 * class version.
-	 */
-	private static final long serialVersionUID = 1L;
-	private Table table;
-	private CategoryDetailForm categoryForm = new CategoryDetailForm();
+    /**
+     * class version.
+     */
+    private static final long serialVersionUID = 1L;
+    private Table table;
+    private CategoryDetailForm categoryForm = new CategoryDetailForm();
 
-	public CategoryMgtView() {
-		super(SplitPanel.ORIENTATION_HORIZONTAL);
-		initLeft();
-		initRight();
-	}
+    public CategoryMgtView() {
+        super(SplitPanel.ORIENTATION_HORIZONTAL);
+        initLeft();
+        initRight();
+    }
 
-	void setCategories(final Container categoryItems) {		
-		table.setContainerDataSource(categoryItems);
-		table.setVisibleColumns(new String[] {"name"});
-	}
+    void setCategories(final Container categoryItems) {
+        table.setContainerDataSource(categoryItems);
+        table.setVisibleColumns(new String[] {"name"});
+    }
 
-	private void initLeft() {
-		final VerticalLayout left = new VerticalLayout();
-		setFirstComponent(left);
-		table = new Table("Categories");
-		left.addComponent(table);
-		table.setWidth("100%");
-	}
+    private void initLeft() {
+        final VerticalLayout left = new VerticalLayout();
+        setFirstComponent(left);
+        table = new Table("Categories");
+        left.addComponent(table);
+        table.setWidth("100%");
+    }
 
-	private void initRight() {
-	}
+    private void initRight() {
+    }
 
-	/**
-	 * Tells the view to forward the selection of a category in the table to the argument.
-	 * @param presenter the presenter instance to forward to
-	 */
-	@SuppressWarnings("serial")
-	public void forwardCategorySelection(final CategoryMgtPresenter presenter) {
-		table.setImmediate(true);
-		table.setSelectable(true);
-		table.addListener(new Property.ValueChangeListener() {
-			
-			@Override
-			public void valueChange(final ValueChangeEvent event) {
-				presenter.selectCategory((Category)table.getValue());				
-			}
-		});
-	}
-	
-	public void edit(final CategoryItem category) {
-		setSecondComponent(categoryForm);
-		categoryForm.setCategory(category);
-	}
-	
+    /**
+     * Tells the view to forward the selection of a category in the table to the argument.
+     * 
+     * @param presenter the presenter instance to forward to
+     */
+    @SuppressWarnings("serial")
+    public void forwardCategorySelection(final CategoryMgtPresenter presenter) {
+        table.setImmediate(true);
+        table.setSelectable(true);
+        table.addListener(new Property.ValueChangeListener() {
+
+            @Override
+            public void valueChange(final ValueChangeEvent event) {
+                presenter.selectCategory((Category) table.getValue());
+            }
+        });
+    }
+
+    public void edit(final CategoryItem category) {
+        setSecondComponent(categoryForm);
+        categoryForm.setCategory(category);
+    }
+
 }

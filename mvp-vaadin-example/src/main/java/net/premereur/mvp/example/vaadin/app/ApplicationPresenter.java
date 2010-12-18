@@ -9,40 +9,42 @@ import com.vaadin.Application;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
 
-public final class ApplicationPresenter extends
-		BasePresenter<ApplicationWindow, ApplicationBus> {
+/**
+ * Handles the application-level events. A.o. it sets up the main window and handles application shutdown.
+ * 
+ * @author gpremer
+ * 
+ */
+public final class ApplicationPresenter extends BasePresenter<ApplicationWindow, ApplicationBus> {
 
-	@Inject
-	public ApplicationPresenter(final EventBus eventBus,
-			final ApplicationWindow view) {
-		super((ApplicationBus) eventBus, view);
-	}
+    @Inject
+    public ApplicationPresenter(final EventBus eventBus, final ApplicationWindow view) {
+        super((ApplicationBus) eventBus, view);
+    }
 
-	public void onInit(final Application application) {
-		ApplicationWindow main = getView();
-		application.setMainWindow(main);
-		addAppListener(application, main);
-	}
+    public void onInit(final Application application) {
+        ApplicationWindow main = getView();
+        application.setMainWindow(main);
+        addAppListener(application, main);
+    }
 
-	public void onClose(final Application application) {
-		application.close();
-	}
+    public void onClose(final Application application) {
+        application.close();
+    }
 
-	public void onSelectCategoryMgt() {
-		((CategoryMgtBus) getEventBus()).activate(getView());
-	}
-	
-	@SuppressWarnings("serial")
-	private void addAppListener(final Application application,
-			final ApplicationWindow main) {
-		main.addListener(new Window.CloseListener() {
+    public void onSelectCategoryMgt() {
+        ((CategoryMgtBus) getEventBus()).activate(getView());
+    }
 
-			@Override
-			public void windowClose(CloseEvent e) {
-				getEventBus().close(application);
-			}
-		});
-	}
+    @SuppressWarnings("serial")
+    private void addAppListener(final Application application, final ApplicationWindow main) {
+        main.addListener(new Window.CloseListener() {
 
+            @Override
+            public void windowClose(final CloseEvent e) {
+                getEventBus().close(application);
+            }
+        });
+    }
 
 }

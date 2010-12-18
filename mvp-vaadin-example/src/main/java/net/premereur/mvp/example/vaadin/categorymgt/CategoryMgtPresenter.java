@@ -11,27 +11,24 @@ import com.google.inject.Inject;
 import com.vaadin.data.Container;
 import com.vaadin.data.util.BeanItemContainer;
 
-public class CategoryMgtPresenter extends
-		BasePresenter<CategoryMgtView, CategoryMgtBus> {
+public class CategoryMgtPresenter extends BasePresenter<CategoryMgtView, CategoryMgtBus> {
 
-	private final CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
-	@Inject
-	public CategoryMgtPresenter(final EventBus eventBus,
-			final CategoryMgtView view,
-			final CategoryRepository categoryRepository) {
-		super((CategoryMgtBus) eventBus, view);
-		this.categoryRepository = categoryRepository;
-	}
+    @Inject
+    public CategoryMgtPresenter(final EventBus eventBus, final CategoryMgtView view, final CategoryRepository categoryRepository) {
+        super((CategoryMgtBus) eventBus, view);
+        this.categoryRepository = categoryRepository;
+    }
 
-	public void onActivate(final ApplicationWindow window) {
-		window.setWorkPane(getView());
-		Container catContainer = new BeanItemContainer<Category>(categoryRepository.allCategories());
-		getView().setCategories(catContainer);
-		getView().forwardCategorySelection(this);
-	}
+    public void onActivate(final ApplicationWindow window) {
+        window.setWorkPane(getView());
+        Container catContainer = new BeanItemContainer<Category>(categoryRepository.allCategories());
+        getView().setCategories(catContainer);
+        getView().forwardCategorySelection(this);
+    }
 
-	public void selectCategory(final Category category) {
-		getView().edit(new CategoryItem(category));
-	}
+    public void selectCategory(final Category category) {
+        getView().edit(new CategoryItem(category));
+    }
 }
