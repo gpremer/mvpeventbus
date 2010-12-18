@@ -19,7 +19,7 @@ import com.vaadin.ui.MenuBar.MenuItem;
  * 
  */
 @SuppressWarnings("serial")
-public final class ApplicationWindow extends Window implements View {
+public class ApplicationWindow extends Window implements View {
 
     private final ApplicationBus bus;
 

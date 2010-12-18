@@ -5,8 +5,8 @@ import org.mockito.MockitoAnnotations;
 
 public abstract class MockTestBase {
 
-	@Before
-	public void initMocks() throws Exception {
-		MockitoAnnotations.initMocks(this);
-	}
+    @Before
+    public void initMocks() throws Exception {
+        MockitoAnnotations.initMocks(this);
+    }
 }

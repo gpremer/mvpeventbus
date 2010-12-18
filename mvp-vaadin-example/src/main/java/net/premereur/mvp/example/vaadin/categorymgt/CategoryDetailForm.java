@@ -21,7 +21,8 @@ public final class CategoryDetailForm extends Form {
     }
 
     /**
-     * Sets the category that's going be edited. 
+     * Sets the category that's going be edited.
+     * 
      * @param categoryItem
      */
     public void setCategory(final CategoryItem categoryItem) {

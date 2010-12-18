@@ -21,47 +21,46 @@ import com.vaadin.data.Container;
 
 public class CategoryMgtPresenterTest extends MockTestBase {
 
-	private CategoryMgtPresenter presenter;
-	@Mock
-	private CategoryMgtView view;
-	@Mock
-	private CategoryMgtBus eventBus;
-	@Mock
-	private CategoryRepository repo;
-	@Mock
-	private ApplicationWindow appWindow;
+    private CategoryMgtPresenter presenter;
+    @Mock
+    private CategoryMgtView view;
+    @Mock
+    private CategoryMgtBus eventBus;
+    @Mock
+    private CategoryRepository repo;
+    @Mock
+    private ApplicationWindow appWindow;
 
-	@Before
-	public void setUpPresenterWithMockView() throws Exception {
-		presenter = new CategoryMgtPresenter(eventBus, view, repo);
-		List<Category> categories = Arrays.asList(new Category("cat1"));
-		when(repo.allCategories()).thenReturn(categories);
-	}
+    @Before
+    public void setUpPresenterWithMockView() throws Exception {
+        presenter = new CategoryMgtPresenter(eventBus, view, repo);
+        List<Category> categories = Arrays.asList(new Category("cat1"));
+        when(repo.allCategories()).thenReturn(categories);
+    }
 
-	@Test
-	public void shouldAddViewToApplicationWindow() throws Exception {
-		presenter.onActivate(appWindow);
-		verify(appWindow).setWorkPane(view);
-	}
+    @Test
+    public void shouldAddViewToApplicationWindow() throws Exception {
+        presenter.onActivate(appWindow);
+        verify(appWindow).setWorkPane(view);
+    }
 
-	@Test
-	public void shouldProvideViewWithAllCategories() throws Exception {
-		presenter.onActivate(appWindow);
-		verify(view).setCategories(any(Container.class));
-	}
+    @Test
+    public void shouldProvideViewWithAllCategories() throws Exception {
+        presenter.onActivate(appWindow);
+        verify(view).setCategories(any(Container.class));
+    }
 
-	@Test
-	public void shouldBindItselfAsSelectListener() throws Exception {
-		presenter.onActivate(appWindow);
-		verify(view).forwardCategorySelection(presenter);
-	}
+    @Test
+    public void shouldBindItselfAsSelectListener() throws Exception {
+        presenter.onActivate(appWindow);
+        verify(view).forwardCategorySelection(presenter);
+    }
 
-	@Test
-	public void shouldAskViewToEditCategoryWhenCategoryIsSelected()
-			throws Exception {
-		final Category cat = new Category("cat1");
-		presenter.selectCategory(cat);
-		// A better matcher would be nice!
-		verify(view).edit(any(CategoryItem.class));
-	}
+    @Test
+    public void shouldAskViewToEditCategoryWhenCategoryIsSelected() throws Exception {
+        final Category cat = new Category("cat1");
+        presenter.selectCategory(cat);
+        // A better matcher would be nice!
+        verify(view).edit(any(CategoryItem.class));
+    }
 }

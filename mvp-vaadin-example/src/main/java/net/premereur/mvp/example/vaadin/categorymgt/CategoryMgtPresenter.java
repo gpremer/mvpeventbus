@@ -31,7 +31,7 @@ public final class CategoryMgtPresenter extends BasePresenter<CategoryMgtView, C
      * See {@link CategoryMgtBus#activate(ApplicationWindow)}.
      */
     public void onActivate(final ApplicationWindow window) {
-        window.setWorkPane(getView());
+        window.setWorkPane(getView()); //TODO use event bus
         Container catContainer = new BeanItemContainer<Category>(categoryRepository.allCategories());
         getView().setCategories(catContainer);
         getView().forwardCategorySelection(this);

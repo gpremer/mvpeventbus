@@ -17,13 +17,13 @@ import com.vaadin.ui.VerticalLayout;
  * @author gpremer
  * 
  */
-public final class CategoryMgtView extends SplitPanel implements View {
+public class CategoryMgtView extends SplitPanel implements View {
 
     /**
      * class version.
      */
     private static final long serialVersionUID = 1L;
-    private Table table;
+    private Table table = new Table("Categories");
     private CategoryDetailForm categoryForm = new CategoryDetailForm();
 
     public CategoryMgtView() {
@@ -40,7 +40,6 @@ public final class CategoryMgtView extends SplitPanel implements View {
     private void initLeft() {
         final VerticalLayout left = new VerticalLayout();
         setFirstComponent(left);
-        table = new Table("Categories");
         left.addComponent(table);
         table.setWidth("100%");
     }
