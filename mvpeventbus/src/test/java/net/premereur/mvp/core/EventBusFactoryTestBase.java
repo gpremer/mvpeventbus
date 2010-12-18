@@ -7,7 +7,6 @@ import net.premereur.mvp.core.basic.BasicEventBusFactory;
 
 import org.junit.Before;
 
-@SuppressWarnings("unchecked")
 public abstract class EventBusFactoryTestBase {
 
 	protected EventBusFactory eventBusFactory;
