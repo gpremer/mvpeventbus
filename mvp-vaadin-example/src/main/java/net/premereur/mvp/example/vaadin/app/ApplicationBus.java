@@ -12,12 +12,23 @@ import com.vaadin.Application;
  */
 public interface ApplicationBus extends EventBus {
 
+    /**
+     * The applications is initialising.
+     * @param app the current application instance.
+     */
     @Event(ApplicationPresenter.class)
     void init(Application app);
 
+    /**
+     * The applications is closing.
+     * @param app the current application instance.
+     */
     @Event(ApplicationPresenter.class)
     void close(Application app);
 
+    /**
+     * Category management is selected.
+     */
     @Event(ApplicationPresenter.class)
     void selectCategoryMgt();
 

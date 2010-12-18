@@ -17,21 +17,40 @@ import com.vaadin.ui.Window.CloseEvent;
  */
 public final class ApplicationPresenter extends BasePresenter<ApplicationWindow, ApplicationBus> {
 
+    /**
+     * Creates an {@link ApplicationPresenter}.
+     * 
+     * @param eventBus the event bus the presenter should send to.
+     * @param view the view the presenter should manage.
+     */
     @Inject
     public ApplicationPresenter(final EventBus eventBus, final ApplicationWindow view) {
         super((ApplicationBus) eventBus, view);
     }
 
+    /**
+     * The application is initialising.
+     * 
+     * @param application the application instance we should add the view to.
+     */
     public void onInit(final Application application) {
         ApplicationWindow main = getView();
         application.setMainWindow(main);
         addAppListener(application, main);
     }
 
+    /**
+     * The application (user session) is closing.
+     * 
+     * @param application the application instance for the user.
+     */
     public void onClose(final Application application) {
         application.close();
     }
 
+    /**
+     * The user want to perform category management.
+     */
     public void onSelectCategoryMgt() {
         ((CategoryMgtBus) getEventBus()).activate(getView());
     }

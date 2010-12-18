@@ -13,19 +13,23 @@ import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 
 /**
- * The main window of the application. Other windows are attached here to provide content the user can actually interact
- * with.
+ * The main window of the application. Other windows are attached here to provide content the user can actually interact with.
  * 
  * @author gpremer
  * 
  */
 @SuppressWarnings("serial")
-public class ApplicationWindow extends Window implements View {
+public final class ApplicationWindow extends Window implements View {
 
     private final ApplicationBus bus;
 
     private ComponentContainer workPane;
 
+    /**
+     * Constructs the application window.
+     * 
+     * @param bus
+     */
     @Inject
     public ApplicationWindow(final EventBus bus) {
         super("Sample Vaadin MVP Application");
@@ -36,7 +40,7 @@ public class ApplicationWindow extends Window implements View {
         addWorkPane();
     }
 
-    public ApplicationBus getEventBus() {
+    private ApplicationBus getEventBus() {
         return bus;
     }
 
