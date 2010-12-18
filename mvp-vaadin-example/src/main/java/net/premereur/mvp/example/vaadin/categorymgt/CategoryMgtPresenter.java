@@ -11,6 +11,12 @@ import com.google.inject.Inject;
 import com.vaadin.data.Container;
 import com.vaadin.data.util.BeanItemContainer;
 
+/**
+ * Handles events related to category management.
+ * 
+ * @author gpremer
+ * 
+ */
 public class CategoryMgtPresenter extends BasePresenter<CategoryMgtView, CategoryMgtBus> {
 
     private final CategoryRepository categoryRepository;

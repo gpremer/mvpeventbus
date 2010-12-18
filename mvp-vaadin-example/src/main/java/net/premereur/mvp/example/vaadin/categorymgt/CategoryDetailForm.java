@@ -6,6 +6,12 @@ import net.premereur.mvp.example.vaadin.data.CategoryItem;
 
 import com.vaadin.ui.Form;
 
+/**
+ * Allows creating new Categories and updating existing ones.
+ * 
+ * @author gpremer
+ * 
+ */
 public final class CategoryDetailForm extends Form {
 
     private static final long serialVersionUID = 1L;

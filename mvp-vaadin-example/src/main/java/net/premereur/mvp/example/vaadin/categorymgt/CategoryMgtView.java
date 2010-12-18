@@ -11,6 +11,12 @@ import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 
+/**
+ * Displays a left pane with a list of categories and a right pane that is dependent on the selection in the list.
+ * 
+ * @author gpremer
+ * 
+ */
 public class CategoryMgtView extends SplitPanel implements View {
 
     /**

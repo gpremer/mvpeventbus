@@ -13,7 +13,7 @@ import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 
 /**
- * The main window of the application. It contains a left and a right pane. Other windows are attached here to provide content the user can actually interact
+ * The main window of the application. Other windows are attached here to provide content the user can actually interact
  * with.
  * 
  * @author gpremer
