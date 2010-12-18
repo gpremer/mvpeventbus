@@ -20,6 +20,10 @@ public final class CategoryDetailForm extends Form {
         setCaption("Category mgt");
     }
 
+    /**
+     * Sets the category that's going be edited. 
+     * @param categoryItem
+     */
     public void setCategory(final CategoryItem categoryItem) {
         setItemDataSource(categoryItem);
         setVisibleItemProperties(Arrays.asList("name"));

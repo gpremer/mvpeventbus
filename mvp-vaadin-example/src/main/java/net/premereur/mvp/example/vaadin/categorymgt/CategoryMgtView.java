@@ -17,7 +17,7 @@ import com.vaadin.ui.VerticalLayout;
  * @author gpremer
  * 
  */
-public class CategoryMgtView extends SplitPanel implements View {
+public final class CategoryMgtView extends SplitPanel implements View {
 
     /**
      * class version.
@@ -48,13 +48,8 @@ public class CategoryMgtView extends SplitPanel implements View {
     private void initRight() {
     }
 
-    /**
-     * Tells the view to forward the selection of a category in the table to the argument.
-     * 
-     * @param presenter the presenter instance to forward to
-     */
     @SuppressWarnings("serial")
-    public void forwardCategorySelection(final CategoryMgtPresenter presenter) {
+    void forwardCategorySelection(final CategoryMgtPresenter presenter) {
         table.setImmediate(true);
         table.setSelectable(true);
         table.addListener(new Property.ValueChangeListener() {
@@ -66,7 +61,7 @@ public class CategoryMgtView extends SplitPanel implements View {
         });
     }
 
-    public void edit(final CategoryItem category) {
+    void edit(final CategoryItem category) {
         setSecondComponent(categoryForm);
         categoryForm.setCategory(category);
     }

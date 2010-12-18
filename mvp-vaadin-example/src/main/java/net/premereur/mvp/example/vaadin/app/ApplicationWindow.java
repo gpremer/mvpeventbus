@@ -13,7 +13,7 @@ import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 
 /**
- * The main window of the application. Other windows are attached here to provide content the user can actually interact with.
+ * The main window of the application. Other windows are attached here to provide content the user can actually interact with. This window does provide a menu.
  * 
  * @author gpremer
  * 
@@ -74,6 +74,11 @@ public final class ApplicationWindow extends Window implements View {
         addComponent(workPane);
     }
 
+    /**
+     * Sets the actual visible screen below the menu.
+     * 
+     * @param container
+     */
     public void setWorkPane(final ComponentContainer container) {
         removeComponent(workPane);
         this.workPane = container;

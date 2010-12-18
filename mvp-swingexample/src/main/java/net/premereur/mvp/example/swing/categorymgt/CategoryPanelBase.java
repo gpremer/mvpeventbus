@@ -21,6 +21,7 @@ import net.premereur.mvp.example.domain.model.Category;
  */
 // NOCS MAGIC 400
 public abstract class CategoryPanelBase extends JPanel implements View {
+    private static final long serialVersionUID = 1L;
     private Category category;
     private JButton cancelButton = new JButton("Cancel");
     private JButton saveButton = new JButton("Save");

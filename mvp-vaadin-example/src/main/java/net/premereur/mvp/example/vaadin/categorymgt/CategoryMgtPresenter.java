@@ -17,7 +17,7 @@ import com.vaadin.data.util.BeanItemContainer;
  * @author gpremer
  * 
  */
-public class CategoryMgtPresenter extends BasePresenter<CategoryMgtView, CategoryMgtBus> {
+public final class CategoryMgtPresenter extends BasePresenter<CategoryMgtView, CategoryMgtBus> {
 
     private final CategoryRepository categoryRepository;
 
@@ -27,6 +27,9 @@ public class CategoryMgtPresenter extends BasePresenter<CategoryMgtView, Categor
         this.categoryRepository = categoryRepository;
     }
 
+    /**
+     * See {@link CategoryMgtBus#activate(ApplicationWindow)}.
+     */
     public void onActivate(final ApplicationWindow window) {
         window.setWorkPane(getView());
         Container catContainer = new BeanItemContainer<Category>(categoryRepository.allCategories());
@@ -34,7 +37,7 @@ public class CategoryMgtPresenter extends BasePresenter<CategoryMgtView, Categor
         getView().forwardCategorySelection(this);
     }
 
-    public void selectCategory(final Category category) {
+    void selectCategory(final Category category) {
         getView().edit(new CategoryItem(category));
     }
 }
