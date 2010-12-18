@@ -44,6 +44,8 @@ public class ApplicationWindow extends Window implements View {
 
 			@Override
 			public void menuSelected(MenuItem selectedItem) {
+				// We may want to refactor this so that we forward the event to
+				// the presenter iso to the bus directly
 				getEventBus().selectCategoryMgt();
 			}
 		});

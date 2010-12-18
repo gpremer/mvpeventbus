@@ -1,7 +1,8 @@
 package net.premereur.mvp.example.vaadin.categorymgt;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,8 +11,8 @@ import net.premereur.mvp.example.domain.model.Category;
 import net.premereur.mvp.example.domain.repository.CategoryRepository;
 import net.premereur.mvp.example.vaadin.MockTestBase;
 import net.premereur.mvp.example.vaadin.app.ApplicationWindow;
+import net.premereur.mvp.example.vaadin.data.CategoryItem;
 
-import org.apache.jasper.tagplugins.jstl.core.When;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -47,5 +48,20 @@ public class CategoryMgtPresenterTest extends MockTestBase {
 	public void shouldProvideViewWithAllCategories() throws Exception {
 		presenter.onActivate(appWindow);
 		verify(view).setCategories(any(Container.class));
+	}
+
+	@Test
+	public void shouldBindItselfAsSelectListener() throws Exception {
+		presenter.onActivate(appWindow);
+		verify(view).forwardCategorySelection(presenter);
+	}
+
+	@Test
+	public void shouldAskViewToEditCategoryWhenCategoryIsSelected()
+			throws Exception {
+		final Category cat = new Category("cat1");
+		presenter.selectCategory(cat);
+		// A better matcher would be nice!
+		verify(view).edit(any(CategoryItem.class));
 	}
 }

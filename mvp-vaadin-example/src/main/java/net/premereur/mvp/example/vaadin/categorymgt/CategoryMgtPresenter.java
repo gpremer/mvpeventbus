@@ -5,6 +5,7 @@ import net.premereur.mvp.core.guice.BasePresenter;
 import net.premereur.mvp.example.domain.model.Category;
 import net.premereur.mvp.example.domain.repository.CategoryRepository;
 import net.premereur.mvp.example.vaadin.app.ApplicationWindow;
+import net.premereur.mvp.example.vaadin.data.CategoryItem;
 
 import com.google.inject.Inject;
 import com.vaadin.data.Container;
@@ -27,5 +28,10 @@ public class CategoryMgtPresenter extends
 		window.setWorkPane(getView());
 		Container catContainer = new BeanItemContainer<Category>(categoryRepository.allCategories());
 		getView().setCategories(catContainer);
+		getView().forwardCategorySelection(this);
+	}
+
+	public void selectCategory(final Category category) {
+		getView().edit(new CategoryItem(category));
 	}
 }
