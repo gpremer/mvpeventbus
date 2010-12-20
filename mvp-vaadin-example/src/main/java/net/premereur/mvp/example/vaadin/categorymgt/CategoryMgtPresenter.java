@@ -45,4 +45,8 @@ public final class CategoryMgtPresenter extends BasePresenter<CategoryMgtView, C
     void selectCategory(final Category category) {
         getView().edit(new CategoryItem(category));
     }
+
+    void deselectCategory() {
+        getView().edit(new CategoryItem(new Category("new category")));
+    }
 }

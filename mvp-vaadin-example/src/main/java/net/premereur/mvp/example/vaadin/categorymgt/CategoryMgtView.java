@@ -52,7 +52,12 @@ public class CategoryMgtView extends SplitPanel implements View {
 
             @Override
             public void valueChange(final ValueChangeEvent event) {
-                presenter.selectCategory((Category) table.getValue());
+                Category item = (Category) table.getValue();
+                if (item == null) {
+                    presenter.deselectCategory();
+                } else {
+                    presenter.selectCategory(item);
+                }
             }
         });
     }
