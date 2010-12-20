@@ -19,7 +19,9 @@ import com.vaadin.data.util.BeanItemContainer;
  */
 public final class CategoryMgtPresenter extends BasePresenter<CategoryMgtView, CategoryMgtBus> {
 
+    private static final long serialVersionUID = 1L;
     private final CategoryRepository categoryRepository;
+    private boolean active = false;
 
     @Inject
     public CategoryMgtPresenter(final EventBus eventBus, final CategoryMgtView view, final CategoryRepository categoryRepository) {
@@ -31,10 +33,13 @@ public final class CategoryMgtPresenter extends BasePresenter<CategoryMgtView, C
      * See {@link CategoryMgtBus#activate(ApplicationWindow)}.
      */
     public void onActivate(final ApplicationWindow window) {
-        window.setWorkPane(getView()); //TODO use event bus
-        Container catContainer = new BeanItemContainer<Category>(categoryRepository.allCategories());
-        getView().setCategories(catContainer);
-        getView().forwardCategorySelection(this);
+        if (!active) {
+            window.setWorkPane(getView()); // TODO use event bus
+            Container catContainer = new BeanItemContainer<Category>(categoryRepository.allCategories());
+            getView().setCategories(catContainer);
+            getView().forwardCategorySelection(this);
+            active = true;
+        }
     }
 
     void selectCategory(final Category category) {

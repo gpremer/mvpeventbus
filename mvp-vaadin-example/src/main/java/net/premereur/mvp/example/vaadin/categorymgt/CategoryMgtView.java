@@ -19,9 +19,6 @@ import com.vaadin.ui.VerticalLayout;
  */
 public class CategoryMgtView extends SplitPanel implements View {
 
-    /**
-     * class version.
-     */
     private static final long serialVersionUID = 1L;
     private Table table = new Table("Categories");
     private CategoryDetailForm categoryForm = new CategoryDetailForm();
