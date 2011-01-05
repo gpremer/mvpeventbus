@@ -71,6 +71,36 @@ It is suggested that UI-framework-specific methods call back to methods in the p
 
 For a complete example, look at the included mvp-swingexample or mvp-vaadin-example projects.
 
+## Extensions
+
+On top of the base functionality, there are a number of interesting additions
+
+### Event bus segments
+
+For larger applications it does not make sense to have a single event bus interface that reference all presenters in the whole application. Therefore it is possible to split up the event bus in distinct segments. Each of the segments can then group related presenters. At run time, there is still a single "fysical" bus that has access to all events, but at design and compile time, the dependency graph is much simplified.
+
+To work with event bus fragments, all you have to do is make separate event bus interfaces. These interfaces have no relationshop on each other. Only when requesting an event bus instance from the factory, are the fragments combined.
+
+E.g.
+
+   EVENT_BUS_FACTORY.createEventBus(ApplicationBus.class, CategoryMgtBus.class).init(this);
+
+In this example `ApplicationBus` and `CategoryMgtBus` both are event bus interface each with their own set of presenters (the sets may overlap, although this will typically not be the case). The resulting event bus instance implements both interfaces. The declared type is the type of the first argument, in this case `CategoryMgtBus`, but the instance ccan be cast to any of the other interfaces. 
+
+Since frequent casting in client code is not so nice, the `BasePresenter` has some syntactic sugar for this. The standard type of the event bus instance is declared through the generics type argument and the other segment types can accessed through a helper method `getEventBus(<segment interface>)` as in:
+
+   /**
+    * See {@link CategoryMgtBus#changedCategory(Category)}.
+    */
+   public void onChangedCategory(final Category category) {
+     getView().refreshCategories(category);
+     getEventBus(ApplicationBus.class).showMessage("Saved category");
+   }
+
+### Guice integration
+
+To be elaborated.
+
 ## Acknowledgement
 
 The interface of the framework was heavily inspired by the [mvp4g](http://code.google.com/p/mvp4g/) project.
