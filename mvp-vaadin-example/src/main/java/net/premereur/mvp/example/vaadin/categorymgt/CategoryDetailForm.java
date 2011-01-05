@@ -44,7 +44,7 @@ public final class CategoryDetailForm extends Form {
     void setSaveListener(final ClickListener listener) {
         commitBtn.addListener(listener);
     }
-    
+
     /**
      * Sets the category that's going be edited.
      * 

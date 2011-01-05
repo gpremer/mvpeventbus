@@ -14,6 +14,7 @@ public interface ApplicationBus extends EventBus {
 
     /**
      * The applications is initialising.
+     * 
      * @param app the current application instance.
      */
     @Event(ApplicationPresenter.class)
@@ -21,6 +22,7 @@ public interface ApplicationBus extends EventBus {
 
     /**
      * The applications is closing.
+     * 
      * @param app the current application instance.
      */
     @Event(ApplicationPresenter.class)
@@ -31,7 +33,12 @@ public interface ApplicationBus extends EventBus {
      */
     @Event(ApplicationPresenter.class)
     void selectCategoryMgt();
-    
+
+    /**
+     * Shows a message in the center of the screen.
+     * 
+     * @param message the message to show
+     */
     @Event(ApplicationPresenter.class)
     void showMessage(final String message);
 
