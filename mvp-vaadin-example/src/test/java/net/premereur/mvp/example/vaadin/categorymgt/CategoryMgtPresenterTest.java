@@ -89,4 +89,11 @@ public class CategoryMgtPresenterTest extends MockTestBase {
         this.presenter.onChangedCategory(category);
         verify(this.view).refreshCategories(category);
     }
+
+    @Test
+    public void shouldAskApplicationToShowMessageWhenCategoryWasSaved() throws Exception {
+        final Category category = new Category("cat1");
+        this.presenter.onChangedCategory(category);
+        verify((ApplicationBus) this.eventBus).showMessage(any(String.class));
+    }
 }
