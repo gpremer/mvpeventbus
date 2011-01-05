@@ -37,7 +37,7 @@ Somewhere in the initialisation part of your application you request an instance
       EventBusFactory.createEventBus(DemoEventBus.class).applicationStarted();
     }
 
-The `EventBusFactory` will create all `Presenter`s mentioned in the `Event` annotations the first time en event handled by the Presenter is sent. Once created, a presenter is kept alive, so it is safe to keep state within the presenter.
+The `EventBusFactory` will create all `Presenter`s mentioned in the `Event` annotations the first time en event handled by the Presenter is sent. Once created, a presenter is kept alive, so it is safe to keep state within the presenter. Future versions of the framework will allow explicit removal of the presenters and the associated view.
 
 ### Presenters
 
@@ -69,7 +69,7 @@ Views are classes that interact with the UI framework you use in your applicatio
 
 It is suggested that UI-framework-specific methods call back to methods in the presenter that the View belongs to.
 
-For a complete example, look at the included mvp-swingexample project.
+For a complete example, look at the included mvp-swingexample or mvp-vaadin-example projects.
 
 ## Acknowledgement
 
@@ -78,6 +78,6 @@ The interface of the framework was heavily inspired by the [mvp4g](http://code.g
 Building
 --------
 
-The sources can be built using gradle 0.9-rc2. Assuming gradle 0.9 is in the path, invoking `gradle build` should build everything quite nicely.
+The sources can be built using gradle 0.9. Assuming gradle 0.9 is in the path, invoking `gradle build` should build everything quite nicely.
 
-All dependencies are packaged in the source tree. For now, the only run-time dependency is guice 2.0.
+The only run-time dependency on the core is guice 2.0. The vaadin example obviously requires [vaadin](http://www.vaadin.com/).
