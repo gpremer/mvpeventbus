@@ -1,8 +1,10 @@
 package net.premereur.mvp.example.vaadin.categorymgt;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.withSettings;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,6 +12,7 @@ import java.util.List;
 import net.premereur.mvp.example.domain.model.Category;
 import net.premereur.mvp.example.domain.repository.CategoryRepository;
 import net.premereur.mvp.example.vaadin.MockTestBase;
+import net.premereur.mvp.example.vaadin.app.ApplicationBus;
 import net.premereur.mvp.example.vaadin.app.ApplicationWindow;
 import net.premereur.mvp.example.vaadin.data.CategoryItem;
 
@@ -22,10 +25,9 @@ import com.vaadin.data.Container;
 public class CategoryMgtPresenterTest extends MockTestBase {
 
     private CategoryMgtPresenter presenter;
+    private CategoryMgtBus eventBus;
     @Mock
     private CategoryMgtView view;
-    @Mock
-    private CategoryMgtBus eventBus;
     @Mock
     private CategoryRepository repo;
     @Mock
@@ -33,34 +35,58 @@ public class CategoryMgtPresenterTest extends MockTestBase {
 
     @Before
     public void setUpPresenterWithMockView() throws Exception {
-        presenter = new CategoryMgtPresenter(eventBus, view, repo);
-        List<Category> categories = Arrays.asList(new Category("cat1"));
-        when(repo.allCategories()).thenReturn(categories);
+        eventBus = mock(CategoryMgtBus.class, withSettings().extraInterfaces(ApplicationBus.class));
+        this.presenter = new CategoryMgtPresenter(this.eventBus, this.view, this.repo);
+        final List<Category> categories = Arrays.asList(new Category("cat1"));
+        when(this.repo.allCategories()).thenReturn(categories);
     }
 
     @Test
     public void shouldAddViewToApplicationWindow() throws Exception {
-        presenter.onActivate(appWindow);
-        verify(appWindow).setWorkPane(view);
+        this.presenter.onActivate(this.appWindow);
+        verify(this.appWindow).setWorkPane(this.view);
     }
 
     @Test
     public void shouldProvideViewWithAllCategories() throws Exception {
-        presenter.onActivate(appWindow);
-        verify(view).setCategories(any(Container.class));
+        this.presenter.onActivate(this.appWindow);
+        verify(this.view).setCategories(any(Container.class));
     }
 
     @Test
     public void shouldBindItselfAsSelectListener() throws Exception {
-        presenter.onActivate(appWindow);
-        verify(view).forwardCategorySelection(presenter);
+        this.presenter.onActivate(this.appWindow);
+        verify(this.view).forwardCategorySelection(this.presenter);
     }
 
     @Test
     public void shouldAskViewToEditCategoryWhenCategoryIsSelected() throws Exception {
         final Category cat = new Category("cat1");
-        presenter.selectCategory(cat);
+        this.presenter.selectCategory(cat);
         // A better matcher would be nice!
-        verify(view).edit(any(CategoryItem.class));
+        verify(this.view).edit(any(CategoryItem.class));
+    }
+
+    @Test
+    public void shouldAskRepositoryToStoreCategoryWhenCategorySaveButtonIsClicked() throws Exception {
+        final Category category = new Category("cat1");
+        final CategoryItem categoryItem = new CategoryItem(category);
+        this.presenter.saveCategory(categoryItem);
+        verify(this.repo).save(category);
+    }
+
+    @Test
+    public void shouldTellEventBusThatCategoryWasSavedWhenCategorySaveButtonIsClicked() throws Exception {
+        final Category category = new Category("cat1");
+        final CategoryItem categoryItem = new CategoryItem(category);
+        this.presenter.saveCategory(categoryItem);
+        verify(this.eventBus).changedCategory(category);
+    }
+
+    @Test
+    public void shouldAskViewToRefreshTableWhenCategoryWasSaved() throws Exception {
+        final Category category = new Category("cat1");
+        this.presenter.onChangedCategory(category);
+        verify(this.view).refreshCategories(category);
     }
 }
