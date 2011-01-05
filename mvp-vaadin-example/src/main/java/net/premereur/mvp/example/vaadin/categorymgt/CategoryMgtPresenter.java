@@ -4,6 +4,7 @@ import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.core.guice.BasePresenter;
 import net.premereur.mvp.example.domain.model.Category;
 import net.premereur.mvp.example.domain.repository.CategoryRepository;
+import net.premereur.mvp.example.vaadin.app.ApplicationBus;
 import net.premereur.mvp.example.vaadin.app.ApplicationWindow;
 import net.premereur.mvp.example.vaadin.data.CategoryItem;
 
@@ -35,18 +36,37 @@ public final class CategoryMgtPresenter extends BasePresenter<CategoryMgtView, C
     public void onActivate(final ApplicationWindow window) {
         if (!active) {
             window.setWorkPane(getView()); // TODO use event bus
-            Container catContainer = new BeanItemContainer<Category>(categoryRepository.allCategories());
+            final Container catContainer = new BeanItemContainer<Category>(categoryRepository.allCategories());
+//            for (Object i : catContainer.getItemIds()) {
+//                System.out.println(i);
+//            }
             getView().setCategories(catContainer);
             getView().forwardCategorySelection(this);
+            getView().forwardCategorySave(this);
             active = true;
         }
     }
 
     void selectCategory(final Category category) {
-        getView().edit(new CategoryItem(category));
+        CategoryItem formData = new CategoryItem(category);
+        getView().edit(formData);
     }
 
     void deselectCategory() {
         getView().edit(new CategoryItem(new Category("new category")));
+    }
+
+    void saveCategory(final CategoryItem categoryItem) {
+        final Category category = categoryItem.getBean();
+        categoryRepository.save(category); // if this could throw, we would have to catch
+        getEventBus().changedCategory(category);
+    }
+
+    /**
+     * See {@link CategoryMgtBus#changedCategory(Category)}.
+     */
+    public void onChangedCategory(final Category category) {
+        getView().refreshCategories(category);
+        getEventBus(ApplicationBus.class).showMessage("Saved category");
     }
 }

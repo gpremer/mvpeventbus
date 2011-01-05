@@ -65,5 +65,12 @@ public final class ApplicationPresenter extends BasePresenter<ApplicationWindow,
             }
         });
     }
+    /**
+     * see {@link ApplicationBus#showMessage(String)}.
+     * @param message the message to display
+     */
+    public void onShowMessage(final String message) {
+        getView().showNotification(message);
+    }
 
 }

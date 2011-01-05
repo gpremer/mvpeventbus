@@ -7,9 +7,13 @@ import net.premereur.mvp.example.vaadin.data.CategoryItem;
 import com.vaadin.data.Container;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.util.BeanItem;
+import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 
 /**
  * Displays a left pane with a list of categories and a right pane that is dependent on the selection in the list.
@@ -20,8 +24,9 @@ import com.vaadin.ui.VerticalLayout;
 public class CategoryMgtView extends SplitPanel implements View {
 
     private static final long serialVersionUID = 1L;
-    private Table table = new Table("Categories");
-    private CategoryDetailForm categoryForm = new CategoryDetailForm();
+    private static final String[] COLUMNS = {"name"};
+    private final Table table = new Table("Categories");
+    private final CategoryDetailForm categoryForm = new CategoryDetailForm();
 
     public CategoryMgtView() {
         super(SplitPanel.ORIENTATION_HORIZONTAL);
@@ -30,15 +35,15 @@ public class CategoryMgtView extends SplitPanel implements View {
     }
 
     void setCategories(final Container categoryItems) {
-        table.setContainerDataSource(categoryItems);
-        table.setVisibleColumns(new String[] {"name"});
+        this.table.setContainerDataSource(categoryItems);
+        this.table.setVisibleColumns(COLUMNS);
     }
 
     private void initLeft() {
         final VerticalLayout left = new VerticalLayout();
         setFirstComponent(left);
-        left.addComponent(table);
-        table.setWidth("100%");
+        left.addComponent(this.table);
+        this.table.setWidth("100%");
     }
 
     private void initRight() {
@@ -46,13 +51,13 @@ public class CategoryMgtView extends SplitPanel implements View {
 
     @SuppressWarnings("serial")
     void forwardCategorySelection(final CategoryMgtPresenter presenter) {
-        table.setImmediate(true);
-        table.setSelectable(true);
-        table.addListener(new Property.ValueChangeListener() {
+        this.table.setImmediate(true);
+        this.table.setSelectable(true);
+        this.table.addListener(new Property.ValueChangeListener() {
 
             @Override
             public void valueChange(final ValueChangeEvent event) {
-                Category item = (Category) table.getValue();
+                final Category item = (Category) CategoryMgtView.this.table.getValue();
                 if (item == null) {
                     presenter.deselectCategory();
                 } else {
@@ -63,8 +68,34 @@ public class CategoryMgtView extends SplitPanel implements View {
     }
 
     void edit(final CategoryItem category) {
-        setSecondComponent(categoryForm);
-        categoryForm.setCategory(category);
+        setSecondComponent(this.categoryForm);
+        this.categoryForm.setCategory(category);
+    }
+
+    @SuppressWarnings("serial")
+    void forwardCategorySave(final CategoryMgtPresenter categoryMgtPresenter) {
+        this.categoryForm.setSaveListener(new ClickListener() {
+
+            @Override
+            public void buttonClick(final ClickEvent event) {
+                commit(categoryMgtPresenter);
+            }
+        });
+    }
+
+    private void commit(final CategoryMgtPresenter presenter) {
+        this.categoryForm.commit(); // write fields to bean
+        presenter.saveCategory((CategoryItem) (this.categoryForm.getItemDataSource()));
+    }
+
+    @SuppressWarnings("unchecked")
+    void refreshCategories(final Category category) {
+        final BeanItemContainer<Category> ds = (BeanItemContainer<Category>) this.table.getContainerDataSource();
+        final BeanItem<Category> item = ds.getItem(category);
+        for (final String column : COLUMNS) {
+            final Property itemProperty = item.getItemProperty(column);
+            itemProperty.setValue(itemProperty.getValue());
+        }
     }
 
 }
