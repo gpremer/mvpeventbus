@@ -4,6 +4,7 @@ import net.premereur.mvp.core.Event;
 import net.premereur.mvp.core.EventBus;
 
 import com.vaadin.Application;
+import com.vaadin.ui.ComponentContainer;
 
 /**
  * Event bus segment that routes major, application-level events.
@@ -41,5 +42,13 @@ public interface ApplicationBus extends EventBus {
      */
     @Event(ApplicationPresenter.class)
     void showMessage(final String message);
+
+    /**
+     * Replaces (or sets the first time called) the central pane of the application window.
+     * 
+     * @param view the component to display
+     */
+    @Event(ApplicationPresenter.class)
+    void setWorkPane(ComponentContainer view);
 
 }

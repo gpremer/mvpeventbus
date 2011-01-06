@@ -6,6 +6,7 @@ import net.premereur.mvp.example.vaadin.categorymgt.CategoryMgtBus;
 
 import com.google.inject.Inject;
 import com.vaadin.Application;
+import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
 
@@ -64,6 +65,15 @@ public final class ApplicationPresenter extends BasePresenter<ApplicationWindow,
                 getEventBus().close(application);
             }
         });
+    }
+
+    /**
+     * See {@link ApplicationBus#setWorkPane(ComponentContainer)}.
+     * 
+     * @param container the view to make central
+     */
+    public void onSetWorkPane(final ComponentContainer container) {
+        getView().setWorkPane(container);
     }
 
     /**

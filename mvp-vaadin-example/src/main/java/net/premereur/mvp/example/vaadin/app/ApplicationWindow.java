@@ -79,7 +79,7 @@ public class ApplicationWindow extends Window implements View {
      * 
      * @param container
      */
-    public void setWorkPane(final ComponentContainer container) {
+    void setWorkPane(final ComponentContainer container) {
         removeComponent(workPane);
         this.workPane = container;
         workPane.setSizeFull();
