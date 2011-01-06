@@ -6,6 +6,7 @@ import net.premereur.mvp.example.vaadin.categorymgt.CategoryMgtBus;
 
 import com.google.inject.Inject;
 import com.vaadin.Application;
+import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
 
@@ -52,7 +53,7 @@ public final class ApplicationPresenter extends BasePresenter<ApplicationWindow,
      * The user want to perform category management.
      */
     public void onSelectCategoryMgt() {
-        ((CategoryMgtBus) getEventBus()).activate(getView());
+        getEventBus(CategoryMgtBus.class).activate(getView());
     }
 
     @SuppressWarnings("serial")
@@ -65,8 +66,19 @@ public final class ApplicationPresenter extends BasePresenter<ApplicationWindow,
             }
         });
     }
+
+    /**
+     * See {@link ApplicationBus#setWorkPane(ComponentContainer)}.
+     * 
+     * @param container the view to make central
+     */
+    public void onSetWorkPane(final ComponentContainer container) {
+        getView().setWorkPane(container);
+    }
+
     /**
      * see {@link ApplicationBus#showMessage(String)}.
+     * 
      * @param message the message to display
      */
     public void onShowMessage(final String message) {

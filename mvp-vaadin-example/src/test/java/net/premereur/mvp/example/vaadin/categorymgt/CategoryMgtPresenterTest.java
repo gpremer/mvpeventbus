@@ -42,19 +42,19 @@ public class CategoryMgtPresenterTest extends MockTestBase {
     }
 
     @Test
-    public void shouldAddViewToApplicationWindow() throws Exception {
+    public void shouldAddViewToApplicationWindowWhenActivated() throws Exception {
         this.presenter.onActivate(this.appWindow);
-        verify(this.appWindow).setWorkPane(this.view);
+        verify((ApplicationBus)this.eventBus).setWorkPane(this.view);
     }
 
     @Test
-    public void shouldProvideViewWithAllCategories() throws Exception {
+    public void shouldProvideViewWithAllCategoriesWhenActivated() throws Exception {
         this.presenter.onActivate(this.appWindow);
         verify(this.view).setCategories(any(Container.class));
     }
 
     @Test
-    public void shouldBindItselfAsSelectListener() throws Exception {
+    public void shouldBindItselfAsSelectListenerWhenActivated() throws Exception {
         this.presenter.onActivate(this.appWindow);
         verify(this.view).forwardCategorySelection(this.presenter);
     }
