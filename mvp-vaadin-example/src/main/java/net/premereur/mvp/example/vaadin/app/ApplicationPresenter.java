@@ -52,7 +52,7 @@ public final class ApplicationPresenter extends BasePresenter<ApplicationWindow,
      * The user want to perform category management.
      */
     public void onSelectCategoryMgt() {
-        ((CategoryMgtBus) getEventBus()).activate(getView());
+        getEventBus(CategoryMgtBus.class).activate(getView());
     }
 
     @SuppressWarnings("serial")
@@ -65,8 +65,10 @@ public final class ApplicationPresenter extends BasePresenter<ApplicationWindow,
             }
         });
     }
+
     /**
      * see {@link ApplicationBus#showMessage(String)}.
+     * 
      * @param message the message to display
      */
     public void onShowMessage(final String message) {
