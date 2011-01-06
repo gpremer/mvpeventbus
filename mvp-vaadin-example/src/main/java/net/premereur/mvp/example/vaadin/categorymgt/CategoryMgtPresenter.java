@@ -37,9 +37,6 @@ public final class CategoryMgtPresenter extends BasePresenter<CategoryMgtView, C
         if (!active) {
             window.setWorkPane(getView()); // TODO use event bus
             final Container catContainer = new BeanItemContainer<Category>(categoryRepository.allCategories());
-//            for (Object i : catContainer.getItemIds()) {
-//                System.out.println(i);
-//            }
             getView().setCategories(catContainer);
             getView().forwardCategorySelection(this);
             getView().forwardCategorySave(this);

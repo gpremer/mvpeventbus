@@ -44,16 +44,8 @@ public class GuiceEventBusFactoryTest extends TestBase {
 		private MyEventBus eventBus;
 		final private Dependency dependency;
 
-		@Override
-		public void setEventBus(MyEventBus eventBus) {
-		}
-
 		public MyEventBus getEventBus() {
 			return eventBus;
-		}
-
-		@Override
-		public void setView(MyView view) {
 		}
 
 		@Inject

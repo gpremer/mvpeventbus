@@ -1,11 +1,14 @@
-package net.premereur.mvp.core;
+package net.premereur.mvp.core.basic;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-
-import net.premereur.mvp.core.basic.BasePresenter;
+import net.premereur.mvp.core.Event;
+import net.premereur.mvp.core.EventBus;
+import net.premereur.mvp.core.NeedsPresenter;
+import net.premereur.mvp.core.UsesView;
+import net.premereur.mvp.core.View;
 
 import org.junit.Test;
 
@@ -103,16 +106,16 @@ public class EvenBusFactoryBasicTest extends EventBusFactoryTestBase {
 	@UsesView(MyViewWithPresenter.class)
 	public static class MyPresenterForView implements Presenter<MyViewWithPresenter, MyEventbusWithViewAndPresenterThatKnowEachOther> {
 
-		@Override
-		public void setEventBus(MyEventbusWithViewAndPresenterThatKnowEachOther eventBus) {
-		}
-
-		@Override
-		public void setView(MyViewWithPresenter view) {
-		}
-
 		public void onEvent() {
 		}
+
+        @Override
+        public void setEventBus(MyEventbusWithViewAndPresenterThatKnowEachOther eventBus) {
+        }
+
+        @Override
+        public void setView(MyViewWithPresenter view) {
+        }
 
 	}
 
