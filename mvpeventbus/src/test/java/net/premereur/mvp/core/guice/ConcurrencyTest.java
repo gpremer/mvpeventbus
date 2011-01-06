@@ -35,14 +35,6 @@ public class ConcurrencyTest extends TestBase {
 
 		Dependency dependency;
 
-		@Override
-		public void setEventBus(MyEventBus eventBus) {
-		}
-
-		@Override
-		public void setView(MyView view) {
-		}
-
 		@Inject
 		public MyPresenter(Dependency dependency) {
 			this.dependency = dependency;

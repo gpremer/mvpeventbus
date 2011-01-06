@@ -11,17 +11,4 @@ package net.premereur.mvp.core;
  */
 public interface Presenter<V extends View, E extends EventBus> {
 
-    /**
-     * Called by an event bus when creating a presenter to inject the associated view.
-     * 
-     * @param view The view for the presenter.
-     */
-    void setView(V view);
-
-    /**
-     * Called by an event bus when creating a presenter to inject itself.
-     * 
-     * @param eventBus The bus on which to send events.
-     */
-    void setEventBus(E eventBus);
 }

@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.premereur.mvp.core.EventBus;
-import net.premereur.mvp.core.Presenter;
 import net.premereur.mvp.core.View;
 
 /**

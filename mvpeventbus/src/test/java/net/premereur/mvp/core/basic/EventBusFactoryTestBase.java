@@ -1,8 +1,13 @@
-package net.premereur.mvp.core;
+package net.premereur.mvp.core.basic;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 
+import net.premereur.mvp.core.Event;
+import net.premereur.mvp.core.EventBus;
+import net.premereur.mvp.core.EventBusFactory;
+import net.premereur.mvp.core.UsesView;
+import net.premereur.mvp.core.View;
 import net.premereur.mvp.core.basic.BasicEventBusFactory;
 
 import org.junit.Before;

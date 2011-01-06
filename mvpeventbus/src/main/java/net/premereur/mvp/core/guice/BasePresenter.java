@@ -20,17 +20,13 @@ public abstract class BasePresenter<V extends View, E extends EventBus> implemen
 
     /**
      * Creates a base presenter for the given event bus segment and view.
+     * 
      * @param eventBus an event bus segment
      * @param view the managed view
      */
     public BasePresenter(final E eventBus, final V view) {
         this.eventBus = eventBus;
         this.view = view;
-    }
-
-    @Override
-    public void setEventBus(final E eventBus) {
-        // To respect interface
     }
 
     /**
@@ -55,11 +51,11 @@ public abstract class BasePresenter<V extends View, E extends EventBus> implemen
         return (Bus) getEventBus();
     }
 
-    @Override
-    public void setView(final V view) {
-        // To respect interface
-    }
-
+    /**
+     * Returns the view managed by the presenter.
+     * 
+     * @return a view instance reserved for this presenter
+     */
     protected final V getView() {
         return view;
     }

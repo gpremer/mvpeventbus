@@ -1,5 +1,9 @@
-package net.premereur.mvp.core;
+package net.premereur.mvp.core.basic;
 
+import net.premereur.mvp.core.Event;
+import net.premereur.mvp.core.EventBus;
+import net.premereur.mvp.core.UsesView;
+import net.premereur.mvp.core.View;
 import net.premereur.mvp.core.base.VerificationException;
 import net.premereur.mvp.core.basic.BasePresenter;
 
