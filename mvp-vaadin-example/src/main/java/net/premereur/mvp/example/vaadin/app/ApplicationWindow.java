@@ -34,7 +34,7 @@ public class ApplicationWindow extends Window implements View {
     public ApplicationWindow(final EventBus bus) {
         super("Sample Vaadin MVP Application");
         this.bus = (ApplicationBus) bus;
-        ((VerticalLayout) getContent()).setSpacing(false);
+        ((VerticalLayout) getContent()).setMargin(false);
         setSizeFull();
         addMenu();
         addWorkPane();
