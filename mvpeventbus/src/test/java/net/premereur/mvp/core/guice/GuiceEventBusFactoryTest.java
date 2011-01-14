@@ -1,5 +1,6 @@
 package net.premereur.mvp.core.guice;
 
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 
@@ -14,6 +15,7 @@ import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.core.Presenter;
 import net.premereur.mvp.core.View;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -34,6 +36,9 @@ public class GuiceEventBusFactoryTest extends TestBase {
     }
 
     static interface MyOtherEventBus extends EventBus {
+    }
+
+    static interface YetAnotherEventBus extends EventBus {
     }
 
     static interface Dependency {
@@ -63,9 +68,9 @@ public class GuiceEventBusFactoryTest extends TestBase {
 
         @Inject
         public MyPresenter(EventBus eventBus, MyEventBus myEventBus, MyOtherEventBus myOtherEventBus, MyView view, Dependency dependency) {
-            this.myEventBus = myEventBus;
-            this.myOtherEventBus = myOtherEventBus;
-            this.eventBus = (MyEventBus) eventBus;
+            this.eventBus = (MyEventBus) eventBus; // we can cast the general interface to one of the specified
+            this.myEventBus = myEventBus; // we can directly inject the proper type
+            this.myOtherEventBus = myOtherEventBus; // we can directly inject the proper type
             this.dependency = dependency;
         }
 
@@ -105,6 +110,38 @@ public class GuiceEventBusFactoryTest extends TestBase {
     @Before
     public void createFactory() {
         eventBus = GuiceEventBusFactory.withMainSegment(MyEventBus.class).withAdditionalSegment(MyOtherEventBus.class).using(testModule).build().create();
+    }
+
+    @Test
+    public void shouldBuildTheFactoryWithOnlyOneType() {
+        assertTrue(GuiceEventBusFactory.withMainSegment(MyEventBus.class).build().create() instanceof MyEventBus);
+    }
+
+    @Test
+    public void shouldBuildTheFactoryWithAMainTypeAndAnAdditionType() {
+        final MyEventBus myEventBus = GuiceEventBusFactory.withMainSegment(MyEventBus.class).withAdditionalSegment(MyOtherEventBus.class).build().create();
+        assertTrue(myEventBus instanceof MyEventBus);
+        assertTrue(myEventBus instanceof MyOtherEventBus);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void shouldBuildTheFactoryWithAMainTypeAndSeveralAdditionTypes() {
+        final MyEventBus myEventBus = GuiceEventBusFactory.withMainSegment(MyEventBus.class).withAdditionalSegments(MyOtherEventBus.class,
+                YetAnotherEventBus.class).build().create();
+        assertTrue(myEventBus instanceof MyEventBus);
+        assertTrue(myEventBus instanceof MyOtherEventBus);
+        assertTrue(myEventBus instanceof YetAnotherEventBus);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void shouldBuildTheFactoryWithAMainTypeAndSeveralAdditionTypesAsOneArgument() {
+        final MyEventBus myEventBus = GuiceEventBusFactory.withSegments(MyEventBus.class, MyOtherEventBus.class,
+                YetAnotherEventBus.class).build().create();
+        assertTrue(myEventBus instanceof MyEventBus);
+        assertTrue(myEventBus instanceof MyOtherEventBus);
+        assertTrue(myEventBus instanceof YetAnotherEventBus);
     }
 
     @Test

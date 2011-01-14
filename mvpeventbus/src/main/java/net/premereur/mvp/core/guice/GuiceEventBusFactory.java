@@ -113,6 +113,22 @@ public final class GuiceEventBusFactory<EB extends EventBus> extends AbstractEve
     }
 
     /**
+     * Starts specifying an EventBusFactory by assigning the type of the main segments. The main segment is not different from the other segments, but it does
+     * determine the type with which the event bus is instantiated.
+     * 
+     * @param <E> the main type of the event bus
+     * @param mainEventBusInterface the main type of the event bus
+     * @param additionalEventBusInterfaces Additional event bus interfaces to implement
+     * @return a specification that can be configured further
+     */
+    public static <E extends EventBus> Configuration<E> withSegments(final Class<E> mainEventBusInterface,
+            final Class<? extends EventBus>... additionalEventBusInterfaces) {
+        final Configuration<E> configuration = new Configuration<E>(mainEventBusInterface);
+        configuration.withAdditionalSegments(additionalEventBusInterfaces);
+        return configuration;
+    }
+
+    /**
      * Creates a GuiceEventBusFactory.
      * 
      * @param modules the modules containing configuration information for objects that need to be injected.

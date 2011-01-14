@@ -36,6 +36,9 @@ public class EventBusFactorySegmentsTest extends EventBusFactoryTestBase {
         void child1Event();
     }
 
+    interface OtherEventBus extends EventBus {
+    }
+
     @UsesView(MyView.class)
     public static class MainBusPresenter implements Presenter<MyView, MainEventBus> {
         public static Memento memento = mock(Memento.class);
@@ -80,24 +83,29 @@ public class EventBusFactorySegmentsTest extends EventBusFactoryTestBase {
 
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void shouldBeAbleToCreateBusComposedOfSegmentBusses() throws Exception {
-        MainEventBus masterBus = BasicEventBusFactory.withSegments(MainEventBus.class, ChainedEventBus.class).build().create();
+        MainEventBus masterBus = BasicEventBusFactory.withSegments(MainEventBus.class, ChainedEventBus.class, OtherEventBus.class).build().create();
         assertTrue(masterBus instanceof MainEventBus);
         assertTrue(masterBus instanceof ChainedEventBus);
+        assertTrue(masterBus instanceof OtherEventBus);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void shouldPropagateEventsSentToAttachedBusToMasterAndAttachedBus() throws Exception {
-        ChainedEventBus chainedBus = (ChainedEventBus) BasicEventBusFactory.withSegments(MainEventBus.class, ChainedEventBus.class).build().create();
+        ChainedEventBus chainedBus = (ChainedEventBus) BasicEventBusFactory.withMainSegment(MainEventBus.class).withAdditionalSegment(ChainedEventBus.class)
+                .build().create();
         chainedBus.event();
         verify(MainBusPresenter.memento).invoke("shared_event");
         verify(ChildBusPresenter.memento).invoke("shared_event");
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void shouldPropagateEventsSentToMasterBusToMasterBusAndAttachedBus() throws Exception {
-        MainEventBus masterBus = BasicEventBusFactory.withSegments(MainEventBus.class,ChainedEventBus.class).build().create();
+        MainEventBus masterBus = BasicEventBusFactory.withMainSegment(MainEventBus.class).withAdditionalSegments(ChainedEventBus.class).build().create();
         masterBus.event();
         verify(MainBusPresenter.memento).invoke("shared_event");
         verify(ChildBusPresenter.memento).invoke("shared_event");

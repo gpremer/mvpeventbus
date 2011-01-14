@@ -94,9 +94,8 @@ public final class BasicEventBusFactory<EB extends EventBus> extends AbstractEve
      * @param additionalEventBusInterfaces Additional event bus interfaces to implement
      * @return a specification that can be configured further
      */
-    @SuppressWarnings("unchecked")
     public static <E extends EventBus> Configuration<E> withSegments(final Class<E> mainEventBusInterface,
-            final Class<? extends EventBus> additionalEventBusInterfaces) {
+            final Class<? extends EventBus>... additionalEventBusInterfaces) {
         final Configuration<E> configuration = new Configuration<E>(mainEventBusInterface);
         configuration.withAdditionalSegments(additionalEventBusInterfaces);
         return configuration;
