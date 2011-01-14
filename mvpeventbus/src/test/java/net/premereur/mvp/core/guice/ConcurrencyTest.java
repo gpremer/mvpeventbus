@@ -18,97 +18,97 @@ import com.google.inject.Singleton;
 
 public class ConcurrencyTest extends TestBase {
 
-	static class Capturer {
-		MyPresenter target;
+    static class Capturer {
+        MyPresenter target;
 
-		void capture(MyPresenter target) {
-			this.target = target;
-		}
-	}
+        void capture(MyPresenter target) {
+            this.target = target;
+        }
+    }
 
-	static interface MyEventBus extends EventBus {
-		@Event(MyPresenter.class)
-		void event(Capturer capturer);
-	}
+    static interface MyEventBus extends EventBus {
+        @Event(MyPresenter.class)
+        void event(Capturer capturer);
+    }
 
-	public static class MyPresenter implements Presenter<MyView, MyEventBus> {
+    public static class MyPresenter implements Presenter<MyView, MyEventBus> {
 
-		Dependency dependency;
+        Dependency dependency;
 
-		@Inject
-		public MyPresenter(Dependency dependency) {
-			this.dependency = dependency;
-		}
+        @Inject
+        public MyPresenter(Dependency dependency) {
+            this.dependency = dependency;
+        }
 
-		public void onEvent(Capturer capturer) {
-			capturer.capture(this);
-		}
-	}
+        public void onEvent(Capturer capturer) {
+            capturer.capture(this);
+        }
+    }
 
-	public static class MyView implements View {
+    public static class MyView implements View {
 
-	}
+    }
 
-	static interface Dependency {
-	}
+    static interface Dependency {
+    }
 
-	@Singleton
-	static class MyDependency implements Dependency {
+    @Singleton
+    static class MyDependency implements Dependency {
 
-	}
+    }
 
-	private Module testModule = new AbstractModule() {
-		@Override
-		protected void configure() {
-			bind(Dependency.class).to(MyDependency.class).asEagerSingleton();
-		}
-	};
+    private Module testModule = new AbstractModule() {
+        @Override
+        protected void configure() {
+            bind(Dependency.class).to(MyDependency.class).asEagerSingleton();
+        }
+    };
 
-	private GuiceEventBusFactory guiceEventBusFactory;
+    private GuiceEventBusFactory<MyEventBus> guiceEventBusFactory;
 
-	@Before
-	public void createFactory() {
-		// It is important that the tested event busses are created by the same factory instance
-		guiceEventBusFactory = new GuiceEventBusFactory(testModule);		
-	}
-	
-	@Test
-	public void shouldCreateDifferentBusses() throws Exception {
-		MyEventBus eventBus1 = guiceEventBusFactory.createEventBus(MyEventBus.class);
-		MyEventBus eventBus2 = guiceEventBusFactory.createEventBus(MyEventBus.class);
-		assertNotSame(eventBus1, eventBus2);
-	}
+    @Before
+    public void createFactory() {
+        // It is important that the tested event busses are created by the same factory instance
+        guiceEventBusFactory = GuiceEventBusFactory.withMainSegment(MyEventBus.class).using(testModule).build();
+    }
 
-	@Test
-	public void shouldCreateDifferentPresentersForDifferentEventBus() throws Exception {
-		MyEventBus eventBus1 = guiceEventBusFactory.createEventBus(MyEventBus.class);
-		MyEventBus eventBus2 = guiceEventBusFactory.createEventBus(MyEventBus.class);
-		Capturer capturer1 = new Capturer();
-		eventBus1.event(capturer1);
-		Capturer capturer2 = new Capturer();
-		eventBus2.event(capturer2);
-		assertNotSame(capturer1.target, capturer2.target);
-	}
+    @Test
+    public void shouldCreateDifferentBusses() throws Exception {
+        MyEventBus eventBus1 = guiceEventBusFactory.create();
+        MyEventBus eventBus2 = guiceEventBusFactory.create();
+        assertNotSame(eventBus1, eventBus2);
+    }
 
-	@Test
-	public void shouldUseSamePresenterForSameEventBus() throws Exception {
-		MyEventBus eventBus1 = guiceEventBusFactory.createEventBus(MyEventBus.class);
-		Capturer capturer1 = new Capturer();
-		eventBus1.event(capturer1);
-		Capturer capturer2 = new Capturer();
-		eventBus1.event(capturer2);
-		assertSame(capturer1.target, capturer2.target);
-	}
+    @Test
+    public void shouldCreateDifferentPresentersForDifferentEventBus() throws Exception {
+        MyEventBus eventBus1 = guiceEventBusFactory.create();
+        MyEventBus eventBus2 = guiceEventBusFactory.create();
+        Capturer capturer1 = new Capturer();
+        eventBus1.event(capturer1);
+        Capturer capturer2 = new Capturer();
+        eventBus2.event(capturer2);
+        assertNotSame(capturer1.target, capturer2.target);
+    }
 
-	@Test
-	public void shouldUseSameSingletonDependencyForAllEventBusses() throws Exception {
-		MyEventBus eventBus1 = guiceEventBusFactory.createEventBus(MyEventBus.class);
-		MyEventBus eventBus2 = guiceEventBusFactory.createEventBus(MyEventBus.class);
-		Capturer capturer1 = new Capturer();
-		eventBus1.event(capturer1);
-		Capturer capturer2 = new Capturer();
-		eventBus2.event(capturer2);
-		assertSame(capturer1.target.dependency, capturer2.target.dependency);
-	}
+    @Test
+    public void shouldUseSamePresenterForSameEventBus() throws Exception {
+        MyEventBus eventBus1 = guiceEventBusFactory.create();
+        Capturer capturer1 = new Capturer();
+        eventBus1.event(capturer1);
+        Capturer capturer2 = new Capturer();
+        eventBus1.event(capturer2);
+        assertSame(capturer1.target, capturer2.target);
+    }
+
+    @Test
+    public void shouldUseSameSingletonDependencyForAllEventBusses() throws Exception {
+        MyEventBus eventBus1 = guiceEventBusFactory.create();
+        MyEventBus eventBus2 = guiceEventBusFactory.create();
+        Capturer capturer1 = new Capturer();
+        eventBus1.event(capturer1);
+        Capturer capturer2 = new Capturer();
+        eventBus2.event(capturer2);
+        assertSame(capturer1.target.dependency, capturer2.target.dependency);
+    }
 
 }

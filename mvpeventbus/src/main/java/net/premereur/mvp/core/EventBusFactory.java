@@ -5,21 +5,20 @@ package net.premereur.mvp.core;
  * EventBusFactories create event bus implementations. These implementations are synthetic classes that are typically generated on the fly. The factory
  * implementations are meant to be cached for performance, though it is not strictly necessary.
  * 
+ * @param <E> the main event bus type.
+ * 
  * @author gpremer
  * 
  */
-public interface EventBusFactory {
+public interface EventBusFactory<E extends EventBus> {
 
     /**
-     * Creates an event bus implementation. Requires at least one event bus segment and potentially more. The returned object will implement <em>all</em> of
-     * the event bus interfaces.
+     * Creates an event bus implementation as configured with this factory's specification. The returned object implements <em>all</em> event bus interfaces
+     * given in the specification, but the declared type is the main event bus type. In fact, this is the only difference between the main event bus type and
+     * the additional event bus types.
      * 
-     * @param <E> The type of the initial event bus segment
-     * @param initialEventBusIntf The first event bus segment
-     * @param segmentIntfs All other event bus segments. Due to restriction in the Java 5 & 6 generics implementation, it is not possible to define a tighter
-     *            type for this parameter. However, all interfaces have to extend {@link EventBus}.
-     * @return an event bus implementing all supplied interfaces and all event methods contained therein.
+     * @return an event bus implementing all supplied interfaces and thus all event methods contained therein.
      */
-    <E extends EventBus> E createEventBus(Class<E> initialEventBusIntf, Class<?>... segmentIntfs);
+    E create();
 
 }

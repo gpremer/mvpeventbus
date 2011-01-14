@@ -3,7 +3,6 @@ package net.premereur.mvp.example.swing.productmgt;
 import java.util.Collections;
 import java.util.List;
 
-import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.example.domain.model.Product;
 import net.premereur.mvp.example.domain.repository.ProductRepository;
 import net.premereur.mvp.example.swing.application.ApplicationBus;
@@ -21,8 +20,8 @@ import com.google.inject.Singleton;
 public class ProductSearchPresenter extends ProductPresenterBase<ProductSearchPanel> {
 
     @Inject
-    public ProductSearchPresenter(final EventBus bus, final ProductSearchPanel view, final ProductRepository repository) {
-        super((ProductMgtBus) bus, view, repository);
+    public ProductSearchPresenter(final ProductMgtBus bus, final ProductSearchPanel view, final ProductRepository repository) {
+        super(bus, view, repository);
     }
 
     /**

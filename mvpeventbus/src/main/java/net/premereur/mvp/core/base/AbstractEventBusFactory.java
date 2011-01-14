@@ -1,6 +1,11 @@
 package net.premereur.mvp.core.base;
 
+import static java.util.Arrays.asList;
+
 import java.lang.reflect.InvocationHandler;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.core.EventBusFactory;
@@ -8,10 +13,87 @@ import net.premereur.mvp.core.EventBusFactory;
 /**
  * A base class factory for event bus factories.
  * 
+ * @param <E> the type of the main event bus.
+ * 
  * @author gpremer
  * 
  */
-public abstract class AbstractEventBusFactory implements EventBusFactory {
+public abstract class AbstractEventBusFactory<E extends EventBus> implements EventBusFactory<E> {
+
+    private final Collection<Class<? extends EventBus>> eventBusInterfaces;
+
+    /**
+     * A specification for an event bus factory.
+     * 
+     * @author gpremer
+     * 
+     * @param <E> the type of the main event bus segment
+     */
+    public abstract static class Configuration<E extends EventBus> {
+        private Set<Class<? extends EventBus>> eventBusInterfaces = new HashSet<Class<? extends EventBus>>();
+        private final Class<E> mainEventBusInterface;
+
+        /**
+         * Constructs a specification that will ultimately generate a factory with the argument as main bus interface.
+         * 
+         * @param mainEventBusInterface the main interface of the busses to create
+         */
+        protected Configuration(final Class<E> mainEventBusInterface) {
+            this.mainEventBusInterface = mainEventBusInterface;
+            eventBusInterfaces.add(mainEventBusInterface);
+        }
+
+        /**
+         * Adds a bunch of segments.
+         * 
+         * @param additionalEventBusInterfaces the segments to add
+         */
+        protected final void add(final Class<? extends EventBus>... additionalEventBusInterfaces) {
+            this.eventBusInterfaces.addAll(asList(additionalEventBusInterfaces));
+        }
+
+        /**
+         * Finally creates the factory.
+         * 
+         * @return an event bus factory that can be used to create event bus instances
+         */
+        public abstract EventBusFactory<E> build();
+
+        /**
+         * The event bus interfaces that where specified.
+         * 
+         * @return the eventBusInterfaces
+         */
+        protected final Set<Class<? extends EventBus>> getEventBusInterfaces() {
+            return eventBusInterfaces;
+        }
+
+        /**
+         * The main main event bus interface that was specified.
+         * 
+         * @return the mainEventBusInterface
+         */
+        protected final Class<E> getMainEventBusInterface() {
+            return mainEventBusInterface;
+        }
+
+    }
+
+    /**
+     * Creates the base part of an EventBusFactory.
+     * 
+     * @param eventBusInterfaces the interfaces the event bus will implement
+     */
+    protected AbstractEventBusFactory(final Collection<Class<? extends EventBus>> eventBusInterfaces) {
+        this.eventBusInterfaces = eventBusInterfaces;
+    }
+
+    /**
+     * Returns all event bus interfaces that created event busses need to implement.
+     */
+    protected final Collection<Class<? extends EventBus>> getEventBusInterfaces() {
+        return eventBusInterfaces;
+    }
 
     /**
      * Creates an event bus that implements all of the supplied event bus interfaces. The first argument is the called the master event bus. This naming is
@@ -23,20 +105,17 @@ public abstract class AbstractEventBusFactory implements EventBusFactory {
      * presenters. When there's a need to send events to event sinks on other, combined, busses, the designer has the choice of replicating event methods in the
      * attached bus or calling events directly on the master bus.
      * 
-     * @param <E> The main event bus interface type
-     * @param mainEventBusIntf the main segment
-     * @param segmentIntfs the other, optional, segments
      * @return an event bus implementing all of the segment interfaces
      */
     @SuppressWarnings("unchecked")
-    public final <E extends EventBus> E createEventBus(final Class<E> mainEventBusIntf, final Class<?>... segmentIntfs) {
-        Class<? extends EventBus>[] eventBusIntfs = (Class<? extends EventBus>[]) new Class<?>[1 + segmentIntfs.length];
-        eventBusIntfs[0] = mainEventBusIntf;
-        for (int i = 0; i < segmentIntfs.length; ++i) {
-            eventBusIntfs[i + 1] = (Class<? extends EventBus>) segmentIntfs[i];
-        }
-        InvocationHandler handler = createHandler(eventBusIntfs);
-        return (E) createProxy(eventBusIntfs, handler);
+    public final E create() {
+        InvocationHandler handler = createHandler(getEventBusInterfaceArray());
+        return (E) createProxy(getEventBusInterfaceArray(), handler);
+    }
+
+    @SuppressWarnings("unchecked")
+    private Class<? extends EventBus>[] getEventBusInterfaceArray() {
+        return getEventBusInterfaces().toArray((Class<? extends EventBus>[]) (new Class<?>[] {}));
     }
 
     /**

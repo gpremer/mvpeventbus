@@ -11,22 +11,23 @@ import net.premereur.mvp.example.swing.productmgt.ProductMgtModule;
  * The demo application itself.
  * 
  * @author gpremer
- *
+ * 
  */
 public final class CategoryApp {
 
     /**
      * Starts the application.
-     *
+     * 
      * @param args the command line arguments
      */
     public static void main(final String[] args) {
         // Schedule a job for the event-dispatching thread:
         // creating and showing this application's GUI.
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            @SuppressWarnings("unchecked")
             public void run() {
-                new GuiceEventBusFactory(new CategoryMgtModule(), new ProductMgtModule()).createEventBus(ApplicationBus.class, CategoryMgtBus.class,
-                        ProductMgtBus.class).applicationStarted();
+                GuiceEventBusFactory.withMainSegment(ApplicationBus.class).withAdditionalSegments(CategoryMgtBus.class, ProductMgtBus.class).using(
+                        new CategoryMgtModule(), new ProductMgtModule()).build().create().applicationStarted();
             }
         });
     }

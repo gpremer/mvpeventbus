@@ -82,22 +82,22 @@ public class EventBusFactorySegmentsTest extends EventBusFactoryTestBase {
 
     @Test
     public void shouldBeAbleToCreateBusComposedOfSegmentBusses() throws Exception {
-        MainEventBus masterBus = eventBusFactory.createEventBus(MainEventBus.class, ChainedEventBus.class);
+        MainEventBus masterBus = BasicEventBusFactory.withSegments(MainEventBus.class, ChainedEventBus.class).build().create();
         assertTrue(masterBus instanceof MainEventBus);
         assertTrue(masterBus instanceof ChainedEventBus);
     }
 
     @Test
     public void shouldPropagateEventsSentToAttachedBusToMasterAndAttachedBus() throws Exception {
-        ChainedEventBus chainedBus = (ChainedEventBus) eventBusFactory.createEventBus(MainEventBus.class, ChainedEventBus.class);
+        ChainedEventBus chainedBus = (ChainedEventBus) BasicEventBusFactory.withSegments(MainEventBus.class, ChainedEventBus.class).build().create();
         chainedBus.event();
         verify(MainBusPresenter.memento).invoke("shared_event");
         verify(ChildBusPresenter.memento).invoke("shared_event");
     }
 
     @Test
-    public void shouldPropagateEventsSentToMasterBusToMasterBusaAndAttachedBus() throws Exception {
-        MainEventBus masterBus = eventBusFactory.createEventBus(MainEventBus.class, ChainedEventBus.class);
+    public void shouldPropagateEventsSentToMasterBusToMasterBusAndAttachedBus() throws Exception {
+        MainEventBus masterBus = BasicEventBusFactory.withSegments(MainEventBus.class,ChainedEventBus.class).build().create();
         masterBus.event();
         verify(MainBusPresenter.memento).invoke("shared_event");
         verify(ChildBusPresenter.memento).invoke("shared_event");

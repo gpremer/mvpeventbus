@@ -8,6 +8,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/mvp-demodomain"/>
 	<classpathentry kind="var" path="GRADLE_CACHE/aopalliance/aopalliance/jars/aopalliance-1.0.jar"/>
 	<classpathentry kind="var" path="GRADLE_CACHE/org.mockito/mockito-core/jars/mockito-core-1.8.5.jar"/>
-	<classpathentry kind="var" path="GRADLE_CACHE/com.google.code.guice/guice/jars/guice-2.0.1.jar"/>
+	<classpathentry kind="var" path="GRADLE_CACHE/com.google.code.guice/guice/jars/guice-2.0.1.jar" sourcepath="/LOCAL_SRCS/guice-2.0-src/src"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -1,6 +1,5 @@
 package net.premereur.mvp.example.vaadin;
 
-import net.premereur.mvp.core.EventBusFactory;
 import net.premereur.mvp.core.guice.GuiceEventBusFactory;
 import net.premereur.mvp.example.vaadin.app.ApplicationBus;
 import net.premereur.mvp.example.vaadin.app.ApplicationModule;
@@ -18,14 +17,15 @@ import com.vaadin.Application;
 @SuppressWarnings("serial")
 public class SampleApplication extends Application {
 
-    private static final EventBusFactory EVENT_BUS_FACTORY;
+    private static final GuiceEventBusFactory<ApplicationBus> EVENT_BUS_FACTORY;
 
     static {
-        EVENT_BUS_FACTORY = new GuiceEventBusFactory(new ApplicationModule(), new CategoryMgtModule());
+        EVENT_BUS_FACTORY = GuiceEventBusFactory.withMainSegment(ApplicationBus.class).withAdditionalSegment(CategoryMgtBus.class).using(
+                new ApplicationModule(), new CategoryMgtModule()).build();
     }
 
     @Override
     public final void init() {
-        EVENT_BUS_FACTORY.createEventBus(ApplicationBus.class, CategoryMgtBus.class).init(this);
+        EVENT_BUS_FACTORY.create().init(this);
     }
 }

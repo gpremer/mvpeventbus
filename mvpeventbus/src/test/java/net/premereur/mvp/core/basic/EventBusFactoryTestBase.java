@@ -2,23 +2,21 @@ package net.premereur.mvp.core.basic;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
-
 import net.premereur.mvp.core.Event;
 import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.core.EventBusFactory;
 import net.premereur.mvp.core.UsesView;
 import net.premereur.mvp.core.View;
-import net.premereur.mvp.core.basic.BasicEventBusFactory;
 
 import org.junit.Before;
 
 public abstract class EventBusFactoryTestBase {
 
-	protected EventBusFactory eventBusFactory;
+	protected EventBusFactory<MyEventBus> eventBusFactory;
 
 	@Before
 	public void setUpFactory() {
-		eventBusFactory = new BasicEventBusFactory();
+		eventBusFactory = BasicEventBusFactory.withMainSegment(MyEventBus.class).build();
 	}
 
 	interface Memento {
@@ -75,4 +73,7 @@ public abstract class EventBusFactoryTestBase {
 		// methods are just ignored
 	}
 
+	protected <EB extends EventBus> EB createEventBus(final Class<EB> busInterface) {
+	    return BasicEventBusFactory.withMainSegment(busInterface).build().create();
+	}
 }
