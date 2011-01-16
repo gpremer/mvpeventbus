@@ -27,21 +27,25 @@ An event bus is a simple interface extending `EventBus` and containing methods m
       // Many more events ....
     }
 
-Event methods are void methods that can take any number of parameters (of reference types), so there is no need to create special-purpose event classes.
+Event methods are void methods that can take any number of parameters (of reference types), so there is no need to create special-purpose event classes. Sending an event is the same as calling an method annotated with `@Event`. The advantage of this approach is that it is not necessary to write a dedicated, repetitive, `Event` class for any event you want to send over the bus.
 
 ### Creating event busses
 
-Somewhere in the initialisation part of your application you request an instance of this interface:
+Somewhere in the initialisation part of your application you request an object implementing the interface you have defined:
 
     public void init() {
-      EventBusFactory.createEventBus(DemoEventBus.class).applicationStarted();
+      final EventBusFactory<DemoEventBus> factory = BasicEventBusFactory.withMainType(DemoEventBus.class).build()
+      final DemoEventBus eventBus = factory.create();
     }
 
-The `EventBusFactory` will create all `Presenter`s mentioned in the `Event` annotations the first time en event handled by the Presenter is sent. Once created, a presenter is kept alive, so it is safe to keep state within the presenter. Future versions of the framework will allow explicit removal of the presenters and the associated view.
+First you build a factory object based on the specification of what types should be implemented and then you ask this factory to build an bus instance. This instance is automagically generated using dynamic proxies, so you don't have to do anything besides defining the interface. In a stand-alone application, e.g. using Swing, you  likely have one factory instance and one bus instance. In a web application on the other hand, you'll have one factory and one bus for every user session.
+
 
 ### Presenters
 
-`Presenter`s implement the application logic and are simple classes that implement the `Presenter` interface. There's a convenience class `BasePresenter` that implements this interface and that you can extend from.
+The `EventBusFactory` will create all `Presenter`s mentioned in the `Event` annotations the first time an event handled by the presenter is sent. After the first request, a presenter is stored for subsequent requests. Obviously, all event bus instances have their own instance of all presenters so that different user sessions can have different state.
+
+The role of the presenter is to provide the application logic. Presenters have to implement the `Presenter` tagging interface. There's a convenience class `BasePresenter` that implements this interface and that you can extend from.
 
     @UsesView(ApplicationFrame.class)
     public class ApplicationPresenter extends BasePresenter<ApplicationFrame, DemoEventBus> {
@@ -57,7 +61,9 @@ The `EventBusFactory` will create all `Presenter`s mentioned in the `Event` anno
       // Many more event handlers
     }
 
-As can be observed, the Presenter has a handler method named after the event but starting with 'on'. The `EventBusFactory` injects the `View` specified in the `@UsesView` annotation. It also provides a reference to the event bus object used for delivering the event so that the Presenter can send new events to the bus.
+As can be observed, the Presenter has a handler method named after the event but starting with 'on'. The `EventBusFactory` injects the `View` specified in the `@UsesView` annotation. It also provides a reference to the event bus object used for delivering the event so that the Presenter can send new events to the bus. There's also a Guice-enabled version of the event bus factory that avoids the need for a base class and the `UsesView` annotation. See the section on Guice support for that.
+
+As said, once created a presenter is kept alive, so it is safe to store state within the presenter. However, when the event bus instance that forwards events to the presenter becomes unreferenced (e.g. the user's session terminates), all associated presenters are removed as well.  Future versions of the framework may explicit removal of the presenters and the associated view.
 
 ### Views
 
@@ -67,25 +73,25 @@ Views are classes that interact with the UI framework you use in your applicatio
       // view logic here
     }
 
-It is suggested that UI-framework-specific methods call back to methods in the presenter that the View belongs to.
+It is suggested that UI-framework-specific methods call back to methods in the presenter that the View belongs to. The is to have as little logic as possible in the view and as much as possible in the presenter. The view should only contain the code that requires a run-time environment to test. The presenter should contain everything that can be tested a as unit test. In practice, it depends on the amount of test coverage you aim for. If you're not unit testing every last bit of your application, it may be convenient to shift a bit more reponsability to the view.
 
 For a complete example, look at the included mvp-swingexample or mvp-vaadin-example projects.
 
 ## Extensions
 
-On top of the base functionality, there are a number of interesting additions
+On top of the base functionality, there are a number of interesting additions.
 
-### Event bus segments
+### Event bus segment types
 
-For larger applications it does not make sense to have a single event bus interface that reference all presenters in the whole application. Therefore it is possible to split up the event bus in distinct segments. Each of the segments can then group related presenters. At run time, there is still a single "fysical" bus that has access to all events, but at design and compile time, the dependency graph is much simplified.
+For larger applications it doesn't make sense to have a single event bus interface containing all events and all presenters for the whole application. Therefore, it is possible to get different views of the whole event bus that only show a number of, likely related, events. These parts are called "segments", but keep in mind that there is only one event bus that handles all events. Events are not local to a certain segment. Still, this concept allows modularising applications at design time.
 
-To work with event bus fragments, all you have to do is make separate event bus interfaces. These interfaces have no relationshop on each other. Only when requesting an event bus instance from the factory, are the fragments combined.
+To work with event bus segments, all you have to do is make separate event bus interfaces. These interfaces have no relationship to each other when coding. Only when configuring an event bus factory at run time, are the fragments combined.
 
 E.g.
 
-    EVENT_BUS_FACTORY.createEventBus(ApplicationBus.class, CategoryMgtBus.class).init(this);
+    BasicEventBusFactory.withSegments(MainEventBus.class, ChainedEventBus.class, OtherEventBus.class).build()
 
-In this example `ApplicationBus` and `CategoryMgtBus` both are event bus interface each with their own set of presenters (the sets may overlap, although this will typically not be the case). The resulting event bus instance implements both interfaces. The declared type is the type of the first argument, in this case `CategoryMgtBus`, but the instance ccan be cast to any of the other interfaces. 
+In this example `MainEventBus`, `ChainedEventBus` and `OtherEventBus` are event bus interfaces each with their own set of presenters (the sets may overlap, although this will typically not be the case). The resulting event bus instance implements both interfaces. The declared type of any event bus instance created from this factory is the type of the first argument, in this case `MainEventBus`, but the instance can be cast to any of the other interfaces. 
 
 Since frequent casting in client code is not so nice, the `BasePresenter` has some syntactic sugar for this. The standard type of the event bus instance is declared through the generics type argument. The other segment types can accessed through a helper method `getEventBus(<segment interface>)` as in:
 
@@ -99,11 +105,11 @@ Since frequent casting in client code is not so nice, the `BasePresenter` has so
 
 ### Guice integration
 
-To be elaborated.
+The basic event bus factory can only create event busses that inject the event bus interfaces and the view into the presenter. `GuiceEventBusFactory` creates event busses that uses Google Guice to inject anything that is configured in a Guice module. Obviously, the presenter needs to be annotated with Guice's `@Inject`.
 
 ## Acknowledgement
 
-The interface of the framework was heavily inspired by the [mvp4g](http://code.google.com/p/mvp4g/) project.
+The interface of the mvpeventbus framework was inspired by the [mvp4g](http://code.google.com/p/mvp4g/) project. The difference is that mvpeventbus is more generic and can be used server-side e.g. for Swing and Vaadin applications.
 
 Building
 --------
