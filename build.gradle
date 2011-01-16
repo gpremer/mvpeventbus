@@ -41,7 +41,7 @@ subprojects {
     configFile = file("${rootDir}/config/checkstyle/junit.xml")
   }
 
-  version = '1.0-rc1'
+  version = '1.0-rc2'
 
   jar {
     manifest.attributes provider: 'ICTects'
