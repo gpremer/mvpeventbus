@@ -89,11 +89,12 @@ To work with event bus segments, all you have to do is make separate event bus i
 
 E.g.
 
-    BasicEventBusFactory.withSegments(MainEventBus.class, ChainedEventBus.class, OtherEventBus.class).build()
+    BasicEventBusFactory.withSegments(MainEventBus.class, ChainedEventBus.class, OtherEventBus.class)
+                        .build()
 
 In this example `MainEventBus`, `ChainedEventBus` and `OtherEventBus` are event bus interfaces each with their own set of presenters (the sets may overlap, although this will typically not be the case). The resulting event bus instance implements both interfaces. The declared type of any event bus instance created from this factory is the type of the first argument, in this case `MainEventBus`, but the instance can be cast to any of the other interfaces. 
 
-Since frequent casting in client code is not so nice, the `BasePresenter` has some syntactic sugar for this. The standard type of the event bus instance is declared through the generics type argument. The other segment types can accessed through a helper method `getEventBus(<segment interface>)` as in:
+Since frequent casting in client code doesn't look very nice, the `BasePresenter` has some syntactic sugar for this. The standard type of the event bus instance is declared through the generics type argument. The other segment types can accessed through a helper method `getEventBus(<segment interface>)` as in:
 
     /**
      * See {@link CategoryMgtBus#changedCategory(Category)}.
@@ -103,9 +104,19 @@ Since frequent casting in client code is not so nice, the `BasePresenter` has so
       getEventBus(ApplicationBus.class).showMessage("Saved category");
     }
 
+This example also demostrates a suggested way of documenting event methods. The `@link` Javadoc tag, and the `@Event` annotation allow navigating both ways between event definition and handler.   
+
 ### Guice integration
 
 The basic event bus factory can only create event busses that inject the event bus interfaces and the view into the presenter. `GuiceEventBusFactory` creates event busses that uses Google Guice to inject anything that is configured in a Guice module. Obviously, the presenter needs to be annotated with Guice's `@Inject`.
+
+After you have defined modules, you can use them with a `GuiceEventBusFactory` as in
+
+    factory = GuiceEventBusFactory.withMainSegment(MyEventBus.class)
+                                  .withAdditionalSegment(MyOtherEventBus.class)
+                                  .using(testModule).build()
+
+This is just like specifying a `BasicEventBusFactory`, with the addition of a `using` method that takes one or more Guice modules. Note that this factory has been specified with explicit main and event bus segments, this is equivalent to using `withSegments`, but a tad more expressive.
 
 ## Acknowledgement
 
