@@ -1,6 +1,5 @@
 package net.premereur.mvp.example.vaadin.categorymgt;
 
-import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.core.guice.BasePresenter;
 import net.premereur.mvp.example.domain.model.Category;
 import net.premereur.mvp.example.domain.repository.CategoryRepository;
@@ -25,8 +24,8 @@ public final class CategoryMgtPresenter extends BasePresenter<CategoryMgtView, C
     private boolean active = false;
 
     @Inject
-    public CategoryMgtPresenter(final EventBus eventBus, final CategoryMgtView view, final CategoryRepository categoryRepository) {
-        super((CategoryMgtBus) eventBus, view);
+    public CategoryMgtPresenter(final CategoryMgtBus eventBus, final CategoryMgtView view, final CategoryRepository categoryRepository) {
+        super(eventBus, view);
         this.categoryRepository = categoryRepository;
     }
 

@@ -118,6 +118,16 @@ After you have defined modules, you can use them with a `GuiceEventBusFactory` a
 
 This is just like specifying a `BasicEventBusFactory`, with the addition of a `using` method that takes one or more Guice modules. Note that this factory has been specified with explicit main and event bus segments, this is equivalent to using `withSegments`, but a tad more expressive.
 
+Anyway, suppose you define a binding for an `CategoryRepository` in Guice, you can now do:
+
+    @Inject
+    public CategoryMgtPresenter(final CategoryMgtBus eventBus, final CategoryMgtView view, final CategoryRepository categoryRepository) {
+        super(eventBus, view);
+        this.categoryRepository = categoryRepository;
+    }
+
+You can also inject more than one interface for the same event bus if you want. E.g. the segment that corresponds with the application-level events and the segment that corresponds to the module-level events.
+
 ## Acknowledgement
 
 The interface of the mvpeventbus framework was inspired by the [mvp4g](http://code.google.com/p/mvp4g/) project. The difference is that mvpeventbus is more generic and can be used server-side e.g. for Swing and Vaadin applications.
