@@ -108,7 +108,7 @@ This example also demostrates a suggested way of documenting event methods. The 
 
 ### Guice integration
 
-The basic event bus factory can only create event busses that inject the event bus interfaces and the view into the presenter. `GuiceEventBusFactory` creates event busses that uses Google Guice to inject anything that is configured in a Guice module. Obviously, the presenter needs to be annotated with Guice's `@Inject`.
+The basic event bus factory can only create event busses that inject the event bus interfaces and the view into the presenter. `GuiceEventBusFactory` creates event busses that use Google Guice to inject anything that can be configured in a Guice module. Obviously, the presenter needs to be annotated with Guice's `@Inject`.
 
 After you have defined modules, you can use them with a `GuiceEventBusFactory` as in
 
@@ -116,9 +116,9 @@ After you have defined modules, you can use them with a `GuiceEventBusFactory` a
                                   .withAdditionalSegment(MyOtherEventBus.class)
                                   .using(testModule).build()
 
-This is just like specifying a `BasicEventBusFactory`, with the addition of a `using` method that takes one or more Guice modules. Note that this factory has been specified with explicit main and event bus segments, this is equivalent to using `withSegments`, but a tad more expressive.
+This is just like specifying a `BasicEventBusFactory`, with the addition of a `using` method that takes one or more Guice modules. Note that this factory has been specified with explicit main and event bus segments, this is equivalent to using the single `withSegments` methods, but a tad more expressive.
 
-Anyway, suppose you define a binding for an `CategoryRepository` in Guice, you can now do:
+Anyway, suppose you define a binding for a `CategoryRepository`, you can then expect that all parameters are to the following constructor are supplied:
 
     @Inject
     public CategoryMgtPresenter(final CategoryMgtBus eventBus, final CategoryMgtView view, final CategoryRepository categoryRepository) {
@@ -126,7 +126,9 @@ Anyway, suppose you define a binding for an `CategoryRepository` in Guice, you c
         this.categoryRepository = categoryRepository;
     }
 
-You can also inject more than one interface for the same event bus if you want. E.g. the segment that corresponds with the application-level events and the segment that corresponds to the module-level events.
+There's no need to bind implementations for the `eventBus` and `view` parameters as those are supplied by the framework itself.
+
+You can also inject more than one interface on the same event bus if you want. E.g. the segment that corresponds with the application-level events and the segment that corresponds to the module-level events.
 
 ## Acknowledgement
 
