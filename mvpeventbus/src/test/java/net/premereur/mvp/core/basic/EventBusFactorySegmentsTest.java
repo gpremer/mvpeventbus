@@ -92,7 +92,6 @@ public class EventBusFactorySegmentsTest extends EventBusFactoryTestBase {
         assertTrue(masterBus instanceof OtherEventBus);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void shouldPropagateEventsSentToAttachedBusToMasterAndAttachedBus() throws Exception {
         ChainedEventBus chainedBus = (ChainedEventBus) BasicEventBusFactory.withMainSegment(MainEventBus.class).withAdditionalSegment(ChainedEventBus.class)
