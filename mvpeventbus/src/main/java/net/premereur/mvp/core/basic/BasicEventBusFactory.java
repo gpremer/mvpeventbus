@@ -111,7 +111,7 @@ public final class BasicEventBusFactory<EB extends EventBus> extends AbstractEve
     /**
      * {@inheritDoc}
      */
-    protected EventBusInvocationHandler createHandler(final Class<? extends EventBus>[] eventBusIntfs) {
+    protected EventBusInvocationHandler createInvocationHandler(final Class<? extends EventBus>[] eventBusIntfs) {
         return new EventBusInvocationHandler(eventBusIntfs);
     }
 

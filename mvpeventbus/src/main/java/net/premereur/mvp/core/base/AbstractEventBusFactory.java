@@ -109,7 +109,7 @@ public abstract class AbstractEventBusFactory<E extends EventBus> implements Eve
      */
     @SuppressWarnings("unchecked")
     public final E create() {
-        InvocationHandler handler = createHandler(getEventBusInterfaceArray());
+        InvocationHandler handler = createInvocationHandler(getEventBusInterfaceArray());
         return (E) createProxy(getEventBusInterfaceArray(), handler);
     }
 
@@ -133,6 +133,6 @@ public abstract class AbstractEventBusFactory<E extends EventBus> implements Eve
      * @param eventBusIntfs the eventbus segment interfaces that make up the complete event bus
      * @return a dynamic proxy invocation handler
      */
-    protected abstract InvocationHandler createHandler(Class<? extends EventBus>[] eventBusIntfs);
+    protected abstract InvocationHandler createInvocationHandler(Class<? extends EventBus>[] eventBusIntfs);
 
 }

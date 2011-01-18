@@ -146,7 +146,7 @@ public final class GuiceEventBusFactory<EB extends EventBus> extends AbstractEve
      * {@inheritDoc}
      */
     @Override
-    protected InvocationHandler createHandler(final Class<? extends EventBus>[] eventBusIntfs) {
+    protected InvocationHandler createInvocationHandler(final Class<? extends EventBus>[] eventBusIntfs) {
         return new GuiceEventBusInvocationHandler(eventBusIntfs, guiceInjector.getInstance(PresenterFactory.class));
     }
 
