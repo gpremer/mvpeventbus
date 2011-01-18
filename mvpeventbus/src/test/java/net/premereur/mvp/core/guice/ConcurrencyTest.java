@@ -19,28 +19,32 @@ import com.google.inject.Singleton;
 public class ConcurrencyTest extends TestBase {
 
     static class Capturer {
-        MyPresenter target;
+        MyPresenter presenter;
 
-        void capture(MyPresenter target) {
-            this.target = target;
+        void capture(final MyPresenter target) {
+            this.presenter = target;
         }
+
     }
 
     static interface MyEventBus extends EventBus {
         @Event(MyPresenter.class)
         void event(Capturer capturer);
+
     }
 
     public static class MyPresenter implements Presenter<MyView, MyEventBus> {
 
         Dependency dependency;
+        MyEventBus eventBus;
 
         @Inject
-        public MyPresenter(Dependency dependency) {
+        public MyPresenter(final Dependency dependency, final MyEventBus bus) {
             this.dependency = dependency;
+            this.eventBus = bus;
         }
 
-        public void onEvent(Capturer capturer) {
+        public void onEvent(final Capturer capturer) {
             capturer.capture(this);
         }
     }
@@ -87,7 +91,7 @@ public class ConcurrencyTest extends TestBase {
         eventBus1.event(capturer1);
         Capturer capturer2 = new Capturer();
         eventBus2.event(capturer2);
-        assertNotSame(capturer1.target, capturer2.target);
+        assertNotSame(capturer1.presenter, capturer2.presenter);
     }
 
     @Test
@@ -97,7 +101,7 @@ public class ConcurrencyTest extends TestBase {
         eventBus1.event(capturer1);
         Capturer capturer2 = new Capturer();
         eventBus1.event(capturer2);
-        assertSame(capturer1.target, capturer2.target);
+        assertSame(capturer1.presenter, capturer2.presenter);
     }
 
     @Test
@@ -108,7 +112,18 @@ public class ConcurrencyTest extends TestBase {
         eventBus1.event(capturer1);
         Capturer capturer2 = new Capturer();
         eventBus2.event(capturer2);
-        assertSame(capturer1.target.dependency, capturer2.target.dependency);
+        assertSame(capturer1.presenter.dependency, capturer2.presenter.dependency);
+    }
+
+    @Test
+    public void shouldInjectDifferentEventBussesOnPresentersFromDifferentBusses() throws Exception {
+        MyEventBus eventBus1 = guiceEventBusFactory.create();
+        MyEventBus eventBus2 = guiceEventBusFactory.create();
+        Capturer capturer1 = new Capturer();
+        eventBus1.event(capturer1);
+        Capturer capturer2 = new Capturer();
+        eventBus2.event(capturer2);
+        assertNotSame(capturer1.presenter.eventBus, capturer2.presenter.eventBus);
     }
 
 }

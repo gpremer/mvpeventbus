@@ -19,13 +19,15 @@ import com.google.inject.Provider;
 public final class EventBusModule extends AbstractModule {
 
     private final Set<Class<? extends EventBus>> eventBusIntfs;
-    private EventBus eventBus;
+    // private EventBus eventBus;
+
+    private static final ThreadLocal<EventBus> EVENT_BUS_STORE = new ThreadLocal<EventBus>();
 
     @SuppressWarnings("unchecked")
     private final Provider eventBusProvider = new Provider<EventBus>() {
         @Override
         public EventBus get() {
-            return eventBus;
+            return EVENT_BUS_STORE.get();
         }
     };
 
@@ -39,8 +41,13 @@ public final class EventBusModule extends AbstractModule {
         this.eventBusIntfs = new HashSet<Class<? extends EventBus>>(eventBusIntfs);
     }
 
-    public void setEventBus(final EventBus eventBus) {
-        this.eventBus = eventBus;
+    /**
+     * Sets the event bus provider to return the given event bus instance for the current thread.
+     * 
+     * @param eventBus the event bus that should be in scope.
+     */
+    static void setThreadEventBus(final EventBus eventBus) {
+        EVENT_BUS_STORE.set(eventBus);
     }
 
     @SuppressWarnings("unchecked")

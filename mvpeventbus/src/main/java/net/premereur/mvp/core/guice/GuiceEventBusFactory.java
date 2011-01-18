@@ -156,7 +156,7 @@ public final class GuiceEventBusFactory<EB extends EventBus> extends AbstractEve
     @Override
     protected Object createProxy(final Class<? extends EventBus>[] eventBusIntfs, final InvocationHandler handler) {
         final Object proxy = Proxy.newProxyInstance(GuiceEventBusFactory.class.getClassLoader(), eventBusIntfs, handler);
-        eventBusModule.setEventBus((EventBus) proxy);
+        EventBusModule.setThreadEventBus((EventBus) proxy);
         return proxy;
     }
 

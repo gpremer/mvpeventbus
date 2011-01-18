@@ -49,6 +49,7 @@ public final class GuicePresenterFactory implements PresenterFactory {
             }
             Presenter<View, ? extends EventBus> presenter = eventBusPresenters.get(presenterClass);
             if (presenter == null) {
+                EventBusModule.setThreadEventBus(eventBus);
                 presenter = (Presenter<View, ? extends EventBus>) injector.getInstance(presenterClass);
                 eventBusPresenters.put(presenterClass, presenter);
             }
