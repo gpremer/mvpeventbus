@@ -40,7 +40,6 @@ Somewhere in the initialisation part of your application you request an object i
 
 First you build a factory object based on the specification of what types should be implemented and then you ask this factory to build an bus instance. This instance is automagically generated using dynamic proxies, so you don't have to do anything besides defining the interface. In a stand-alone application, e.g. using Swing, you  likely have one factory instance and one bus instance. In a web application on the other hand, you'll have one factory and one bus for every user session.
 
-
 ### Presenters
 
 The `EventBusFactory` will create all `Presenter`s mentioned in the `Event` annotations the first time an event handled by the presenter is sent. After the first request, a presenter is stored for subsequent requests. Obviously, all event bus instances have their own instance of all presenters so that different user sessions can have different state.
@@ -77,15 +76,21 @@ It is suggested that UI-framework-specific methods call back to methods in the p
 
 For a complete example, look at the included mvp-swingexample or mvp-vaadin-example projects.
 
+### Validation at wiring time
+
+Since the event dispatching methods in the event bus interface and the event handlers in the presenters are only linked through a naming convention, the framework validates the saneness of your set up as soon as possible. From the moment the `build` method is invoked on the factory builder, all `Presenter`s defined in `@Event` annotation are checked to make sure that they contain the requisite event handler methods with the correct argument types. If not, an exception is issued. Thus, if you can create an event bus factory, you can be assured that there will be no run-time surprises due to method lookup misses. Also, all exceptions that do occur try to be as descriptive as possible so you can correct the issue as efficiently as possible.
+
+By the way, these look ups at wiring time are also used to avoid having to perform reflection at event dispatching time.
+
 ## Extensions
 
 On top of the base functionality, there are a number of interesting additions.
 
 ### Event bus segment types
 
-For larger applications it doesn't make sense to have a single event bus interface containing all events and all presenters for the whole application. Therefore, it is possible to get different views of the whole event bus that only show a number of, likely related, events. These parts are called "segments", but keep in mind that there is only one event bus that handles all events. Events are not local to a certain segment. Still, this concept allows modularising applications at design time.
+For larger applications it doesn't make sense to have a single event bus interface containing all events and referring to all presenters for the whole application. Therefore, it is possible to get different views of the whole event bus that only show a number of, likely related, events. These parts are called "segments", but keep in mind that there is only one event bus that handles all events: events are not local to a certain segment and event bus segments are not chained. Still, thinking of segments allows modularising applications at design time.
 
-To work with event bus segments, all you have to do is make separate event bus interfaces. These interfaces have no relationship to each other when coding. Only when configuring an event bus factory at run time, are the fragments combined.
+To work with event bus segments, all you have to do is make separate event bus interfaces. These interfaces have no programmatic relationship to each other at design time. Only when configuring an event bus factory, are the fragments combined.
 
 E.g.
 
@@ -104,7 +109,7 @@ Since frequent casting in client code doesn't look very nice, the `BasePresenter
       getEventBus(ApplicationBus.class).showMessage("Saved category");
     }
 
-This example also demostrates a suggested way of documenting event methods. The `@link` Javadoc tag, and the `@Event` annotation allow navigating both ways between event definition and handler.   
+This example also demostrates a suggested way of documenting event methods. The `@link` Javadoc tag in the event handler, and the `@Event` annotation in the event dispatcher allow navigating between event definition and implementation despite the absence of a compiler-enforced link.   
 
 ### Guice integration
 
@@ -118,17 +123,18 @@ After you have defined modules, you can use them with a `GuiceEventBusFactory` a
 
 This is just like specifying a `BasicEventBusFactory`, with the addition of a `using` method that takes one or more Guice modules. Note that this factory has been specified with explicit main and event bus segments, this is equivalent to using the single `withSegments` methods, but a tad more expressive.
 
-Anyway, suppose you define a binding for a `CategoryRepository`, you can then expect that all parameters are to the following constructor are supplied:
+Anyway, suppose you define a binding for a `CategoryRepository`, you can then expect all parameters to the following constructor being supplied by Guice:
 
     @Inject
-    public CategoryMgtPresenter(final CategoryMgtBus eventBus, final CategoryMgtView view, final CategoryRepository categoryRepository) {
+    public CategoryMgtPresenter(final CategoryMgtBus eventBus, final CategoryMgtView view, 
+                                final CategoryRepository categoryRepository) {
         super(eventBus, view);
         this.categoryRepository = categoryRepository;
     }
 
-There's no need to bind implementations for the `eventBus` and `view` parameters as those are supplied by the framework itself.
+There's no need to bind implementations for the `eventBus` and `view` parameters in your modules as those are supplied by the framework itself.
 
-You can also inject more than one interface on the same event bus if you want. E.g. the segment that corresponds with the application-level events and the segment that corresponds to the module-level events.
+You can also inject more than one interface on the same event bus if you prefer to avoid casting to the correct segment type. E.g. you can both inject the segment that corresponds with the application-level events and the segment that corresponds to the module-level events. You'll end up with references to the same object, but typed differently.
 
 ## Acknowledgement
 
