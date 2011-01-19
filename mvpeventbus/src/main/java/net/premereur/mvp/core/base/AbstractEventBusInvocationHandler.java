@@ -5,6 +5,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import net.premereur.mvp.core.Event;
 import net.premereur.mvp.core.EventBus;
@@ -20,6 +22,8 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
     private final EventMethodMapper methodMapper;
 
     private final PresenterFactory presenterFactory;
+
+    private static final Logger LOG = Logger.getLogger("net.premereur.mvp.core");
 
     /**
      * Constructor.
@@ -56,6 +60,10 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
      */
     @Override
     public final Object invoke(final Object proxy, final Method eventMethod, final Object[] args) throws Throwable {
+        if (LOG.isLoggable(Level.FINE)) {
+            Thread.dumpStack();
+            LOG.fine("Receiving method " + eventMethod.getName() + " with arguments " + args);
+        }
         for (final EventMethodMapper.HandlerMethodPair handlerMethodPair : methodMapper.getHandlerEvents(eventMethod)) {
             final Object handler = presenterFactory.getPresenter(handlerMethodPair.getHandlerClass(), (EventBus) proxy);
             final Method method = handlerMethodPair.getMethod();
