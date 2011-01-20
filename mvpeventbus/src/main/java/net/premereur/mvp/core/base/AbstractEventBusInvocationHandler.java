@@ -60,20 +60,29 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
      */
     @Override
     public final Object invoke(final Object proxy, final Method eventMethod, final Object[] args) throws Throwable {
+        if (isSpecialMethod(eventMethod)) {
+            return handleSpecialMethods(proxy, eventMethod, args);
+        }
         if (LOG.isLoggable(Level.FINE)) {
-            Thread.dumpStack();
-            LOG.fine("Receiving method " + eventMethod.getName() + " with arguments " + args);
+            LOG.fine("Receiving method " + eventMethod.getName() + LogHelper.formatArguments(" with arguments ", args));
         }
         for (final EventMethodMapper.HandlerMethodPair handlerMethodPair : methodMapper.getHandlerEvents(eventMethod)) {
             final Object handler = presenterFactory.getPresenter(handlerMethodPair.getHandlerClass(), (EventBus) proxy);
             final Method method = handlerMethodPair.getMethod();
             try {
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.fine("Dispatching to " + handler.getClass() + " event method " + method.getName());
+                }
                 method.invoke(handler, args);
             } catch (InvocationTargetException e) {
                 throw new InvocationTargetException(e, "While invoking " + method.getName() + " on " + handler.getClass());
             }
         }
-        return handleSpecialMethods(proxy, eventMethod, args);
+        return null;
+    }
+
+    private boolean isSpecialMethod(final Method method) {
+        return method.getName().equals("hashCode");
     }
 
     private Object handleSpecialMethods(final Object proxy, final Method method, final Object[] args) {
