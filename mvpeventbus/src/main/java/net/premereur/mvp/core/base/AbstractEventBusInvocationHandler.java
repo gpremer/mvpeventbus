@@ -64,14 +64,14 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
             return handleSpecialMethods(proxy, eventMethod, args);
         }
         if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine("Receiving method " + eventMethod.getName() + LogHelper.formatArguments(" with arguments ", args));
+            LOG.fine("Receiving event " + eventMethod.getName() + LogHelper.formatArguments(" with ", args));
         }
         for (final EventMethodMapper.HandlerMethodPair handlerMethodPair : methodMapper.getHandlerEvents(eventMethod)) {
             final Object handler = presenterFactory.getPresenter(handlerMethodPair.getHandlerClass(), (EventBus) proxy);
             final Method method = handlerMethodPair.getMethod();
             try {
                 if (LOG.isLoggable(Level.FINE)) {
-                    LOG.fine("Dispatching to " + handler.getClass() + " event method " + method.getName());
+                    LOG.fine("Dispatching to " + handler.getClass() + " -> " + method.getName());
                 }
                 method.invoke(handler, args);
             } catch (InvocationTargetException e) {

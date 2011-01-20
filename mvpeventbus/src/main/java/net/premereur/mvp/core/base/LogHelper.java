@@ -11,6 +11,7 @@ public abstract class LogHelper {
     /**
      * Formats the given argument array taking into account that it may be null or empty or that it may contain null arguments. Arguments are expected to have a
      * suitable toString method; there is no deep inspection.
+     * 
      * @param prefix prefix in case the argument array is not empty
      * @param args an argument array as used in the reflection methods
      * 
