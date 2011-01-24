@@ -12,7 +12,6 @@ public final class ApplicationModule extends AbstractModule {
 
     @Override
     protected void configure() {
-
     }
 
 }

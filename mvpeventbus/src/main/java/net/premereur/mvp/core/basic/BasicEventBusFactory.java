@@ -2,10 +2,12 @@ package net.premereur.mvp.core.basic;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
+import java.util.List;
 import java.util.Set;
 
 import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.core.base.AbstractEventBusFactory;
+import net.premereur.mvp.core.base.EventInterceptor;
 
 /**
  * A factory for event busses that uses only standard Java SE mechanisms.
@@ -24,33 +26,10 @@ public final class BasicEventBusFactory<EB extends EventBus> extends AbstractEve
      * 
      * @param <E>
      */
-    public static final class Configuration<E extends EventBus> extends AbstractEventBusFactory.Configuration<E> {
+    public static final class Configuration<E extends EventBus> extends AbstractEventBusFactory.Configuration<E, Configuration<E>> {
 
         private Configuration(final Class<E> mainEventBusInterface) {
             super(mainEventBusInterface);
-        }
-
-        /**
-         * Adds an additional segment to the factory. Can be called many times, but see also {@link #withAdditionalSegments(Class...)} to add several segments
-         * at once.
-         * 
-         * @param additionalEventBusInterface a segment the factory should create a bus implementation for
-         */
-        @SuppressWarnings("unchecked")
-        public Configuration<E> withAdditionalSegment(final Class<? extends EventBus> additionalEventBusInterface) {
-            add(additionalEventBusInterface);
-            return this;
-        }
-
-        /**
-         * Adds several additional segments to the factory. Can be called many times, but see also {@link #withAdditionalSegment(Class...)} to add only a single
-         * segment.
-         * 
-         * @param additionalEventBusInterfaces a segment the factory should create a bus implementation for
-         */
-        public Configuration<E> withAdditionalSegments(final Class<? extends EventBus>... additionalEventBusInterfaces) {
-            add(additionalEventBusInterfaces);
-            return this;
         }
 
         /**
@@ -59,7 +38,7 @@ public final class BasicEventBusFactory<EB extends EventBus> extends AbstractEve
          * @return an event bus factory that can be used to create event bus instances
          */
         public BasicEventBusFactory<E> build() {
-            return new BasicEventBusFactory<E>(getEventBusInterfaces());
+            return new BasicEventBusFactory<E>(getEventBusInterfaces(), getInterceptors());
         }
 
     }
@@ -68,9 +47,10 @@ public final class BasicEventBusFactory<EB extends EventBus> extends AbstractEve
      * Creates a factory creating busses with the supplied interfaces.
      * 
      * @param eventBusInterfaces the bus type interfaces
+     * @param interceptors the bus-level interceptors
      */
-    public BasicEventBusFactory(final Set<Class<? extends EventBus>> eventBusInterfaces) {
-        super(eventBusInterfaces);
+    protected BasicEventBusFactory(final Set<Class<? extends EventBus>> eventBusInterfaces, final List<EventInterceptor> interceptors) {
+        super(eventBusInterfaces, interceptors);
     }
 
     /**
@@ -111,8 +91,8 @@ public final class BasicEventBusFactory<EB extends EventBus> extends AbstractEve
     /**
      * {@inheritDoc}
      */
-    protected EventBusInvocationHandler createInvocationHandler(final Class<? extends EventBus>[] eventBusIntfs) {
-        return new EventBusInvocationHandler(eventBusIntfs);
+    protected EventBusInvocationHandler createInvocationHandler(final Class<? extends EventBus>[] eventBusIntfs, final List<EventInterceptor> interceptors) {
+        return new EventBusInvocationHandler(eventBusIntfs, interceptors);
     }
 
 }

@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,6 +24,8 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
 
     private final PresenterFactory presenterFactory;
 
+    private final List<EventInterceptor> interceptors;
+
     private static final Logger LOG = Logger.getLogger("net.premereur.mvp.core");
 
     /**
@@ -31,10 +34,12 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
      * @param eventBusClasses the classes to proxy
      * @param presenterFactory the factory to create presenter instances with
      * @param verifier the verifier the concrete InvocationHandler needs
+     * @param interceptors The interceptors to call before the event dispatch
      */
     public AbstractEventBusInvocationHandler(final Class<? extends EventBus>[] eventBusClasses, final PresenterFactory presenterFactory,
-            final EventBusVerifier verifier) {
+            final EventBusVerifier verifier, final List<EventInterceptor> interceptors) {
         this.presenterFactory = presenterFactory;
+        this.interceptors = interceptors;
         this.methodMapper = new EventMethodMapper();
         final Collection<String> verificationErrors = new ArrayList<String>();
         registerAllEventMethods(eventBusClasses, verifier, verificationErrors);
@@ -66,6 +71,23 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("Receiving event " + eventMethod.getName() + LogHelper.formatArguments(" with ", args));
         }
+        if (executeInterceptors(eventMethod, args)) {
+            dispatchEventToHandlers(proxy, eventMethod, args);
+        }
+        return null;
+    }
+
+    private boolean executeInterceptors(final Method eventMethod, final Object[] args) {
+        for (final EventInterceptor interceptor : interceptors) {
+            if (!interceptor.beforeEvent(eventMethod, args)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void dispatchEventToHandlers(final Object proxy, final Method eventMethod, final Object[] args) throws IllegalAccessException,
+            InvocationTargetException {
         for (final EventMethodMapper.HandlerMethodPair handlerMethodPair : methodMapper.getHandlerEvents(eventMethod)) {
             final Object handler = presenterFactory.getPresenter(handlerMethodPair.getHandlerClass(), (EventBus) proxy);
             final Method method = handlerMethodPair.getMethod();
@@ -78,7 +100,6 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
                 throw new InvocationTargetException(e, "While invoking " + method.getName() + " on " + handler.getClass());
             }
         }
-        return null;
     }
 
     private boolean isSpecialMethod(final Method method) {

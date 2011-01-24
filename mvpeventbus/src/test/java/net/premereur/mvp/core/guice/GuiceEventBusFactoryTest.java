@@ -31,7 +31,6 @@ public class GuiceEventBusFactoryTest extends TestBase {
 
         @Event(MyPresenter.class)
         void eventBusCall();
-
     }
 
     static interface MyOtherEventBus extends EventBus {
@@ -136,8 +135,7 @@ public class GuiceEventBusFactoryTest extends TestBase {
     @SuppressWarnings("unchecked")
     @Test
     public void shouldBuildTheFactoryWithAMainTypeAndSeveralAdditionTypesAsOneArgument() {
-        final MyEventBus myEventBus = GuiceEventBusFactory.withSegments(MyEventBus.class, MyOtherEventBus.class,
-                YetAnotherEventBus.class).build().create();
+        final MyEventBus myEventBus = GuiceEventBusFactory.withSegments(MyEventBus.class, MyOtherEventBus.class, YetAnotherEventBus.class).build().create();
         assertTrue(myEventBus instanceof MyEventBus);
         assertTrue(myEventBus instanceof MyOtherEventBus);
         assertTrue(myEventBus instanceof YetAnotherEventBus);

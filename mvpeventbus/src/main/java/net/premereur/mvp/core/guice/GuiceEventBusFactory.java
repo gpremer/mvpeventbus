@@ -12,6 +12,7 @@ import java.util.Set;
 
 import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.core.base.AbstractEventBusFactory;
+import net.premereur.mvp.core.base.EventInterceptor;
 import net.premereur.mvp.core.base.PresenterFactory;
 
 import com.google.inject.Guice;
@@ -38,35 +39,12 @@ public final class GuiceEventBusFactory<EB extends EventBus> extends AbstractEve
      * 
      * @param <E> an EventBus interface
      */
-    public static final class Configuration<E extends EventBus> extends AbstractEventBusFactory.Configuration<E> {
+    public static final class Configuration<E extends EventBus> extends AbstractEventBusFactory.Configuration<E, Configuration<E>> {
 
         private Set<Module> modules = new HashSet<Module>();
 
         private Configuration(final Class<E> mainEventBusInterface) {
             super(mainEventBusInterface);
-        }
-
-        /**
-         * Adds an additional segment to the factory. Can be called many times, but see also {@link #withAdditionalSegments(Class...)} to add several segments
-         * at once.
-         * 
-         * @param additionalEventBusInterface a segment the factory should create a bus implementation for
-         */
-        @SuppressWarnings("unchecked")
-        public Configuration<E> withAdditionalSegment(final Class<? extends EventBus> additionalEventBusInterface) {
-            add(additionalEventBusInterface);
-            return this;
-        }
-
-        /**
-         * Adds several additional segments to the factory. Can be called many times, but see also {@link #withAdditionalSegment(Class...)} to add only a single
-         * segment.
-         * 
-         * @param additionalEventBusInterfaces a segment the factory should create a bus implementation for
-         */
-        public Configuration<E> withAdditionalSegments(final Class<? extends EventBus>... additionalEventBusInterfaces) {
-            add(additionalEventBusInterfaces);
-            return this;
         }
 
         /**
@@ -95,7 +73,7 @@ public final class GuiceEventBusFactory<EB extends EventBus> extends AbstractEve
          * @return an event bus factory that can be used to create event bus instances
          */
         public GuiceEventBusFactory<E> build() {
-            return new GuiceEventBusFactory<E>(getModules(), getEventBusInterfaces());
+            return new GuiceEventBusFactory<E>(getModules(), getEventBusInterfaces(), getInterceptors());
         }
 
     }
@@ -133,9 +111,11 @@ public final class GuiceEventBusFactory<EB extends EventBus> extends AbstractEve
      * 
      * @param modules the modules containing configuration information for objects that need to be injected.
      * @param eventBusInterfaces the interfaces the event bus will implement
+     * @param interceptors Interceptors to be called before invoking an event
      */
-    protected GuiceEventBusFactory(final Collection<Module> modules, final Collection<Class<? extends EventBus>> eventBusInterfaces) {
-        super(eventBusInterfaces);
+    protected GuiceEventBusFactory(final Collection<Module> modules, final Collection<Class<? extends EventBus>> eventBusInterfaces,
+            final List<EventInterceptor> interceptors) {
+        super(eventBusInterfaces, interceptors);
         final List<Module> allModules = new ArrayList<Module>(modules);
         eventBusModule = new EventBusModule(getEventBusInterfaces());
         allModules.add(eventBusModule);
@@ -146,8 +126,8 @@ public final class GuiceEventBusFactory<EB extends EventBus> extends AbstractEve
      * {@inheritDoc}
      */
     @Override
-    protected InvocationHandler createInvocationHandler(final Class<? extends EventBus>[] eventBusIntfs) {
-        return new GuiceEventBusInvocationHandler(eventBusIntfs, guiceInjector.getInstance(PresenterFactory.class));
+    protected InvocationHandler createInvocationHandler(final Class<? extends EventBus>[] eventBusIntfs, final List<EventInterceptor> interceptors) {
+        return new GuiceEventBusInvocationHandler(eventBusIntfs, guiceInjector.getInstance(PresenterFactory.class), interceptors);
     }
 
     /**
