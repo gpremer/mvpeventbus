@@ -1,5 +1,6 @@
 package net.premereur.mvp.core.guice;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -64,23 +65,24 @@ public class InterceptTest extends TestBase {
 
     static public class MyInterceptor implements EventInterceptor {
 
-        private boolean intercepted = false;
+        private Method interceptedMethod;
         private boolean shouldContinue = true;
+        private Object[] args;
 
         @Override
-        public boolean beforeEvent(Method eventMethod, Object[] args) {
-            intercepted = true;
+        public boolean beforeEvent(final Method eventMethod, final Object[] args) {
+            interceptedMethod = eventMethod;
+            this.args = args;
             return shouldContinue;
         }
 
         public boolean didIntercept() {
-            return intercepted;
+            return interceptedMethod != null;
         }
 
         public void haltsProcessing() {
             shouldContinue = false;
         }
-
     }
 
     @Before
@@ -112,6 +114,20 @@ public class InterceptTest extends TestBase {
     public void shouldBeCalledOnEvent() {
         eventBus.event(capturer);
         assertTrue("The interceptor should be called", interceptor.didIntercept());
+    }
+
+    @Test
+    public void shouldPassEventMethodToInterceptor() throws Exception {
+        eventBus.event(capturer);
+        final Method method = MyEventBus.class.getMethod("event", Capturer.class);
+        assertEquals(method, interceptor.interceptedMethod);
+    }
+
+    @Test
+    public void shouldPassArgumentsToInterceptor() throws Exception {
+        eventBus.event(capturer);
+        assertEquals(capturer, interceptor.args[0]);
+        assertEquals(1, interceptor.args.length);
     }
 
     @Test
