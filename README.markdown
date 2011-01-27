@@ -150,7 +150,7 @@ The interceptor has to implement the `EventInterceptor` interface
     static public class MyInterceptor implements EventInterceptor {
 
         @Override
-        public boolean beforeEvent(final Method eventMethod, final Object[] args) {
+        public boolean beforeEvent(final EventBus bus, final Method eventMethod, final Object[] args) {
             // do something here
             return PROCEED; // or HALT
         }
@@ -160,6 +160,8 @@ The interceptor has to implement the `EventInterceptor` interface
 If the interceptor returns true (the value of the constant PROCEED) event handling proceeds. If it returns false (the value of the constant HALT), event execution is halted. It is possible to define multiple interceptors by simple using `interceptedBy` more than once. In that case, the first interceptor that yields false will also prevent the next interceptor being executed.
 
 Using interceptors can be very powerfull in combination with custom annotations. An interceptor can query the event method for any annotations defined on it and then use the values of the annotation's properties. In effect this allows you to pass extra parameters to the interceptor to guide the cross-cutting behaviour. Using this technique it should be possible to avoid having to know which events exist on the bus in order to limit the applicability of the interceptor.
+
+Given the signature of the `beforeEvent` method, it is obviously possible to send additional events to the event bus if required.
 
 If you use the `GuiceEventBusFactory`, you can also use Guice AOP, but you have be aware of two concerns:
    1. it works only for objects created by Guice, which the event bus itself is not
