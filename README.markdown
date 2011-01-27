@@ -82,7 +82,8 @@ Since the event dispatching methods in the event bus interface and the event han
 
 By the way, these look ups at wiring time are also used to avoid having to perform reflection at event dispatching time.
 
-## Extensions
+Extensions
+----------
 
 On top of the base functionality, there are a number of interesting additions.
 
@@ -136,7 +137,37 @@ There's no need to bind implementations for the `eventBus` and `view` parameters
 
 You can also inject more than one interface on the same event bus if you prefer to avoid casting to the correct segment type. E.g. you can both inject the segment that corresponds with the application-level events and the segment that corresponds to the module-level events. You'll end up with references to the same object, but typed differently.
 
-## Acknowledgement
+### Interception
+
+For defining cross-cutting concerns, mvpeventbus allows defining event interceptors at the bus level. I.e., you can define interceptor classes that receive every event sent to the bus. These interceptors are given a reference to the originally called event with it's parameters.
+
+An interceptor is defined when setting up the factory
+
+    BasicEventBusFactory.withMainSegment(MyEventBus.class).interceptedBy(new MyInterceptor())
+
+The interceptor has to implement the `EventInterceptor` interface
+
+    static public class MyInterceptor implements EventInterceptor {
+
+        @Override
+        public boolean beforeEvent(final Method eventMethod, final Object[] args) {
+            // do something here
+            return PROCEED; // or HALT
+        }
+
+    }
+
+If the interceptor returns true (the value of the constant PROCEED) event handling proceeds. If it returns false (the value of the constant HALT), event execution is halted. It is possible to define multiple interceptors by simple using `interceptedBy` more than once. In that case, the first interceptor that yields false will also prevent the next interceptor being executed.
+
+Using interceptors can be very powerfull in combination with custom annotations. An interceptor can query the event method for any annotations defined on it and then use the values of the annotation's properties. In effect this allows you to pass extra parameters to the interceptor to guide the cross-cutting behaviour. Using this technique it should be possible to avoid having to know which events exist on the bus in order to limit the applicability of the interceptor.
+
+If you use the `GuiceEventBusFactory`, you can also use Guice AOP, but you have be aware of two concerns:
+   1. it works only for objects created by Guice, which the event bus itself is not
+   2. they get applied for every call to an injected object
+So if one event dispatches to two handlers, the Guice interceptors will be invoked for all injected objects for both handlers. That may be just what you need with respect to those objects, but it does no good if you want to define cross-cutting behaviour at the event level.
+
+Acknowledgement
+---------------
 
 The interface of the mvpeventbus framework was inspired by the [mvp4g](http://code.google.com/p/mvp4g/) project. The difference is that mvpeventbus is more generic and can be used server-side e.g. for Swing and Vaadin applications.
 
