@@ -5,6 +5,7 @@ import net.premereur.mvp.example.vaadin.app.ApplicationBus;
 import net.premereur.mvp.example.vaadin.app.ApplicationModule;
 import net.premereur.mvp.example.vaadin.categorymgt.CategoryMgtBus;
 import net.premereur.mvp.example.vaadin.categorymgt.CategoryMgtModule;
+import net.premereur.mvp.example.vaadin.common.URLContextInterceptor;
 
 import com.vaadin.Application;
 
@@ -21,7 +22,7 @@ public class SampleApplication extends Application {
 
     static {
         EVENT_BUS_FACTORY = GuiceEventBusFactory.withMainSegment(ApplicationBus.class).withAdditionalSegment(CategoryMgtBus.class).using(
-                new ApplicationModule(), new CategoryMgtModule()).build();
+                new ApplicationModule(), new CategoryMgtModule()).interceptedBy(new URLContextInterceptor()).build();
     }
 
     @Override

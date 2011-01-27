@@ -70,7 +70,7 @@ public class InterceptTest extends TestBase {
         private Object[] args;
 
         @Override
-        public boolean beforeEvent(final Method eventMethod, final Object[] args) {
+        public boolean beforeEvent(final EventBus bus, final Method eventMethod, final Object[] args) {
             interceptedMethod = eventMethod;
             this.args = args;
             return shouldContinue;

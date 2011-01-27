@@ -71,15 +71,15 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("Receiving event " + eventMethod.getName() + LogHelper.formatArguments(" with ", args));
         }
-        if (executeInterceptors(eventMethod, args)) {
+        if (executeInterceptors((EventBus) proxy, eventMethod, args)) {
             dispatchEventToHandlers(proxy, eventMethod, args);
         }
         return null;
     }
 
-    private boolean executeInterceptors(final Method eventMethod, final Object[] args) {
+    private boolean executeInterceptors(final EventBus bus, final Method eventMethod, final Object[] args) {
         for (final EventInterceptor interceptor : interceptors) {
-            if (!interceptor.beforeEvent(eventMethod, args)) {
+            if (!interceptor.beforeEvent(bus, eventMethod, args)) {
                 return false;
             }
         }

@@ -7,6 +7,7 @@ import com.google.inject.Inject;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.MenuBar;
+import com.vaadin.ui.UriFragmentUtility;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.MenuBar.Command;
@@ -25,6 +26,8 @@ public class ApplicationWindow extends Window implements View {
 
     private ComponentContainer workPane;
 
+    private UriFragmentUtility urifu;
+
     /**
      * Constructs the application window.
      * 
@@ -38,6 +41,7 @@ public class ApplicationWindow extends Window implements View {
         setSizeFull();
         addMenu();
         addWorkPane();
+        addFragmentHandler();
     }
 
     private ApplicationBus getEventBus() {
@@ -84,6 +88,15 @@ public class ApplicationWindow extends Window implements View {
         this.workPane = container;
         workPane.setSizeFull();
         addComponent(workPane);
+    }
+
+    private void addFragmentHandler() {
+        urifu = new UriFragmentUtility();
+        addComponent(urifu);
+    }
+
+    void setURIFragment(final String fragment) {
+        urifu.setFragment(fragment);
     }
 
 }
