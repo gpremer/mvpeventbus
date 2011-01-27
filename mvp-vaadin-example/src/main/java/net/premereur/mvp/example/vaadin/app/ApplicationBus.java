@@ -2,6 +2,7 @@ package net.premereur.mvp.example.vaadin.app;
 
 import net.premereur.mvp.core.Event;
 import net.premereur.mvp.core.EventBus;
+import net.premereur.mvp.example.vaadin.common.URLContext;
 
 import com.vaadin.Application;
 import com.vaadin.ui.ComponentContainer;
@@ -32,6 +33,7 @@ public interface ApplicationBus extends EventBus {
     /**
      * Category management is selected.
      */
+    @URLContext("categories")
     @Event(ApplicationPresenter.class)
     void selectCategoryMgt();
 
@@ -50,5 +52,12 @@ public interface ApplicationBus extends EventBus {
      */
     @Event(ApplicationPresenter.class)
     void setWorkPane(ComponentContainer view);
+    
+    /**
+     * Sets the URL shown in the browser window.
+     * @param fragment the part of the URL after #
+     */
+    @Event(ApplicationPresenter.class)
+    void setURIFragment(String fragment);
 
 }

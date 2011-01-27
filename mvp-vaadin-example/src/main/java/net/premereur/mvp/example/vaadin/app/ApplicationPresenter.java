@@ -77,7 +77,7 @@ public final class ApplicationPresenter extends BasePresenter<ApplicationWindow,
     }
 
     /**
-     * see {@link ApplicationBus#showMessage(String)}.
+     * See {@link ApplicationBus#showMessage(String)}.
      * 
      * @param message the message to display
      */
@@ -85,4 +85,11 @@ public final class ApplicationPresenter extends BasePresenter<ApplicationWindow,
         getView().showNotification(message);
     }
 
+    /**
+     * See {@link ApplicationBus#setURIFragment(String)}.
+     * @param fragment the new URI fragment
+     */
+    public void onSetURIFragment(final String fragment) {
+       getView().setURIFragment(fragment); 
+    }
 }

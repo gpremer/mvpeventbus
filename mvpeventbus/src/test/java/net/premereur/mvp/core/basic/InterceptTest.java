@@ -55,7 +55,7 @@ public class InterceptTest extends TestBase {
         private boolean shouldContinue = PROCEED;
 
         @Override
-        public boolean beforeEvent(Method eventMethod, Object[] args) {
+        public boolean beforeEvent(final EventBus bus, final Method eventMethod, final Object[] args) {
             intercepted = true;
             return shouldContinue;
         }

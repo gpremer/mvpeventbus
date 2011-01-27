@@ -2,6 +2,8 @@ package net.premereur.mvp.core.base;
 
 import java.lang.reflect.Method;
 
+import net.premereur.mvp.core.EventBus;
+
 /**
  * EventInterceptors (that are configured in an EventBusFactory) are called for every event sent to the event bus. This creates the opportunity to define
  * cross-cutting behaviour only once.
@@ -31,9 +33,10 @@ public interface EventInterceptor {
     /**
      * Called before an intercepted is processed.
      * 
+     * @param eventBus the event bus to which the event was dispatched and that the interceptor can use to send other events
      * @param eventMethod the event about to be processed
      * @param args the arguments given to the event
      * @return true if the event should be further processed, false if not
      */
-    boolean beforeEvent(final Method eventMethod, final Object[] args);
+    boolean beforeEvent(final EventBus eventBus, final Method eventMethod, final Object[] args);
 }
