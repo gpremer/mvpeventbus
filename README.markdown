@@ -168,6 +168,12 @@ If you use the `GuiceEventBusFactory`, you can also use Guice AOP, but you have 
    2. they get applied for every call to an injected object
 So if one event dispatches to two handlers, the Guice interceptors will be invoked for all injected objects for both handlers. That may be just what you need with respect to those objects, but it does no good if you want to define cross-cutting behaviour at the event level.
 
+Therefore, `GuiceEventBusFactory` also allows adding interceptors by class, as in
+
+    GuiceEventBusFactory.withMainSegment(MyEventBus.class).interceptedBy(MyGuiceInterceptor.class)
+
+The interceptor will be instantiated by Guice at the moment the factory is created. Depending on what you want to inject, it may be necessay to inject a Guice `Provider` instead of a dependency instance directly  since this enables scoped objects at run time. The interceptor itself will *not* be instantiated for event interception for performance reasons.
+
 Acknowledgement
 ---------------
 

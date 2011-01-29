@@ -1,6 +1,6 @@
 package net.premereur.mvp.core.guice;
 
-import java.util.List;
+import java.util.Collection;
 
 import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.core.base.AbstractEventBusInvocationHandler;
@@ -25,7 +25,7 @@ public final class GuiceEventBusInvocationHandler extends AbstractEventBusInvoca
      * @param interceptors The interceptors to call before the event dispatch
      */
     public GuiceEventBusInvocationHandler(final Class<? extends EventBus>[] eventBusClasses, final PresenterFactory presenterFactory,
-            final List<EventInterceptor> interceptors) {
+            final Collection<EventInterceptor> interceptors) {
         super(eventBusClasses, presenterFactory, GUICE_EVENT_BUS_VERIFIER, interceptors);
     }
 

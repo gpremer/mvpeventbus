@@ -2,6 +2,7 @@ package net.premereur.mvp.core.basic;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -91,7 +92,7 @@ public final class BasicEventBusFactory<EB extends EventBus> extends AbstractEve
     /**
      * {@inheritDoc}
      */
-    protected EventBusInvocationHandler createInvocationHandler(final Class<? extends EventBus>[] eventBusIntfs, final List<EventInterceptor> interceptors) {
+    protected EventBusInvocationHandler createInvocationHandler(final Class<? extends EventBus>[] eventBusIntfs, final Collection<EventInterceptor> interceptors) {
         return new EventBusInvocationHandler(eventBusIntfs, interceptors);
     }
 

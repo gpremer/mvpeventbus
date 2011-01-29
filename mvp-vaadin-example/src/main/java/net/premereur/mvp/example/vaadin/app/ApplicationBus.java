@@ -52,9 +52,10 @@ public interface ApplicationBus extends EventBus {
      */
     @Event(ApplicationPresenter.class)
     void setWorkPane(ComponentContainer view);
-    
+
     /**
      * Sets the URL shown in the browser window.
+     * 
      * @param fragment the part of the URL after #
      */
     @Event(ApplicationPresenter.class)

@@ -87,9 +87,10 @@ public final class ApplicationPresenter extends BasePresenter<ApplicationWindow,
 
     /**
      * See {@link ApplicationBus#setURIFragment(String)}.
+     * 
      * @param fragment the new URI fragment
      */
     public void onSetURIFragment(final String fragment) {
-       getView().setURIFragment(fragment); 
+        getView().setURIFragment(fragment);
     }
 }

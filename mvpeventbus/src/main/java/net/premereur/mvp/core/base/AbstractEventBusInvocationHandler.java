@@ -5,7 +5,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,7 +23,7 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
 
     private final PresenterFactory presenterFactory;
 
-    private final List<EventInterceptor> interceptors;
+    private final Collection<EventInterceptor> interceptors;
 
     private static final Logger LOG = Logger.getLogger("net.premereur.mvp.core");
 
@@ -37,7 +36,7 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
      * @param interceptors The interceptors to call before the event dispatch
      */
     public AbstractEventBusInvocationHandler(final Class<? extends EventBus>[] eventBusClasses, final PresenterFactory presenterFactory,
-            final EventBusVerifier verifier, final List<EventInterceptor> interceptors) {
+            final EventBusVerifier verifier, final Collection<EventInterceptor> interceptors) {
         this.presenterFactory = presenterFactory;
         this.interceptors = interceptors;
         this.methodMapper = new EventMethodMapper();
@@ -71,13 +70,13 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("Receiving event " + eventMethod.getName() + LogHelper.formatArguments(" with ", args));
         }
-        if (executeInterceptors((EventBus) proxy, eventMethod, args)) {
+        if (executeInterceptorChain((EventBus) proxy, eventMethod, args)) {
             dispatchEventToHandlers(proxy, eventMethod, args);
         }
         return null;
     }
 
-    private boolean executeInterceptors(final EventBus bus, final Method eventMethod, final Object[] args) {
+    private boolean executeInterceptorChain(final EventBus bus, final Method eventMethod, final Object[] args) {
         for (final EventInterceptor interceptor : interceptors) {
             if (!interceptor.beforeEvent(bus, eventMethod, args)) {
                 return false;

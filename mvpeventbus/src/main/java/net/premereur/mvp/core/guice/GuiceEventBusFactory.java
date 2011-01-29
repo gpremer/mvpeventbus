@@ -31,6 +31,7 @@ public final class GuiceEventBusFactory<EB extends EventBus> extends AbstractEve
 
     private final Injector guiceInjector;
     private final EventBusModule eventBusModule;
+    private final Collection<Class<? extends EventInterceptor>> interceptorClasses;
 
     /**
      * Specification for {@link GuiceEventBusFactory} instances.
@@ -41,7 +42,9 @@ public final class GuiceEventBusFactory<EB extends EventBus> extends AbstractEve
      */
     public static final class Configuration<E extends EventBus> extends AbstractEventBusFactory.Configuration<E, Configuration<E>> {
 
-        private Set<Module> modules = new HashSet<Module>();
+        private final Set<Module> modules = new HashSet<Module>();
+
+        private final Set<Class<? extends EventInterceptor>> interceptorClasses = new HashSet<Class<? extends EventInterceptor>>();
 
         private Configuration(final Class<E> mainEventBusInterface) {
             super(mainEventBusInterface);
@@ -59,6 +62,17 @@ public final class GuiceEventBusFactory<EB extends EventBus> extends AbstractEve
         }
 
         /**
+         * The interceptor will be provided by Guice when an event bus instance is created.
+         * 
+         * @param interceptorClass the class of the interceptor to be
+         * @return a Configuration instance
+         */
+        public Configuration<E> interceptedBy(final Class<? extends EventInterceptor> interceptorClass) {
+            interceptorClasses.add(interceptorClass);
+            return this;
+        }
+
+        /**
          * The modules that were specified.
          * 
          * @return the modules
@@ -67,13 +81,17 @@ public final class GuiceEventBusFactory<EB extends EventBus> extends AbstractEve
             return modules;
         }
 
+        private Set<Class<? extends EventInterceptor>> getInterceptorClasses() {
+            return interceptorClasses;
+        }
+
         /**
          * Finally creates the factory.
          * 
          * @return an event bus factory that can be used to create event bus instances
          */
         public GuiceEventBusFactory<E> build() {
-            return new GuiceEventBusFactory<E>(getModules(), getEventBusInterfaces(), getInterceptors());
+            return new GuiceEventBusFactory<E>(getModules(), getEventBusInterfaces(), getInterceptors(), getInterceptorClasses());
         }
 
     }
@@ -112,22 +130,28 @@ public final class GuiceEventBusFactory<EB extends EventBus> extends AbstractEve
      * @param modules the modules containing configuration information for objects that need to be injected.
      * @param eventBusInterfaces the interfaces the event bus will implement
      * @param interceptors Interceptors to be called before invoking an event
+     * @param interceptorClasses Interceptors to be provided by Guice
      */
     protected GuiceEventBusFactory(final Collection<Module> modules, final Collection<Class<? extends EventBus>> eventBusInterfaces,
-            final List<EventInterceptor> interceptors) {
+            final Collection<EventInterceptor> interceptors, final Collection<Class<? extends EventInterceptor>> interceptorClasses) {
         super(eventBusInterfaces, interceptors);
         final List<Module> allModules = new ArrayList<Module>(modules);
         eventBusModule = new EventBusModule(getEventBusInterfaces());
         allModules.add(eventBusModule);
         this.guiceInjector = Guice.createInjector(allModules);
+        this.interceptorClasses = interceptorClasses;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected InvocationHandler createInvocationHandler(final Class<? extends EventBus>[] eventBusIntfs, final List<EventInterceptor> interceptors) {
-        return new GuiceEventBusInvocationHandler(eventBusIntfs, guiceInjector.getInstance(PresenterFactory.class), interceptors);
+    protected InvocationHandler createInvocationHandler(final Class<? extends EventBus>[] eventBusIntfs, final Collection<EventInterceptor> interceptors) {
+        final Collection<EventInterceptor> allInterceptors = new ArrayList<EventInterceptor>(interceptors);
+        for (final Class<? extends EventInterceptor> interceptorClass : interceptorClasses) {
+            allInterceptors.add(guiceInjector.getInstance(interceptorClass));
+        }
+        return new GuiceEventBusInvocationHandler(eventBusIntfs, guiceInjector.getInstance(PresenterFactory.class), allInterceptors);
     }
 
     /**

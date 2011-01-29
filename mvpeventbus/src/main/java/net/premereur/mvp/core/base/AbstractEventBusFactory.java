@@ -23,7 +23,7 @@ import net.premereur.mvp.core.EventBusFactory;
 public abstract class AbstractEventBusFactory<E extends EventBus> implements EventBusFactory<E> {
 
     private final Collection<Class<? extends EventBus>> eventBusInterfaces;
-    private final List<EventInterceptor> interceptors;
+    private final Collection<EventInterceptor> interceptors;
 
     /**
      * A specification for an event bus factory.
@@ -141,7 +141,7 @@ public abstract class AbstractEventBusFactory<E extends EventBus> implements Eve
      * @param eventBusInterfaces the interfaces the event bus will implement
      * @param interceptors Interceptors to be called before invoking an event
      */
-    protected AbstractEventBusFactory(final Collection<Class<? extends EventBus>> eventBusInterfaces, final List<EventInterceptor> interceptors) {
+    protected AbstractEventBusFactory(final Collection<Class<? extends EventBus>> eventBusInterfaces, final Collection<EventInterceptor> interceptors) {
         this.eventBusInterfaces = eventBusInterfaces;
         this.interceptors = interceptors;
     }
@@ -192,6 +192,6 @@ public abstract class AbstractEventBusFactory<E extends EventBus> implements Eve
      * @param intercepters The interceptors to call before the event dispatch
      * @return a dynamic proxy invocation handler
      */
-    protected abstract InvocationHandler createInvocationHandler(Class<? extends EventBus>[] eventBusIntfs, List<EventInterceptor> intercepters);
+    protected abstract InvocationHandler createInvocationHandler(Class<? extends EventBus>[] eventBusIntfs, Collection<EventInterceptor> intercepters);
 
 }

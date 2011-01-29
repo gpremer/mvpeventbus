@@ -73,10 +73,12 @@ public class ProductSelectionPanel extends JPanel {
         private Boolean selected = false;
         private Product product;
 
+        @SuppressWarnings("unused")
         public Boolean getSelected() {
             return selected;
         }
 
+        @SuppressWarnings("unused")
         public Product getProduct() {
             return product;
         }

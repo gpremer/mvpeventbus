@@ -3,7 +3,7 @@
  */
 package net.premereur.mvp.core.basic;
 
-import java.util.List;
+import java.util.Collection;
 
 import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.core.base.AbstractEventBusInvocationHandler;
@@ -25,7 +25,7 @@ public class EventBusInvocationHandler extends AbstractEventBusInvocationHandler
      * @param eventBusClasses the classes to proxy
      * @param interceptors the bus-level interceptors
      */
-    public EventBusInvocationHandler(final Class<? extends EventBus>[] eventBusClasses, final List<EventInterceptor> interceptors) {
+    public EventBusInvocationHandler(final Class<? extends EventBus>[] eventBusClasses, final Collection<EventInterceptor> interceptors) {
         super(eventBusClasses, new PresenterFactory(), VERIFIER, interceptors);
     }
 

@@ -23,14 +23,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 public class InterceptTest extends TestBase {
 
     static class Capturer {
-        MyPresenter presenter;
+        Object captured;
 
-        void capture(final MyPresenter target) {
-            this.presenter = target;
+        void capture(final Object target) {
+            this.captured = target;
         }
     }
 
@@ -133,14 +134,14 @@ public class InterceptTest extends TestBase {
     @Test
     public void shouldStillCallEvent() {
         eventBus.event(capturer);
-        assertNotNull("The event should still be called", capturer.presenter);
+        assertNotNull("The event should still be called", capturer.captured);
     }
 
     @Test
     public void shouldNotDispatchEventIfInterceptorHaltsProcessing() {
         interceptor.haltsProcessing();
         eventBus.event(capturer);
-        assertNull("The event should not be dispatched", capturer.presenter);
+        assertNull("The event should not be dispatched", capturer.captured);
     }
 
     @Test
@@ -169,7 +170,36 @@ public class InterceptTest extends TestBase {
         interceptor2.haltsProcessing();
         eventBus = GuiceEventBusFactory.withMainSegment(MyEventBus.class).interceptedBy(interceptor1).interceptedBy(interceptor2).build().create();
         eventBus.event(capturer);
-        assertNull("The event should not be dispatched", capturer.presenter);
+        assertNull("The event should not be dispatched", capturer.captured);
     }
 
+    private static class Dependency {
+        
+    }
+    
+    private static class MyGuiceInterceptor implements EventInterceptor {
+
+        private final Provider<Dependency> dependencyProvider; // allows for scoped dependencies
+
+        @SuppressWarnings("unused")
+        @Inject
+        public MyGuiceInterceptor(final Provider<Dependency> dependency ) {
+            this.dependencyProvider = dependency;
+        }
+        
+        @Override
+        public boolean beforeEvent(final EventBus eventBus, final Method eventMethod,final Object[] args) {
+            final Capturer capturer = (Capturer)args[0];
+            capturer.capture(dependencyProvider.get());
+            return HALT;
+        }
+        
+    }
+    
+    @Test
+    public void shouldUseGuiceToInstantiateInterceptor() {
+        eventBus = GuiceEventBusFactory.withMainSegment(MyEventBus.class).interceptedBy(MyGuiceInterceptor.class).build().create();
+        eventBus.event(capturer);
+        assertTrue("Should be the injected dependency", capturer.captured instanceof Dependency);
+    }
 }
