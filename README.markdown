@@ -172,7 +172,7 @@ Therefore, `GuiceEventBusFactory` also allows adding interceptors by class, as i
 
     GuiceEventBusFactory.withMainSegment(MyEventBus.class).interceptedBy(MyGuiceInterceptor.class)
 
-The interceptor will be instantiated by Guice at the moment the factory is created. Depending on what you want to inject, it may be necessay to inject a Guice `Provider` instead of a dependency instance directly  since this enables scoped objects at run time. The interceptor itself will *not* be instantiated for event interception for performance reasons.
+The interceptor will be instantiated by Guice at the moment the factory is created. Depending on what you want to inject, it may be necessay to inject a Guice `Provider` instead of a dependency instance directly since this enables scoped objects at run time. The interceptor itself will *not* be instantiated for every event interception for performance reasons.
 
 Acknowledgement
 ---------------
@@ -182,6 +182,6 @@ The interface of the mvpeventbus framework was inspired by the [mvp4g](http://co
 Building
 --------
 
-The sources can be built using gradle 0.9. Assuming gradle 0.9 is in the path, invoking `gradle build` should build everything quite nicely.
+The sources can be built using gradle 0.9 and Java 6.0. Assuming gradle 0.9 and a JDK 6 are on your path, invoking `gradle build` should build everything quite nicely. The binary jars are completely compatible with Java 5.
 
 The only run-time dependency on the core is guice 2.0. The vaadin example obviously requires [vaadin](http://www.vaadin.com/).
