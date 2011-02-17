@@ -29,4 +29,9 @@ public final class GuiceEventBusInvocationHandler extends AbstractEventBusInvoca
         super(eventBusClasses, presenterFactory, GUICE_EVENT_BUS_VERIFIER, interceptors);
     }
 
+    @Override
+    protected void prepareEventBusForCalling(final EventBus eventBus) {
+        EventBusModule.setThreadEventBus(eventBus); // so that Guice can inject the proper event bus
+    }
+
 }

@@ -21,4 +21,12 @@ package net.premereur.mvp.core;
  */
 public interface EventBus {
 
+    /**
+     * Detaches the presenter from the event bus. This means that it becomes available for garbage collection (if no other reference is held within the
+     * application). A new instance will be created if an event is sent to with a handler of the presenter type. If a presenter is detached from one segment it
+     * is detached from all segments of the bus.
+     * 
+     * @param presenter the presenter to be detached from the bus.
+     */
+    void detach(Presenter<?, ?> presenter);
 }

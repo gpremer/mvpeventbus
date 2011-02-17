@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 import net.premereur.mvp.core.Event;
 import net.premereur.mvp.core.EventBus;
+import net.premereur.mvp.core.Presenter;
 import net.premereur.mvp.util.reflection.ReflectionUtil;
 
 /**
@@ -26,6 +27,16 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
     private final Collection<EventInterceptor> interceptors;
 
     private static final Logger LOG = Logger.getLogger("net.premereur.mvp.core");
+
+    private static final Method DETACH_METHOD;
+
+    static {
+        try {
+            DETACH_METHOD = EventBus.class.getMethod("detach", Presenter.class);
+        } catch (final NoSuchMethodException e) {
+            throw new RuntimeException("Bug in " + AbstractEventBusInvocationHandler.class, e); // This is a bug
+        }
+    }
 
     /**
      * Constructor.
@@ -68,12 +79,21 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
             return handleSpecialMethods(proxy, eventMethod, args);
         }
         if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine("Receiving event " + eventMethod.getName() + LogHelper.formatArguments(" with ", args));
+            LOG.fine("Receiving event " + methodName(eventMethod) + LogHelper.formatArguments(" with ", args));
         }
+        prepareEventBusForCalling((EventBus) proxy);
         if (executeInterceptorChain((EventBus) proxy, eventMethod, args)) {
             dispatchEventToHandlers(proxy, eventMethod, args);
         }
         return null;
+    }
+
+    /**
+     * Can be overridden to do necessary set up with the event bus before it can receive events.
+     * 
+     * @param eventBus the event bus that is to be prepared for calling.
+     */
+    protected void prepareEventBusForCalling(final EventBus eventBus) {
     }
 
     private boolean executeInterceptorChain(final EventBus bus, final Method eventMethod, final Object[] args) {
@@ -92,24 +112,39 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
             final Method method = handlerMethodPair.getMethod();
             try {
                 if (LOG.isLoggable(Level.FINE)) {
-                    LOG.fine("Dispatching to " + handler.getClass() + " -> " + method.getName());
+                    LOG.fine("Dispatching to " + handler.getClass() + " -> " + methodName(method));
                 }
                 method.invoke(handler, args);
             } catch (InvocationTargetException e) {
-                throw new InvocationTargetException(e, "While invoking " + method.getName() + " on " + handler.getClass());
+                throw new InvocationTargetException(e, "While invoking " + methodName(method) + " on " + handler.getClass());
             }
         }
     }
 
     private boolean isSpecialMethod(final Method method) {
-        return method.getName().equals("hashCode");
+        final String methodName = methodName(method);
+        return methodName.equals("hashCode") || (method.equals(DETACH_METHOD));
     }
 
     private Object handleSpecialMethods(final Object proxy, final Method method, final Object[] args) {
-        if (method.getName().equals("hashCode")) {
+        final String methodName = methodName(method);
+        if (methodName.equals("hashCode")) {
             return hashCode(); // The hash code of the handler
         }
+        if (method.equals(DETACH_METHOD)) {
+            final Presenter<?, ?> presenter = (Presenter<?, ?>) args[0];
+            presenterFactory.detachPresenter(presenter, (EventBus) proxy);
+            return null; // void
+        }
         return null;
+    }
+
+    /**
+     * @param method
+     * @return
+     */
+    private String methodName(final Method method) {
+        return method.getName();
     }
 
 }

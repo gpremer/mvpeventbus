@@ -16,9 +16,16 @@ public interface PresenterFactory {
      * combination, the same presenter instance should be returned.
      * 
      * @param handlerClass the class of the presenter to return.
-     * @param eventbus the event bus instance the presenter is associated with.
+     * @param eventBus the event bus instance the presenter is associated with.
      * @return a {@link Presenter}.
      */
-    Presenter<?, ?> getPresenter(Class<?> handlerClass, EventBus eventbus);
+    Presenter<?, ?> getPresenter(Class<?> handlerClass, EventBus eventBus);
+
+    /**
+     * Releases a previously returned presenter from the event bus.
+     * @param presenter the presenter to release
+     * @param eventBus the event bus from which the presenter should be released.
+     */
+    void detachPresenter(Presenter<?, ?> presenter, EventBus eventBus);
 
 }

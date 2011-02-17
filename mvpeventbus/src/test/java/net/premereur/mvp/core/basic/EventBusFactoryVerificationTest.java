@@ -2,6 +2,7 @@ package net.premereur.mvp.core.basic;
 
 import net.premereur.mvp.core.Event;
 import net.premereur.mvp.core.EventBus;
+import net.premereur.mvp.core.Presenter;
 import net.premereur.mvp.core.UsesView;
 import net.premereur.mvp.core.View;
 import net.premereur.mvp.core.base.VerificationException;
@@ -73,6 +74,10 @@ public class EventBusFactoryVerificationTest extends EventBusFactoryTestBase {
     }
 
     class ClassEventBus implements EventBus {
+
+        @Override
+        public void detach(Presenter<?, ?> presenter) {
+        }
 
     }
 
