@@ -1,6 +1,8 @@
 package net.premereur.mvp.core.base;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -18,22 +20,34 @@ import net.premereur.mvp.core.View;
 public abstract class AbstractPresenterFactory implements PresenterFactory {
 
     // A WeakHashMap is chosen so that the event bus and all its associated presenters can be released when the event bus is no longer referenced elsewhere
-    private final WeakHashMap<EventBus, Map<Class<?>, Presenter<View, ? extends EventBus>>> cache = new WeakHashMap<EventBus, Map<Class<?>, Presenter<View, ? extends EventBus>>>();
+    private final WeakHashMap<EventBus, Map<Class<?>, List<Presenter<?, ?>>>> busHandlers = new WeakHashMap<EventBus, Map<Class<?>, List<Presenter<?, ?>>>>();
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public final Presenter<View, ? extends EventBus> getPresenter(final Class<?> presenterClass, final EventBus eventBus) {
-        // There should be no 2 threads requiring the same event bus, just to be
-        // on the safe side
-        final Map<Class<?>, Presenter<View, ? extends EventBus>> eventBusPresenters = presentersForBus(eventBus);
-        Presenter<View, ? extends EventBus> presenter = eventBusPresenters.get(presenterClass);
-        if (presenter == null) {
-            presenter = createPresenter(presenterClass, eventBus);
-            eventBusPresenters.put(presenterClass, presenter);
+    public final List<Presenter<?, ?>> getPresenters(final Class<?> presenterClass, final EventBus eventBus) {
+        final Map<Class<?>, List<Presenter<?, ?>>> eventBusPresenters = presentersForBus(eventBus);
+        List<Presenter<?, ?>> presenters = eventBusPresenters.get(presenterClass);
+        if (presenters == null) {
+            presenters = new ArrayList<Presenter<?, ?>>();
+            presenters.add(createPresenter(presenterClass, eventBus));
+            eventBusPresenters.put(presenterClass, presenters);
         }
-        return presenter;
+        return presenters;
+    }
+
+    @Override
+    public final Presenter<?, ?> getNewPresenter(final Class<?> handlerClass, final EventBus eventBus) {
+        final Map<Class<?>, List<Presenter<?, ?>>> eventBusPresenters = presentersForBus(eventBus);
+        List<Presenter<?, ?>> presenters = eventBusPresenters.get(handlerClass);
+        if (presenters == null) {
+            presenters = new ArrayList<Presenter<?, ?>>();
+            eventBusPresenters.put(handlerClass, presenters);
+        }
+        final Presenter<View, ? extends EventBus> newPresenter = createPresenter(handlerClass, eventBus);
+        presenters.add(newPresenter);
+        return newPresenter;
     }
 
     /**
@@ -46,16 +60,24 @@ public abstract class AbstractPresenterFactory implements PresenterFactory {
 
     @Override
     public final void detachPresenter(final Presenter<?, ?> presenter, final EventBus eventBus) {
-        final Map<Class<?>, Presenter<View, ? extends EventBus>> eventBusPresenters = presentersForBus(eventBus);
-        eventBusPresenters.remove(presenter.getClass());
+        final Map<Class<?>, List<Presenter<?, ?>>> eventBusPresenters = presentersForBus(eventBus);
+        final List<Presenter<?, ?>> presenters = eventBusPresenters.get(presenter.getClass());
+        presenters.remove(presenter); // may leave an empty list
+        if (presenters.isEmpty()) {
+            // There should be no 2 threads requiring the same event bus, just to be
+            // on the safe side
+            synchronized (eventBus) {
+                eventBusPresenters.put(presenter.getClass(), null);
+            }
+        }
     }
 
-    private Map<Class<?>, Presenter<View, ? extends EventBus>> presentersForBus(final EventBus eventBus) {
+    private Map<Class<?>, List<Presenter<?, ?>>> presentersForBus(final EventBus eventBus) {
         synchronized (eventBus) {
-            Map<Class<?>, Presenter<View, ? extends EventBus>> eventBusPresenters = cache.get(eventBus);
+            Map<Class<?>, List<Presenter<?, ?>>> eventBusPresenters = busHandlers.get(eventBus);
             if (eventBusPresenters == null) {
-                eventBusPresenters = new HashMap<Class<?>, Presenter<View, ? extends EventBus>>();
-                cache.put(eventBus, eventBusPresenters);
+                eventBusPresenters = new HashMap<Class<?>, List<Presenter<?, ?>>>();
+                busHandlers.put(eventBus, eventBusPresenters);
             }
             return eventBusPresenters;
         }

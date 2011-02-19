@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,6 +26,10 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
     private final PresenterFactory presenterFactory;
 
     private final Collection<EventInterceptor> interceptors;
+
+    private final HandlerFetchStrategy dispatchHandlerFetchStrategy;
+
+    private final HandlerFetchStrategy createHandlerFetchStrategy;
 
     private static final Logger LOG = Logger.getLogger("net.premereur.mvp.core");
 
@@ -54,6 +59,8 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
         final Collection<String> verificationErrors = new ArrayList<String>();
         registerAllEventMethods(eventBusClasses, verifier, verificationErrors);
         throwVerificationIfNeeded(verificationErrors);
+        this.dispatchHandlerFetchStrategy = new DispatchHandlerFetchStrategy(presenterFactory, methodMapper);
+        this.createHandlerFetchStrategy = new CreateHandlerFetchStrategy(presenterFactory, methodMapper);
     }
 
     private void registerAllEventMethods(final Class<? extends EventBus>[] eventBusClasses, final EventBusVerifier verifier,
@@ -81,9 +88,9 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("Receiving event " + methodName(eventMethod) + LogHelper.formatArguments(" with ", args));
         }
-        prepareEventBusForCalling((EventBus) proxy);
         if (executeInterceptorChain((EventBus) proxy, eventMethod, args)) {
-            dispatchEventToHandlers(proxy, eventMethod, args);
+            dispatchEventToHandlers(proxy, eventMethod, args, dispatchHandlerFetchStrategy);
+            dispatchEventToHandlers(proxy, eventMethod, args, createHandlerFetchStrategy);
         }
         return null;
     }
@@ -105,18 +112,21 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
         return true;
     }
 
-    private void dispatchEventToHandlers(final Object proxy, final Method eventMethod, final Object[] args) throws IllegalAccessException,
-            InvocationTargetException {
-        for (final EventMethodMapper.HandlerMethodPair handlerMethodPair : methodMapper.getHandlerEvents(eventMethod)) {
-            final Object handler = presenterFactory.getPresenter(handlerMethodPair.getHandlerClass(), (EventBus) proxy);
+    private void dispatchEventToHandlers(final Object proxy, final Method eventMethod, final Object[] args, final HandlerFetchStrategy handlerFetchStrategy)
+            throws IllegalAccessException, InvocationTargetException {
+        for (final EventMethodMapper.HandlerMethodPair handlerMethodPair : handlerFetchStrategy.getHandlerMethodPairs(eventMethod)) {
+            final List<Presenter<?, ?>> handlers = handlerFetchStrategy.getHandlers(handlerMethodPair.getHandlerClass(), (EventBus) proxy);
             final Method method = handlerMethodPair.getMethod();
-            try {
-                if (LOG.isLoggable(Level.FINE)) {
-                    LOG.fine("Dispatching to " + handler.getClass() + " -> " + methodName(method));
+            for (Presenter<?, ?> handler : handlers) {
+                try {
+                    if (LOG.isLoggable(Level.FINE)) {
+                        LOG.fine("Dispatching to " + handler.getClass() + " -> " + methodName(method));
+                    }
+                    prepareEventBusForCalling((EventBus) proxy);
+                    method.invoke(handler, args);
+                } catch (InvocationTargetException e) {
+                    throw new InvocationTargetException(e, "While invoking " + methodName(method) + " on " + handler.getClass());
                 }
-                method.invoke(handler, args);
-            } catch (InvocationTargetException e) {
-                throw new InvocationTargetException(e, "While invoking " + methodName(method) + " on " + handler.getClass());
             }
         }
     }

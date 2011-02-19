@@ -1,11 +1,17 @@
 package net.premereur.mvp.core.guice;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
+import java.util.HashSet;
+import java.util.Set;
+
 import net.premereur.mvp.TestBase;
 import net.premereur.mvp.core.Event;
 import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.core.Presenter;
 import net.premereur.mvp.core.View;
+import net.premereur.mvp.core.Event.Policy;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +22,11 @@ public class LifeCycleTest extends TestBase {
         @Event(MyPresenter.class)
         void event(final Capturer capturer);
 
-        void createEvent(final Capturer capturer);
+        @Event(value = {MyPresenter.class}, instantiation = Policy.TO_NEW_INSTANCE)
+        void createEvent(final MultiCapturer capturer);
+
+        @Event(MyPresenter.class)
+        void normalEvent(final MultiCapturer capturer);
     }
 
     static class MyView implements View {
@@ -29,8 +39,12 @@ public class LifeCycleTest extends TestBase {
             capturer.capture(this);
         }
 
-        public void onCreateEvent(final Capturer capturer) {
-            capturer.capture(this);
+        public void onCreateEvent(final MultiCapturer capturer) {
+            capturer.captureAll(this);
+        }
+
+        public void onNormalEvent(final MultiCapturer capturer) {
+            capturer.captureAll(this);
         }
     }
 
@@ -40,14 +54,39 @@ public class LifeCycleTest extends TestBase {
         void capture(final MyPresenter target) {
             this.captured = target;
         }
+
+    }
+
+    static class MultiCapturer {
+        Set<MyPresenter> allCaptured = new HashSet<MyPresenter>();
+
+        void captureAll(final MyPresenter target) {
+            this.allCaptured.add(target);
+        }
+        
+        void reset() {
+            allCaptured.clear();
+        }
+        int numberCaptured() {
+           return allCaptured.size(); 
+        }
+        MyPresenter firstCaptured() {
+            return allCaptured.iterator().next();
+        }
+        MyPresenter secondCaptured() {
+            allCaptured.iterator().next();
+            return allCaptured.iterator().next();
+        }
     }
 
     private MyEventBus eventBus;
     private Capturer capturer;
+    private MultiCapturer multiCapturer;
 
     @Before
     public void initCapturer() {
         capturer = new Capturer();
+        multiCapturer = new MultiCapturer();
     }
 
     @Before
@@ -74,7 +113,25 @@ public class LifeCycleTest extends TestBase {
         assertTrue("The presenter references should point to different presenters", p1 != p2);
     }
 
-    public void shouldCreateNewEventHandlerWhenEvenMethodAnnotatedWithRequiresNew() {
-
+    @Test 
+    public void shouldDispatchEventOnceTheFirstTimeAHandlerIsReferenced() {
+        eventBus.normalEvent(multiCapturer);
+        assertEquals(1, multiCapturer.numberCaptured());        
     }
+    
+    @Test
+    public void shouldCreateAdditionalEventHandlerWhenEvenMethodAnnotatedWithToNewInstance() {
+        eventBus.normalEvent(multiCapturer);
+        eventBus.createEvent(multiCapturer);
+        assertEquals(2, multiCapturer.numberCaptured()); // set makes sure there are 2 different presenters        
+    }
+    @Test
+    public void shouldKeepAdditionalEventHandlerWhenEventDispatchedAfterEvenMethodAnnotatedWithToNewInstance() {
+        eventBus.normalEvent(multiCapturer);
+        eventBus.createEvent(multiCapturer);
+        multiCapturer.reset();
+        eventBus.normalEvent(multiCapturer);
+        assertEquals(2, multiCapturer.numberCaptured()); // set makes sure there are 2 different presenters        
+    }
+
 }

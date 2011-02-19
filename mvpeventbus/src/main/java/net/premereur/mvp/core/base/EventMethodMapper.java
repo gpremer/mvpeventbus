@@ -25,7 +25,7 @@ public class EventMethodMapper {
     private static final int AFTER_PREFIX_POS = 2;
 
     /**
-     * Combines a presenter with an event handler method within that presenter. The class cannot be derived from the method because of possible inheritance.
+     * Combines a handler class with an event handler method within that handler. The class cannot be derived from the method because of possible inheritance.
      * 
      * @author gpremer
      * 
@@ -58,13 +58,15 @@ public class EventMethodMapper {
         }
     }
 
-    private final Map<String, List<HandlerMethodPair>> handlingMethodsByEventMethod = new HashMap<String, List<HandlerMethodPair>>();
+    private final Map<String, List<HandlerMethodPair>> dispatchMethodsByEventMethod = new HashMap<String, List<HandlerMethodPair>>();
+    private final Map<String, List<HandlerMethodPair>> createMethodsByEventMethod = new HashMap<String, List<HandlerMethodPair>>();
 
     /**
-     * Adds and verifies methods annotated with {@link Event}.
+     * Adds and verifies methods annotated with {@link Event} on an event bus.
      * 
      * @Event on an event bus interface.
-     * @param eventBusEventMethods an number of event bus event methods
+     * @param eventBusEventMethods a number of event bus event methods. It is assumed that these methods are valid. I.e. this has to be checked before calling
+     *            this method.
      * @param verificationErrors a collection to add possible verification errors to
      */
     public final void addHandlerMethods(final Iterable<Method> eventBusEventMethods, final Collection<String> verificationErrors) {
@@ -72,11 +74,24 @@ public class EventMethodMapper {
             final Event eventAnt = eventMethod.getAnnotation(Event.class);
             final String eventMethodSignature = eventMethodSignature(eventMethod);
             final List<HandlerMethodPair> handlingMethods = createHandlerMethodPairsForEvent(eventMethod, eventAnt, verificationErrors);
-            if (handlingMethodsByEventMethod.containsKey(eventMethodSignature)) {
-                handlingMethodsByEventMethod.get(eventMethodSignature).addAll(handlingMethods);
-            } else {
-                handlingMethodsByEventMethod.put(eventMethodSignature, handlingMethods);
+            switch (eventAnt.instantiation()) {
+            case TO_NEW_INSTANCE:
+                registerHandlingMethods(eventMethodSignature, handlingMethods, createMethodsByEventMethod);
+                break;
+            case TO_EXISTING_INSTANCES:
+            case TO_INSTANCES:
+            default:
+                registerHandlingMethods(eventMethodSignature, handlingMethods, dispatchMethodsByEventMethod);
             }
+        }
+    }
+
+    private void registerHandlingMethods(final String eventMethodSignature, final List<HandlerMethodPair> handlingMethods,
+            final Map<String, List<HandlerMethodPair>> handlingMethodsByEventMethod) {
+        if (handlingMethodsByEventMethod.containsKey(eventMethodSignature)) {
+            handlingMethodsByEventMethod.get(eventMethodSignature).addAll(handlingMethods);
+        } else {
+            handlingMethodsByEventMethod.put(eventMethodSignature, handlingMethods);
         }
     }
 
@@ -129,13 +144,24 @@ public class EventMethodMapper {
     private static final List<HandlerMethodPair> NO_METHODS = Collections.emptyList();
 
     /**
-     * Returns all event handler methods (and the owing presenter classes) for the given event.
+     * Returns all event dispatch handler methods (and the owing presenter classes) for the given event.
      * 
      * @param eventMethod an event bus event method
      * @return all matching event handler methods (and classes)
      */
-    public final Iterable<HandlerMethodPair> getHandlerEvents(final Method eventMethod) {
-        final Iterable<HandlerMethodPair> methods = this.handlingMethodsByEventMethod.get(eventMethodSignature(eventMethod));
+    public final Iterable<HandlerMethodPair> getDispatchHandlerEvents(final Method eventMethod) {
+        final Iterable<HandlerMethodPair> methods = this.dispatchMethodsByEventMethod.get(eventMethodSignature(eventMethod));
+        return methods == null ? NO_METHODS : methods;
+    }
+
+    /**
+     * Returns all event creation handler methods (and the owing presenter classes) for the given event.
+     * 
+     * @param eventMethod an event bus event method
+     * @return all matching event handler methods (and classes)
+     */
+    public final Iterable<HandlerMethodPair> getCreateHandlerEvents(final Method eventMethod) {
+        final Iterable<HandlerMethodPair> methods = this.createMethodsByEventMethod.get(eventMethodSignature(eventMethod));
         return methods == null ? NO_METHODS : methods;
     }
 
