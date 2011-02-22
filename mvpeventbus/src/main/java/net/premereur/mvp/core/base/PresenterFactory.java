@@ -14,8 +14,9 @@ import net.premereur.mvp.core.Presenter;
 public interface PresenterFactory {
 
     /**
-     * Returns a concrete presenter of the given type for use with the given event bus. If this method is called twice for the same handlerClass/eventbus
-     * combination, the same presenter instance should be returned (until the presenter is detached or an additional is created).
+     * Returns a concrete presenter of the given type for use with the given event bus. If no handler of the requested type exists yet, create a new one. If
+     * this method is called twice for the same handlerClass/eventbus combination, the same presenter instance should be returned (until the presenter is
+     * detached or an additional is created).
      * 
      * @param handlerClass the class of the presenter to return.
      * @param eventBus the event bus instance the presenter is associated with.
@@ -39,5 +40,14 @@ public interface PresenterFactory {
      * @param eventBus the event bus from which the presenter should be released.
      */
     void detachPresenter(Presenter<?, ?> presenter, EventBus eventBus);
+
+    /**
+     * Returns a previously returned presenter from the event bus. Does not create a new presenter if there was none already.
+     * 
+     * @param handlerClass the class of the presenter to return.
+     * @param eventBus the event bus instance the presenter is associated with.
+     * @return a collection of {@link Presenter}s handling the event.
+     */
+    List<Presenter<?, ?>> getExistingPresenters(Class<?> handlerClass, EventBus eventBus);
 
 }

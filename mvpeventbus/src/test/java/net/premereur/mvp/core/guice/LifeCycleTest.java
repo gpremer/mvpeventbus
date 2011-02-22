@@ -27,6 +27,9 @@ public class LifeCycleTest extends TestBase {
 
         @Event(MyPresenter.class)
         void normalEvent(final MultiCapturer capturer);
+
+        @Event(value = {MyPresenter.class}, instantiation = Policy.TO_EXISTING_INSTANCES)
+        void existingEvent(final MultiCapturer capturer);
     }
 
     static class MyView implements View {
@@ -46,6 +49,10 @@ public class LifeCycleTest extends TestBase {
         public void onNormalEvent(final MultiCapturer capturer) {
             capturer.captureAll(this);
         }
+
+        public void onExistingEvent(final MultiCapturer capturer) {
+            capturer.captureAll(this);
+        }
     }
 
     static class Capturer {
@@ -53,6 +60,10 @@ public class LifeCycleTest extends TestBase {
 
         void capture(final MyPresenter target) {
             this.captured = target;
+        }
+
+        public void reset() {
+            this.captured = null;
         }
 
     }
@@ -63,16 +74,19 @@ public class LifeCycleTest extends TestBase {
         void captureAll(final MyPresenter target) {
             this.allCaptured.add(target);
         }
-        
+
         void reset() {
             allCaptured.clear();
         }
+
         int numberCaptured() {
-           return allCaptured.size(); 
+            return allCaptured.size();
         }
+
         MyPresenter firstCaptured() {
             return allCaptured.iterator().next();
         }
+
         MyPresenter secondCaptured() {
             allCaptured.iterator().next();
             return allCaptured.iterator().next();
@@ -113,25 +127,39 @@ public class LifeCycleTest extends TestBase {
         assertTrue("The presenter references should point to different presenters", p1 != p2);
     }
 
-    @Test 
+    @Test
     public void shouldDispatchEventOnceTheFirstTimeAHandlerIsReferenced() {
         eventBus.normalEvent(multiCapturer);
-        assertEquals(1, multiCapturer.numberCaptured());        
+        assertEquals(1, multiCapturer.numberCaptured());
     }
-    
+
     @Test
     public void shouldCreateAdditionalEventHandlerWhenEvenMethodAnnotatedWithToNewInstance() {
         eventBus.normalEvent(multiCapturer);
         eventBus.createEvent(multiCapturer);
-        assertEquals(2, multiCapturer.numberCaptured()); // set makes sure there are 2 different presenters        
+        assertEquals(2, multiCapturer.numberCaptured()); // set makes sure there are 2 different presenters
     }
+
     @Test
     public void shouldKeepAdditionalEventHandlerWhenEventDispatchedAfterEvenMethodAnnotatedWithToNewInstance() {
         eventBus.normalEvent(multiCapturer);
         eventBus.createEvent(multiCapturer);
         multiCapturer.reset();
         eventBus.normalEvent(multiCapturer);
-        assertEquals(2, multiCapturer.numberCaptured()); // set makes sure there are 2 different presenters        
+        assertEquals(2, multiCapturer.numberCaptured()); // set makes sure there are 2 different presenters
+    }
+
+    @Test
+    public void shouldNotInstantiateHandlerForEventAnnotatedWithToExistingInstancesTheFirstTimeAnEventToTheHandlerIsSent() {
+        eventBus.existingEvent(multiCapturer);
+        assertEquals(0, multiCapturer.numberCaptured());
+    }
+
+    @Test
+    public void shouldUseExistingHandlerForEventAnnotatedWithToExistingInstancesIfOneWasAlreadyInstantiated() {
+        eventBus.event(capturer);
+        eventBus.existingEvent(multiCapturer);
+        assertEquals(1, multiCapturer.numberCaptured());
     }
 
 }
