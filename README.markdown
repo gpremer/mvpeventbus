@@ -172,7 +172,49 @@ Therefore, `GuiceEventBusFactory` also allows adding interceptors by class, as i
 
     GuiceEventBusFactory.withMainSegment(MyEventBus.class).interceptedBy(MyGuiceInterceptor.class)
 
-The interceptor will be instantiated by Guice at the moment the factory is created. Depending on what you want to inject, it may be necessay to inject a Guice `Provider` instead of a dependency instance directly since this enables scoped objects at run time. The interceptor itself will *not* be instantiated for every event interception for performance reasons.
+The interceptor will be instantiated by Guice at the moment the factory is created. Depending on what you want to inject, it may be necessary to inject a Guice `Provider` instead of a dependency instance directly since this enables scoped objects at run time. The interceptor itself will *not* be instantiated for every event interception for performance reasons.
+
+### Event handler life cycle
+
+As explained before, the normal way of creating event handlers is when an event is first invoked on an event bus instance. From that moment on, the handler stays in memory as long as the event bus instance itself does. In a web application environment, typically until the web session holding the event bus expires. For large applications this may be a bit wasteful since the presenter has state associated with it; not in the least the view object!
+
+#### Cleaning out presenters
+
+A presenter can release itself by calling the event bus method `detach`:
+
+    public void onRemove() {
+      eventbus.detach(this);
+    }
+
+Note that in the default case, since a presenter maintains it view, all information on a screen remains unchanged even if a view is temporarily replaced by a view from another presenter. If this is not what you want you can either detach the presenter when it ceases to be visible or you can reset it's content when it becomes hidden or visible again. 
+
+#### Creating additional presenters
+
+Sometimes you may want to have more than one instance of a given presenter on the same event bus. For example, you may have a few different panes that each show a different entity of the same kind. This can be achieved by giving an additional argument to the `@Event` annotation.
+
+    static interface MyEventBus extends EventBus {
+        @Event(value = {MyPresenter.class}, instantiation = Policy.TO_NEW_INSTANCE)
+        void createEvent(final MultiCapturer capturer);
+    }
+
+In this case, a new instance of `MyPresenter` will be instantiated every time the `createEvent` event is sent to the bus. The accompanying handler method `onCreateEvent` will only be invoked for the new instance. Event methods not tagged with `TO_NEW_INSTANCE` will obviously dispatched to all exising presenters of the handler type.
+
+#### Deferring presenter creation
+
+It can also be that you only want to send an event to a presenter in case an instance of it already exists. For this purpose, you can use the `TO_EXISTING_INSTANCES` instantation policy as in:
+
+    static interface MyEventBus extends EventBus {
+        @Event(value = {MyPresenter.class}, instantiation = Policy.TO_EXISTING_INSTANCES)
+        void existingEvent(final MultiCapturer capturer);
+    }
+
+Here, all instances of `MyPresenter` attached to the even bus instance are called with their `onExistingEvent` method, but no instance will be created should at least one not exist yet.
+
+#### Dispatching to all presenters, creating one if necessary
+
+This is the default case, but if you want, you can use the instantiation policy `TO_INSTANCES` explicitly.
+
+Note that if you need to distinguish between presenter instances, the advised way is by means of information you pass as a parameter of the event methods. Don't be tempted to use some shared variables.
 
 Acknowledgement
 ---------------
