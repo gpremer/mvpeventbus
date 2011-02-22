@@ -13,6 +13,7 @@ import net.premereur.mvp.core.Event;
 import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.core.Presenter;
 import net.premereur.mvp.core.View;
+import net.premereur.mvp.core.Event.Policy;
 
 /**
  * Maintains the connection between an event and the presenter methods that the event should be forwarded to.
@@ -58,8 +59,18 @@ public class EventMethodMapper {
         }
     }
 
-    private final Map<String, List<HandlerMethodPair>> dispatchMethodsByEventMethod = new HashMap<String, List<HandlerMethodPair>>();
-    private final Map<String, List<HandlerMethodPair>> createMethodsByEventMethod = new HashMap<String, List<HandlerMethodPair>>();
+    private final Map<String, List<HandlerMethodPair>>[] eventMethodsByEventMethodByPolicy;
+
+    /**
+     * Creates a new EventMethodMapper.
+     */
+    @SuppressWarnings("unchecked")
+    public EventMethodMapper() {
+        eventMethodsByEventMethodByPolicy = new HashMap[Event.Policy.values().length];
+        for (Event.Policy policy : Event.Policy.values()) {
+            eventMethodsByEventMethodByPolicy[policy.ordinal()] = new HashMap<String, List<HandlerMethodPair>>();
+        }
+    }
 
     /**
      * Adds and verifies methods annotated with {@link Event} on an event bus.
@@ -71,18 +82,10 @@ public class EventMethodMapper {
      */
     public final void addHandlerMethods(final Iterable<Method> eventBusEventMethods, final Collection<String> verificationErrors) {
         for (final Method eventMethod : eventBusEventMethods) {
-            final Event eventAnt = eventMethod.getAnnotation(Event.class);
+            final Event eventAnnot = eventMethod.getAnnotation(Event.class);
             final String eventMethodSignature = eventMethodSignature(eventMethod);
-            final List<HandlerMethodPair> handlingMethods = createHandlerMethodPairsForEvent(eventMethod, eventAnt, verificationErrors);
-            switch (eventAnt.instantiation()) {
-            case TO_NEW_INSTANCE:
-                registerHandlingMethods(eventMethodSignature, handlingMethods, createMethodsByEventMethod);
-                break;
-            case TO_EXISTING_INSTANCES:
-            case TO_INSTANCES:
-            default:
-                registerHandlingMethods(eventMethodSignature, handlingMethods, dispatchMethodsByEventMethod);
-            }
+            final List<HandlerMethodPair> handlingMethods = createHandlerMethodPairsForEvent(eventMethod, eventAnnot, verificationErrors);
+            registerHandlingMethods(eventMethodSignature, handlingMethods, eventMethodsByEventMethodByPolicy[eventAnnot.instantiation().ordinal()]);
         }
     }
 
@@ -144,24 +147,14 @@ public class EventMethodMapper {
     private static final List<HandlerMethodPair> NO_METHODS = Collections.emptyList();
 
     /**
-     * Returns all event dispatch handler methods (and the owing presenter classes) for the given event.
+     * Returns all event handler methods (and the owing presenter classes) for the given event.
      * 
      * @param eventMethod an event bus event method
+     * @param policy the instantiation policy
      * @return all matching event handler methods (and classes)
      */
-    public final Iterable<HandlerMethodPair> getDispatchHandlerEvents(final Method eventMethod) {
-        final Iterable<HandlerMethodPair> methods = this.dispatchMethodsByEventMethod.get(eventMethodSignature(eventMethod));
-        return methods == null ? NO_METHODS : methods;
-    }
-
-    /**
-     * Returns all event creation handler methods (and the owing presenter classes) for the given event.
-     * 
-     * @param eventMethod an event bus event method
-     * @return all matching event handler methods (and classes)
-     */
-    public final Iterable<HandlerMethodPair> getCreateHandlerEvents(final Method eventMethod) {
-        final Iterable<HandlerMethodPair> methods = this.createMethodsByEventMethod.get(eventMethodSignature(eventMethod));
+    public final Iterable<HandlerMethodPair> getHandlerEvents(final Method eventMethod, final Policy policy) {
+        final Iterable<HandlerMethodPair> methods = this.eventMethodsByEventMethodByPolicy[policy.ordinal()].get(eventMethodSignature(eventMethod));
         return methods == null ? NO_METHODS : methods;
     }
 

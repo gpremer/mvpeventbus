@@ -14,20 +14,20 @@ import net.premereur.mvp.core.base.EventMethodMapper.HandlerMethodPair;
  * @author gpremer
  * 
  */
-class DispatchHandlerFetchStrategy extends HandlerFetchStrategy {
+class ExistingHandlerFetchStrategy extends HandlerFetchStrategy {
 
-    public DispatchHandlerFetchStrategy(final PresenterFactory presenterFactory, final EventMethodMapper methodMapper) {
+    public ExistingHandlerFetchStrategy(final PresenterFactory presenterFactory, final EventMethodMapper methodMapper) {
         super(presenterFactory, methodMapper);
     }
 
     @Override
     public List<Presenter<?, ?>> getHandlers(final Class<?> handlerClass, final EventBus bus) {
-        return getPresenterFactory().getPresenters(handlerClass, bus);
+        return getPresenterFactory().getExistingPresenters(handlerClass, bus);
     }
 
     @Override
     public Iterable<HandlerMethodPair> getHandlerMethodPairs(final Method method) {
-        return getMethodMapper().getHandlerEvents(method, Policy.TO_INSTANCES);
+        return getMethodMapper().getHandlerEvents(method, Policy.TO_EXISTING_INSTANCES);
     }
 
 }

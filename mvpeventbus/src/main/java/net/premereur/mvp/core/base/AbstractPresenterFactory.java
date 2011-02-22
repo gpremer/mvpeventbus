@@ -1,6 +1,7 @@
 package net.premereur.mvp.core.base;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +49,16 @@ public abstract class AbstractPresenterFactory implements PresenterFactory {
         final Presenter<View, ? extends EventBus> newPresenter = createPresenter(handlerClass, eventBus);
         presenters.add(newPresenter);
         return newPresenter;
+    }
+
+    @Override
+    public final List<Presenter<?, ?>> getExistingPresenters(final Class<?> handlerClass, final EventBus eventBus) {
+        final Map<Class<?>, List<Presenter<?, ?>>> eventBusPresenters = presentersForBus(eventBus);
+        List<Presenter<?, ?>> presenters = eventBusPresenters.get(handlerClass);
+        if (presenters == null) {
+            presenters = Collections.emptyList();
+        }
+        return presenters;
     }
 
     /**

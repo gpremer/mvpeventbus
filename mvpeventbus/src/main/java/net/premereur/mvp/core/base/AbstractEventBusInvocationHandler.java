@@ -31,6 +31,8 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
 
     private final HandlerFetchStrategy createHandlerFetchStrategy;
 
+    private final HandlerFetchStrategy existingHandlerFetchStrategy;
+
     private static final Logger LOG = Logger.getLogger("net.premereur.mvp.core");
 
     private static final Method DETACH_METHOD;
@@ -61,6 +63,7 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
         throwVerificationIfNeeded(verificationErrors);
         this.dispatchHandlerFetchStrategy = new DispatchHandlerFetchStrategy(presenterFactory, methodMapper);
         this.createHandlerFetchStrategy = new CreateHandlerFetchStrategy(presenterFactory, methodMapper);
+        this.existingHandlerFetchStrategy = new ExistingHandlerFetchStrategy(presenterFactory, methodMapper);
     }
 
     private void registerAllEventMethods(final Class<? extends EventBus>[] eventBusClasses, final EventBusVerifier verifier,
@@ -91,6 +94,7 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
         if (executeInterceptorChain((EventBus) proxy, eventMethod, args)) {
             dispatchEventToHandlers(proxy, eventMethod, args, dispatchHandlerFetchStrategy);
             dispatchEventToHandlers(proxy, eventMethod, args, createHandlerFetchStrategy);
+            dispatchEventToHandlers(proxy, eventMethod, args, existingHandlerFetchStrategy);
         }
         return null;
     }
