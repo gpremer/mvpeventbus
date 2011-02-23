@@ -5,13 +5,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import net.premereur.mvp.core.Event;
 import net.premereur.mvp.core.EventBus;
-import net.premereur.mvp.core.Presenter;
+import net.premereur.mvp.core.EventHandler;
 import net.premereur.mvp.util.reflection.ReflectionUtil;
 
 /**
@@ -23,7 +22,7 @@ import net.premereur.mvp.util.reflection.ReflectionUtil;
 public abstract class AbstractEventBusInvocationHandler implements InvocationHandler {
     private final EventMethodMapper methodMapper;
 
-    private final PresenterFactory presenterFactory;
+    private final EventHandlerManager handlerManager;
 
     private final Collection<EventInterceptor> interceptors;
 
@@ -39,7 +38,7 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
 
     static {
         try {
-            DETACH_METHOD = EventBus.class.getMethod("detach", Presenter.class);
+            DETACH_METHOD = EventBus.class.getMethod("detach", EventHandler.class);
         } catch (final NoSuchMethodException e) {
             throw new RuntimeException("Bug in " + AbstractEventBusInvocationHandler.class, e); // This is a bug
         }
@@ -49,21 +48,21 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
      * Constructor.
      * 
      * @param eventBusClasses the classes to proxy
-     * @param presenterFactory the factory to create presenter instances with
+     * @param handlerMgr the factory to create handler instances with
      * @param verifier the verifier the concrete InvocationHandler needs
      * @param interceptors The interceptors to call before the event dispatch
      */
-    public AbstractEventBusInvocationHandler(final Class<? extends EventBus>[] eventBusClasses, final PresenterFactory presenterFactory,
+    public AbstractEventBusInvocationHandler(final Class<? extends EventBus>[] eventBusClasses, final EventHandlerManager handlerMgr,
             final EventBusVerifier verifier, final Collection<EventInterceptor> interceptors) {
-        this.presenterFactory = presenterFactory;
+        this.handlerManager = handlerMgr;
         this.interceptors = interceptors;
         this.methodMapper = new EventMethodMapper();
         final Collection<String> verificationErrors = new ArrayList<String>();
         registerAllEventMethods(eventBusClasses, verifier, verificationErrors);
         throwVerificationIfNeeded(verificationErrors);
-        this.dispatchHandlerFetchStrategy = new DispatchHandlerFetchStrategy(presenterFactory, methodMapper);
-        this.createHandlerFetchStrategy = new CreateHandlerFetchStrategy(presenterFactory, methodMapper);
-        this.existingHandlerFetchStrategy = new ExistingHandlerFetchStrategy(presenterFactory, methodMapper);
+        this.dispatchHandlerFetchStrategy = new DispatchHandlerFetchStrategy(handlerMgr, methodMapper);
+        this.createHandlerFetchStrategy = new CreateHandlerFetchStrategy(handlerMgr, methodMapper);
+        this.existingHandlerFetchStrategy = new ExistingHandlerFetchStrategy(handlerMgr, methodMapper);
     }
 
     private void registerAllEventMethods(final Class<? extends EventBus>[] eventBusClasses, final EventBusVerifier verifier,
@@ -119,9 +118,9 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
     private void dispatchEventToHandlers(final Object proxy, final Method eventMethod, final Object[] args, final HandlerFetchStrategy handlerFetchStrategy)
             throws IllegalAccessException, InvocationTargetException {
         for (final EventMethodMapper.HandlerMethodPair handlerMethodPair : handlerFetchStrategy.getHandlerMethodPairs(eventMethod)) {
-            final List<Presenter<?, ?>> handlers = handlerFetchStrategy.getHandlers(handlerMethodPair.getHandlerClass(), (EventBus) proxy);
+            final Iterable<EventHandler> handlers = handlerFetchStrategy.getHandlers(handlerMethodPair.getHandlerClass(), (EventBus) proxy);
             final Method method = handlerMethodPair.getMethod();
-            for (Presenter<?, ?> handler : handlers) {
+            for (EventHandler handler : handlers) {
                 try {
                     if (LOG.isLoggable(Level.FINE)) {
                         LOG.fine("Dispatching to " + handler.getClass() + " -> " + methodName(method));
@@ -146,17 +145,13 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
             return hashCode(); // The hash code of the handler
         }
         if (method.equals(DETACH_METHOD)) {
-            final Presenter<?, ?> presenter = (Presenter<?, ?>) args[0];
-            presenterFactory.detachPresenter(presenter, (EventBus) proxy);
+            final EventHandler handler = (EventHandler) args[0];
+            handlerManager.detachPresenter(handler, (EventBus) proxy);
             return null; // void
         }
         return null;
     }
 
-    /**
-     * @param method
-     * @return
-     */
     private String methodName(final Method method) {
         return method.getName();
     }

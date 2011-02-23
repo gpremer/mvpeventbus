@@ -9,6 +9,6 @@ package net.premereur.mvp.core;
  * @param <V> The {@link View} interface associated with the presenter.
  * @param <E> The {@link EventBus} interface exchanging events with the presenter.
  */
-public interface Presenter<V extends View, E extends EventBus> {
+public interface Presenter<V extends View, E extends EventBus> extends EventHandler {
 
 }

@@ -5,13 +5,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.premereur.mvp.core.EventBus;
-import net.premereur.mvp.core.base.PresenterFactory;
+import net.premereur.mvp.core.base.EventHandlerManager;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provider;
 
 /**
- * A Guice module that registers the {@link PresenterFactory}.
+ * A Guice module that registers the {@link EventHandlerManager}.
  * 
  * @author gpremer
  * 
@@ -53,7 +53,7 @@ public final class EventBusModule extends AbstractModule {
     @SuppressWarnings("unchecked")
     @Override
     protected void configure() {
-        bind(PresenterFactory.class).to(GuicePresenterFactory.class);
+        bind(EventHandlerManager.class).to(GuicePresenterFactory.class);
         bind(EventBus.class).toProvider(eventBusProvider);
         for (final Class<? extends EventBus> busClass : eventBusIntfs) {
             bind(busClass).toProvider(eventBusProvider);

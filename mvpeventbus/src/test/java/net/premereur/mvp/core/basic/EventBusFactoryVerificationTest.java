@@ -2,11 +2,10 @@ package net.premereur.mvp.core.basic;
 
 import net.premereur.mvp.core.Event;
 import net.premereur.mvp.core.EventBus;
-import net.premereur.mvp.core.Presenter;
+import net.premereur.mvp.core.EventHandler;
 import net.premereur.mvp.core.UsesView;
 import net.premereur.mvp.core.View;
 import net.premereur.mvp.core.base.VerificationException;
-import net.premereur.mvp.core.basic.BasePresenter;
 
 import org.junit.Test;
 
@@ -76,7 +75,7 @@ public class EventBusFactoryVerificationTest extends EventBusFactoryTestBase {
     class ClassEventBus implements EventBus {
 
         @Override
-        public void detach(Presenter<?, ?> presenter) {
+        public void detach(EventHandler presenter) {
         }
 
     }

@@ -13,7 +13,7 @@ import java.util.Set;
 import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.core.base.AbstractEventBusFactory;
 import net.premereur.mvp.core.base.EventInterceptor;
-import net.premereur.mvp.core.base.PresenterFactory;
+import net.premereur.mvp.core.base.EventHandlerManager;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -151,7 +151,7 @@ public final class GuiceEventBusFactory<EB extends EventBus> extends AbstractEve
         for (final Class<? extends EventInterceptor> interceptorClass : interceptorClasses) {
             allInterceptors.add(guiceInjector.getInstance(interceptorClass));
         }
-        return new GuiceEventBusInvocationHandler(eventBusIntfs, guiceInjector.getInstance(PresenterFactory.class), allInterceptors);
+        return new GuiceEventBusInvocationHandler(eventBusIntfs, guiceInjector.getInstance(EventHandlerManager.class), allInterceptors);
     }
 
     /**

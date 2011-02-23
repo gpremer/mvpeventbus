@@ -160,7 +160,7 @@ public abstract class AbstractEventBusFactory<E extends EventBus> implements Eve
      * 
      * At run-time it doesn't matter if an application use several event buss segments that are joined with each other, or one large event bus responding to the
      * union of all events in all separate busses. At design-time, however, it is often easier to manage several distinct busses each with their own events and
-     * presenters. When there's a need to send events to event sinks on other, combined, busses, the designer has the choice of replicating event methods in the
+     * event handlers. When there's a need to send events to event sinks on other, combined, busses, the designer has the choice of replicating event methods in the
      * attached bus or calling events directly on the master bus.
      * 
      * @return an event bus implementing all of the segment interfaces

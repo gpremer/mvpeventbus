@@ -1,11 +1,10 @@
 package net.premereur.mvp.core.base;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 
 import net.premereur.mvp.core.EventBus;
-import net.premereur.mvp.core.Presenter;
+import net.premereur.mvp.core.EventHandler;
 import net.premereur.mvp.core.Event.Policy;
 import net.premereur.mvp.core.base.EventMethodMapper.HandlerMethodPair;
 
@@ -17,15 +16,16 @@ import net.premereur.mvp.core.base.EventMethodMapper.HandlerMethodPair;
  */
 class CreateHandlerFetchStrategy extends HandlerFetchStrategy {
 
-    public CreateHandlerFetchStrategy(final PresenterFactory presenterFactory, final EventMethodMapper methodMapper) {
+    public CreateHandlerFetchStrategy(final EventHandlerManager presenterFactory, final EventMethodMapper methodMapper) {
         super(presenterFactory, methodMapper);
     }
 
     @Override
-    public List<Presenter<?, ?>> getHandlers(final Class<?> handlerClass, final EventBus bus) {
-        List<Presenter<?, ?>> singleton = new ArrayList<Presenter<?, ?>>(); // Collections.singleton is not generics-smart enough
-        singleton.add(getPresenterFactory().getNewPresenter(handlerClass, bus));
-        return singleton;
+    public Iterable<EventHandler> getHandlers(final Class<?> handlerClass, final EventBus bus) {
+//        List<EventHandler> singleton = new ArrayList<EventHandler>(); // Collections.singleton is not generics-smart enough
+//        singleton.add(getPresenterFactory().getNewEventHandler(handlerClass, bus));
+//        return singleton;
+        return Collections.singleton(getPresenterFactory().getNewEventHandler(handlerClass, bus));
     }
 
     @Override

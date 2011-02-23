@@ -9,7 +9,7 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 
 /**
- * A {@link net.premereur.mvp.core.base.PresenterFactory} that uses Guice to inject dependencies in the {@link Presenter}s it creates.
+ * A {@link net.premereur.mvp.core.base.EventHandlerManager} that uses Guice to inject dependencies in the {@link Presenter}s it creates.
  * 
  * @author gpremer
  * 

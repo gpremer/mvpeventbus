@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 import net.premereur.mvp.core.EventBus;
-import net.premereur.mvp.core.Presenter;
+import net.premereur.mvp.core.EventHandler;
 import net.premereur.mvp.core.Event.Policy;
 import net.premereur.mvp.core.base.EventMethodMapper.HandlerMethodPair;
 
@@ -16,13 +16,13 @@ import net.premereur.mvp.core.base.EventMethodMapper.HandlerMethodPair;
  */
 class ExistingHandlerFetchStrategy extends HandlerFetchStrategy {
 
-    public ExistingHandlerFetchStrategy(final PresenterFactory presenterFactory, final EventMethodMapper methodMapper) {
+    public ExistingHandlerFetchStrategy(final EventHandlerManager presenterFactory, final EventMethodMapper methodMapper) {
         super(presenterFactory, methodMapper);
     }
 
     @Override
-    public List<Presenter<?, ?>> getHandlers(final Class<?> handlerClass, final EventBus bus) {
-        return getPresenterFactory().getExistingPresenters(handlerClass, bus);
+    public List<EventHandler> getHandlers(final Class<?> handlerClass, final EventBus bus) {
+        return getPresenterFactory().getExistingEventHandlers(handlerClass, bus);
     }
 
     @Override

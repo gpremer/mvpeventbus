@@ -6,7 +6,7 @@ import net.premereur.mvp.core.View;
 import net.premereur.mvp.core.base.AbstractPresenterFactory;
 
 /**
- * A {@link net.premereur.mvp.core.base.PresenterFactory} that uses only standard J2SE libraries and has limited injection possibilities (only the view).
+ * A {@link net.premereur.mvp.core.base.EventHandlerManager} that uses only standard J2SE libraries and has limited injection possibilities (only the view).
  * 
  * FIXME: This class does not handle multiple concurrent event busses.
  * 
