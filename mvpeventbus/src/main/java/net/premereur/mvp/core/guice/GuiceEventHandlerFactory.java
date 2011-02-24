@@ -18,7 +18,7 @@ public final class GuiceEventHandlerFactory extends AbstractEventHandlerFactory 
     private final Injector injector;
 
     /**
-     * Creates a factory for Presenters that initialised by a Guice injector.
+     * Creates a factory for EventHandlers that are initialised by a Guice injector.
      * 
      * @param injector the Guice injector to resolve dependencies with
      */
@@ -28,8 +28,8 @@ public final class GuiceEventHandlerFactory extends AbstractEventHandlerFactory 
     }
 
     @Override
-    protected EventHandler createEventHandler(final Class<?> presenterClass, final EventBus eventBus) {
-        return (EventHandler) injector.getInstance(presenterClass);
+    protected EventHandler createEventHandler(final Class<?> handlerClass, final EventBus eventBus) {
+        return (EventHandler) injector.getInstance(handlerClass);
     }
 
 }

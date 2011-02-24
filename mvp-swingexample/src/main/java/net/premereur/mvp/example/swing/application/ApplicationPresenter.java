@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JComponent;
 import javax.swing.Timer;
 
-import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.core.guice.BasePresenter;
 import net.premereur.mvp.example.support.ClickHandler;
 import net.premereur.mvp.example.swing.categorymgt.CategoryMgtBus;
@@ -23,10 +22,13 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class ApplicationPresenter extends BasePresenter<ApplicationFrame, ApplicationBus> {
+    
+    private final CategoryMgtBus categoryMgtBus;
 
     @Inject
-    public ApplicationPresenter(final EventBus eventBus, final ApplicationFrame view) {
-        super((ApplicationBus) eventBus, view);
+    public ApplicationPresenter(final ApplicationBus eventBus, final CategoryMgtBus catMgtBus, final ApplicationFrame view) {
+        super(eventBus, view);
+        this.categoryMgtBus = catMgtBus;
     }
 
     /**
@@ -100,7 +102,7 @@ public class ApplicationPresenter extends BasePresenter<ApplicationFrame, Applic
         return new ClickHandler() {
             @Override
             public void click() {
-                getEventBus(CategoryMgtBus.class).categoryMgtActivated();
+                categoryMgtBus.categoryMgtActivated();
             }
         };
     }
@@ -109,7 +111,7 @@ public class ApplicationPresenter extends BasePresenter<ApplicationFrame, Applic
         return new ClickHandler() {
             @Override
             public void click() {
-                getEventBus(ProductMgtBus.class).productMgtActivated();
+                getEventBus(ProductMgtBus.class).productMgtActivated(); // avoids having to inject bus
             }
         };
     }

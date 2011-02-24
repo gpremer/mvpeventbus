@@ -13,7 +13,7 @@ import net.premereur.mvp.core.base.AbstractEventHandlerFactory;
  * @author gpremer
  * 
  */
-public final class PresenterFactory extends AbstractEventHandlerFactory {
+public final class HandlerAndPresenterFactory extends AbstractEventHandlerFactory {
 
     private static final ViewFactory VIEW_FACTORY = new ViewFactory();
 
@@ -22,10 +22,15 @@ public final class PresenterFactory extends AbstractEventHandlerFactory {
     protected EventHandler createEventHandler(final Class<?> presenterClass, final EventBus eventBus) {
         final EventHandler handler = (EventHandler) uncheckedNewInstance(presenterClass);
         if (handler instanceof Presenter) {
-            Presenter presenter = (Presenter) handler;
-            presenter.setEventBus(eventBus);
-            presenter.setView(VIEW_FACTORY.newView(presenterClass, presenter));
+            injectViewAndBus(presenterClass, eventBus, handler);
         }
         return handler;
+    }
+
+    @SuppressWarnings("unchecked")
+    private void injectViewAndBus(final Class<?> presenterClass, final EventBus eventBus, final EventHandler handler) {
+        final Presenter presenter = (Presenter) handler;
+        presenter.setEventBus(eventBus);
+        presenter.setView(VIEW_FACTORY.newView(presenterClass, presenter));
     }
 }

@@ -26,7 +26,7 @@ public class EventBusInvocationHandler extends AbstractEventBusInvocationHandler
      * @param interceptors the bus-level interceptors
      */
     public EventBusInvocationHandler(final Class<? extends EventBus>[] eventBusClasses, final Collection<EventInterceptor> interceptors) {
-        super(eventBusClasses, new PresenterFactory(), VERIFIER, interceptors);
+        super(eventBusClasses, new HandlerAndPresenterFactory(), VERIFIER, interceptors);
     }
 
 }
