@@ -2,7 +2,7 @@ package net.premereur.mvp.core.verifiers;
 
 import java.util.Collection;
 
-import net.premereur.mvp.core.Presenter;
+import net.premereur.mvp.core.EventHandler;
 
 /**
  * Verifies handler classes.
@@ -18,6 +18,5 @@ public interface HandlerVerifier {
      * @param handlerClass the class to examine.
      * @return a collection of failure messages. Can be empty.
      */
-    Collection<String> verify(@SuppressWarnings("unchecked")
-    Class<? extends Presenter> handlerClass);
+    Collection<String> verify(Class<? extends EventHandler> handlerClass);
 }

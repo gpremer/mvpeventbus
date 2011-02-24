@@ -53,7 +53,7 @@ public final class EventBusModule extends AbstractModule {
     @SuppressWarnings("unchecked")
     @Override
     protected void configure() {
-        bind(EventHandlerManager.class).to(GuicePresenterFactory.class);
+        bind(EventHandlerManager.class).to(GuiceEventHandlerFactory.class);
         bind(EventBus.class).toProvider(eventBusProvider);
         for (final Class<? extends EventBus> busClass : eventBusIntfs) {
             bind(busClass).toProvider(eventBusProvider);

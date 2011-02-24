@@ -5,7 +5,7 @@ import static java.util.Collections.emptyList;
 
 import java.util.Collection;
 
-import net.premereur.mvp.core.Presenter;
+import net.premereur.mvp.core.EventHandler;
 
 /**
  * Verifies that the class a constructor without arguments.
@@ -19,8 +19,7 @@ public final class HasDefaultConstructorVerifier implements HandlerVerifier {
      * {@inheritDoc}
      */
     @Override
-    public Collection<String> verify(@SuppressWarnings("unchecked")
-    final Class<? extends Presenter> handlerClass) {
+    public Collection<String> verify(final Class<? extends EventHandler> handlerClass) {
         try {
             handlerClass.getConstructor();
             return emptyList();

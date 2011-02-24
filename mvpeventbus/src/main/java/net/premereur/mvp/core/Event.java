@@ -54,9 +54,9 @@ public @interface Event {
     }
 
     /**
-     * The {@link Presenter}s to forward this event to.
+     * The {@link EventHandler}s to forward this event to.
      */
-    Class<? extends Presenter<? extends View, ? extends EventBus>>[] value();
+    Class<? extends EventHandler>[] value();
 
     /**
      * Sets the creation policy for an event handler.

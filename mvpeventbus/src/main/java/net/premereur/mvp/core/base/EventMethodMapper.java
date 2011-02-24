@@ -10,9 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.premereur.mvp.core.Event;
-import net.premereur.mvp.core.EventBus;
-import net.premereur.mvp.core.Presenter;
-import net.premereur.mvp.core.View;
+import net.premereur.mvp.core.EventHandler;
 import net.premereur.mvp.core.Event.Policy;
 
 /**
@@ -101,20 +99,20 @@ public class EventMethodMapper {
     private static List<HandlerMethodPair> createHandlerMethodPairsForEvent(final Method eventMethod, final Event eventAnt,
             final Collection<String> verificationErrors) {
         final List<HandlerMethodPair> handlingMethods = new ArrayList<HandlerMethodPair>();
-        for (final Class<? extends Presenter<? extends View, ? extends EventBus>> presenter : eventAnt.value()) {
+        for (final Class<? extends EventHandler> presenter : eventAnt.value()) {
             handlingMethods.add(new HandlerMethodPair(presenter, correspondingPresenterMethod(presenter, eventMethod, verificationErrors)));
         }
         return handlingMethods;
     }
 
-    private static Method correspondingPresenterMethod(final Class<? extends Presenter<? extends View, ? extends EventBus>> presenter, final Method ebm,
+    private static Method correspondingPresenterMethod(final Class<? extends EventHandler> handlerClass, final Method ebm,
             final Collection<String> verificationErrors) {
-        for (final Method pm : presenter.getMethods()) {
+        for (final Method pm : handlerClass.getMethods()) {
             if (presenterMethodCorrespondsWithEventBusMethod(pm, ebm)) {
                 return pm;
             }
         }
-        verificationErrors.add("Did not find corresponding public event handler on " + presenter.getName() + " for event bus method " + ebm.getName());
+        verificationErrors.add("Did not find corresponding public event handler on " + handlerClass.getName() + " for event bus method " + ebm.getName());
         return null; // TODO change this so that a Method object is returned always
     }
 

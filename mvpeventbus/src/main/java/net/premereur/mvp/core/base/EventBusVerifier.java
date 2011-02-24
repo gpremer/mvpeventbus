@@ -5,8 +5,7 @@ import java.util.Collection;
 
 import net.premereur.mvp.core.Event;
 import net.premereur.mvp.core.EventBus;
-import net.premereur.mvp.core.Presenter;
-import net.premereur.mvp.core.View;
+import net.premereur.mvp.core.EventHandler;
 import net.premereur.mvp.core.verifiers.EventBusInterfaceVerifier;
 import net.premereur.mvp.core.verifiers.HandlerVerifier;
 import net.premereur.mvp.core.verifiers.MethodVerifier;
@@ -42,8 +41,8 @@ public abstract class EventBusVerifier {
         }
     }
 
-    private void verifyHandlers(final Class<? extends Presenter<? extends View, ? extends EventBus>>[] handlers, final Collection<String> verificationErrors) {
-        for (final Class<? extends Presenter<? extends View, ? extends EventBus>> handlerClass : handlers) {
+    private void verifyHandlers(final Class<? extends EventHandler>[] handlers, final Collection<String> verificationErrors) {
+        for (final Class<? extends EventHandler> handlerClass : handlers) {
             for (final HandlerVerifier verifier : getHandlerVerifiers()) {
                 verificationErrors.addAll(verifier.verify(handlerClass));
             }
