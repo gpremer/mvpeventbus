@@ -122,4 +122,18 @@ public class EventBusFactoryVerificationTest extends EventBusFactoryTestBase {
         createEventBus(EventBusWithPresenterWithoutDefaultConstructor.class);
     }
 
+    public static interface EventBusWithBareHandler extends EventBus {
+        @Event(EventHandlerThatIsNotAPresenter.class)
+        void event();
+    }
+
+    public static class EventHandlerThatIsNotAPresenter implements EventHandler {
+        public void onEvent() {
+        }
+    }
+
+    @Test
+    public void shouldAllowsEventHandlersThatAreNotPresentersWithoutTheUsesViewAnnoation() throws Exception {
+        createEventBus(EventBusWithBareHandler.class);
+    }
 }
