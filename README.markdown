@@ -4,7 +4,7 @@ MVP Event Bus
 Goal
 ----
 
-The MVP Event Bus framework is used to let the Presenters in the Model-View-Presenter pattern communicate with each other in a loosely coupled fashion.
+The MVP Event Bus framework lets Presenters in the Model-View-Presenter pattern communicate with each other in a loosely coupled fashion.
 
 For an overview of why you could use the MVP pattern have a look at : [Wikipedia](http://en.wikipedia.org/wiki/Model-view-presenter).
 
@@ -27,24 +27,24 @@ An event bus is a simple interface extending `EventBus` and containing methods m
       // Many more events ....
     }
 
-Event methods are void methods that can take any number of parameters (of reference types), so there is no need to create special-purpose event classes. Sending an event is the same as calling an method annotated with `@Event`. The advantage of this approach is that it is not necessary to write a dedicated, repetitive, `Event` class for any event you want to send over the bus.
+Event methods are void methods that can take any number of parameters (of reference types), so there is no need to create special-purpose event classes. Sending an event is the same as calling a method annotated with `@Event`. The advantage of this approach is that it is not necessary to write dedicated, repetitive, `Event` classes for the events you want to send over the bus.
 
 ### Creating event busses
 
-Somewhere in the initialisation part of your application you request an object implementing the interface you have defined:
+Somewhere in the initialisation part of your application request an object implementing the interface you have defined:
 
     public void init() {
       final EventBusFactory<DemoEventBus> factory = BasicEventBusFactory.withMainType(DemoEventBus.class).build()
       final DemoEventBus eventBus = factory.create();
     }
 
-First you build a factory object based on the specification of what types should be implemented and then you ask this factory to build an bus instance. This instance is automagically generated using dynamic proxies, so you don't have to do anything besides defining the interface. In a stand-alone application, e.g. using Swing, you  likely have one factory instance and one bus instance. In a web application on the other hand, you'll have one factory and one bus for every user session.
+First build a factory object based on the specification of what types should be implemented and then ask this factory to build a bus instance. This instance is automagically generated using dynamic proxies, so you don't have to do anything besides defining the interface. In a stand-alone application, e.g. using Swing, you  likely have one factory instance and one bus instance. In a web application you'll have one factory and one bus for every user session.
 
 ### Presenters
 
-The `EventBusFactory` will create all `Presenter`s mentioned in the `Event` annotations the first time an event handled by the presenter is sent. After the first request, a presenter is stored for subsequent requests. Obviously, all event bus instances have their own instance of all presenters so that different user sessions can have different state.
+The `EventBusFactory` will create all `Presenter`s mentioned in the `Event` annotations the first time an event handled by the presenter is sent. After the first request, a presenter is stored for subsequent requests. Obviously, each event bus instances has its own instance of all presenters so that different user sessions can have different state.
 
-The role of the presenter is to provide the application logic. Presenters have to implement the `Presenter` tagging interface. There's a convenience class `BasePresenter` that implements this interface and that you can extend from.
+The role of the presenter is to provide the application logic. Presenters have to implement the `Presenter` tagging interface. There's a convenience class `BasePresenter` that implements this interface you can extend from.
 
     @UsesView(ApplicationFrame.class)
     public class ApplicationPresenter extends BasePresenter<ApplicationFrame, DemoEventBus> {
@@ -62,7 +62,7 @@ The role of the presenter is to provide the application logic. Presenters have t
 
 As can be observed, the Presenter has a handler method named after the event but starting with 'on'. The `EventBusFactory` injects the `View` specified in the `@UsesView` annotation. It also provides a reference to the event bus object used for delivering the event so that the Presenter can send new events to the bus. There's also a Guice-enabled version of the event bus factory that avoids the need for a base class and the `UsesView` annotation. See the section on Guice support for that.
 
-As said, once created a presenter is kept alive, so it is safe to store state within the presenter. However, when the event bus instance that forwards events to the presenter becomes unreferenced (e.g. the user's session terminates), all associated presenters are removed as well.  Future versions of the framework may explicit removal of the presenters and the associated view.
+As mentioned before, once created a presenter is kept alive, so it is safe to store state within the presenter. However, when the event bus instance that forwards events to the presenter becomes unreferenced (e.g. the user's session terminates), all associated presenters are removed as well. Future versions of the framework may allow explicit removal of the presenters and the associated view.
 
 ### Views
 
@@ -72,15 +72,15 @@ Views are classes that interact with the UI framework you use in your applicatio
       // view logic here
     }
 
-It is suggested that UI-framework-specific methods call back to methods in the presenter that the View belongs to. The is to have as little logic as possible in the view and as much as possible in the presenter. The view should only contain the code that requires a run-time environment to test. The presenter should contain everything that can be tested a as unit test. In practice, it depends on the amount of test coverage you aim for. If you're not unit testing every last bit of your application, it may be convenient to shift a bit more reponsability to the view.
+It is suggested that UI-framework-specific methods call back to methods in the presenter that the View belongs to. The goal is to have as little logic as possible in the view and as much as possible in the presenter. The view should only contain the code that requires a run-time environment to test ?execute?. The presenter should contain everything that can be tested a as unit test. In practice, it depends on the amount of test coverage you aim for. If you're not unit testing every last bit of your application, it may be convenient to shift a bit more reponsability to the view.
 
 For a complete example, look at the included mvp-swingexample or mvp-vaadin-example projects.
 
 ### Validation at wiring time
 
-Since the event dispatching methods in the event bus interface and the event handlers in the presenters are only linked through a naming convention, the framework validates the saneness of your set up as soon as possible. From the moment the `build` method is invoked on the factory builder, all `Presenter`s defined in `@Event` annotation are checked to make sure that they contain the requisite event handler methods with the correct argument types. If not, an exception is issued. Thus, if you can create an event bus factory, you can be assured that there will be no run-time surprises due to method lookup misses. Also, all exceptions that do occur try to be as descriptive as possible so you can correct the issue as efficiently as possible.
+Because the event dispatching methods in the event bus interface and the event handlers in the presenters are only linked through a naming convention, the framework will check the validity of your set up as soon as possible. From the moment the `build` method is invoked on the factory builder, all `Presenter`s defined in `@Event` annotation are checked to make sure that they contain the requisite event handler methods with the correct argument types. If not, an exception is issued. Thus, if you can create an event bus factory, you can be assured that there will be no run-time surprises due to method lookup misses. Also, all exceptions that do occur try to be as descriptive as possible so you can correct the issue as efficiently as possible.
 
-By the way, these look ups at wiring time are also used to avoid having to perform reflection at event dispatching time.
+These look ups at wiring time are also used to avoid having to perform reflection at event dispatching time.
 
 Extensions
 ----------
@@ -100,7 +100,7 @@ E.g.
 
 In this example `MainEventBus`, `ChainedEventBus` and `OtherEventBus` are event bus interfaces each with their own set of presenters (the sets may overlap, although this will typically not be the case). The resulting event bus instance implements both interfaces. The declared type of any event bus instance created from this factory is the type of the first argument, in this case `MainEventBus`, but the instance can be cast to any of the other interfaces. 
 
-Since frequent casting in client code doesn't look very nice, the `BasePresenter` has some syntactic sugar for this. The standard type of the event bus instance is declared through the generics type argument. The other segment types can accessed through a helper method `getEventBus(<segment interface>)` as in:
+Since frequent casting in client code doesn't look very nice, the `BasePresenter` has some syntactic sugar for this. The standard type of the event bus instance is declared through the generics type argument. The other segment types can be accessed through a helper method `getEventBus(<segment interface>)` as in:
 
     /**
      * See {@link CategoryMgtBus#changedCategory(Category)}.
@@ -139,7 +139,7 @@ You can also inject more than one interface on the same event bus if you prefer 
 
 ### Interception
 
-For defining cross-cutting concerns, mvpeventbus allows defining event interceptors at the bus level. I.e., you can define interceptor classes that receive every event sent to the bus. These interceptors are given a reference to the originally called event with it's parameters.
+For defining cross-cutting concerns, mvpeventbus allows defining event interceptors at the bus level. I.e., you can define interceptor classes that receive every event sent to the bus. These interceptors are given a reference to the originally called event with its parameters.
 
 An interceptor is defined when setting up the factory
 
@@ -197,29 +197,29 @@ Sometimes you may want to have more than one instance of a given presenter on th
         void createEvent(final MultiCapturer capturer);
     }
 
-In this case, a new instance of `MyPresenter` will be instantiated every time the `createEvent` event is sent to the bus. The accompanying handler method `onCreateEvent` will only be invoked for the new instance. Event methods not tagged with `TO_NEW_INSTANCE` will obviously dispatched to all exising presenters of the handler type.
+In this case, a new instance of `MyPresenter` will be instantiated every time the `createEvent` event is sent to the bus. The accompanying handler method `onCreateEvent` will only be invoked for the new instance. Event methods not tagged with `TO_NEW_INSTANCE` will be dispatched to all exising presenters of the handler type.
 
 #### Deferring presenter creation
 
-It can also be that you only want to send an event to a presenter in case an instance of it already exists. For this purpose, you can use the `TO_EXISTING_INSTANCES` instantation policy as in:
+If you only want to send an event to a presenter in case an instance of it already exists, you can use the `TO_EXISTING_INSTANCES` instantation policy as in:
 
     static interface MyEventBus extends EventBus {
         @Event(value = {MyPresenter.class}, instantiation = Policy.TO_EXISTING_INSTANCES)
         void existingEvent(final MultiCapturer capturer);
     }
 
-Here, all instances of `MyPresenter` attached to the even bus instance are called with their `onExistingEvent` method, but no instance will be created should at least one not exist yet.
+Here, all instances of `MyPresenter` attached to the even bus instance are called with their `onExistingEvent` method, but no instance will be created. ?Ik veronderstel dat je bedoelt dat er geen MyPresenter instcance wordt gecreeerd, in dat geval mag 2de stuk zin weg. Anders moet je verduidelijken dat er geen Event instance wordt aangemaakt.?
 
 #### Dispatching to all presenters, creating one if necessary
 
 This is the default case, but if you want, you can use the instantiation policy `TO_INSTANCES` explicitly.
 
-Note that if you need to distinguish between presenter instances, the advised way is by means of information you pass as a parameter of the event methods. Don't be tempted to use some shared variables.
+Note that if you need to distinguish between presenter instances, the advised way is by means of information you pass as a parameter of the event methods. Don't be tempted to use some shared variables. ?Weet niet wat je bedoelt?
 
 Acknowledgement
 ---------------
 
-The interface of the mvpeventbus framework was inspired by the [mvp4g](http://code.google.com/p/mvp4g/) project. The difference is that mvpeventbus is more generic and can be used server-side e.g. for Swing and Vaadin applications.
+The interface of the mvpeventbus framework was inspired by the [mvp4g](http://code.google.com/p/mvp4g/) project. The difference is that mvpeventbus is more generic and can be used server-side e.g. for Swing ? =/ server-side? and Vaadin applications.
 
 Building
 --------
