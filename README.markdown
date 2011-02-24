@@ -72,7 +72,7 @@ Views are classes that interact with the UI framework you use in your applicatio
       // view logic here
     }
 
-It is suggested that UI-framework-specific methods call back to methods in the presenter that the View belongs to. The goal is to have as little logic as possible in the view and as much as possible in the presenter. The view should only contain the code that requires a run-time environment to test ?execute?. The presenter should contain everything that can be tested a as unit test. In practice, it depends on the amount of test coverage you aim for. If you're not unit testing every last bit of your application, it may be convenient to shift a bit more reponsability to the view.
+It is suggested that UI-framework-specific methods call back to methods in the presenter that the View belongs to. The goal is to have as little logic as possible in the view and as much as possible in the presenter. The view should only contain the code that requires a run-time environment to execute tests. The presenter should contain everything that can be tested a as unit test. In practice, it depends on the amount of test coverage you aim for. If you're not unit testing every last bit of your application, it may be convenient to shift a bit more reponsability to the view.
 
 For a complete example, look at the included mvp-swingexample or mvp-vaadin-example projects.
 
@@ -208,18 +208,18 @@ If you only want to send an event to a presenter in case an instance of it alrea
         void existingEvent(final MultiCapturer capturer);
     }
 
-Here, all instances of `MyPresenter` attached to the even bus instance are called with their `onExistingEvent` method, but no instance will be created. ?Ik veronderstel dat je bedoelt dat er geen MyPresenter instcance wordt gecreeerd, in dat geval mag 2de stuk zin weg. Anders moet je verduidelijken dat er geen Event instance wordt aangemaakt.?
+Here, all instances of `MyPresenter` attached to the even bus instance are called with their `onExistingEvent` method. No new instance of `MyPresenter` will be created.
 
 #### Dispatching to all presenters, creating one if necessary
 
 This is the default case, but if you want, you can use the instantiation policy `TO_INSTANCES` explicitly.
 
-Note that if you need to distinguish between presenter instances, the advised way is by means of information you pass as a parameter of the event methods. Don't be tempted to use some shared variables. ?Weet niet wat je bedoelt?
+Note that if you want that events to several instances of the same presenter class are handled differently, you should only use information that can be gathered from the event itself. So, add additional, explicit parameters to the event method. Don't use objects that are shared between sender and receiver or use magical context maps that could contain everything.
 
 Acknowledgement
 ---------------
 
-The interface of the mvpeventbus framework was inspired by the [mvp4g](http://code.google.com/p/mvp4g/) project. The difference is that mvpeventbus is more generic and can be used server-side e.g. for Swing ? =/ server-side? and Vaadin applications.
+The interface of the mvpeventbus framework was inspired by the [mvp4g](http://code.google.com/p/mvp4g/) project. The difference is that mvpeventbus is more generic and can be used in stand-alone, e.g. Swing, and server-side, e.g. Vaadin, applications.
 
 Building
 --------
