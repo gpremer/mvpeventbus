@@ -22,7 +22,7 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class ApplicationPresenter extends BasePresenter<ApplicationFrame, ApplicationBus> {
-    
+
     private final CategoryMgtBus categoryMgtBus;
 
     @Inject
