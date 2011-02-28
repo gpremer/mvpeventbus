@@ -11,6 +11,7 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import net.premereur.mvp.TestBase;
+import net.premereur.mvp.UniCapturer;
 import net.premereur.mvp.core.Event;
 import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.core.UsesView;
@@ -22,12 +23,7 @@ import org.junit.Test;
 
 public class InterceptTest extends TestBase {
 
-    static class Capturer {
-        MyPresenter presenter;
-
-        void capture(final MyPresenter target) {
-            this.presenter = target;
-        }
+    static class Capturer extends UniCapturer<MyPresenter> {
     }
 
     static interface MyEventBus extends EventBus {
@@ -37,7 +33,7 @@ public class InterceptTest extends TestBase {
     }
 
     @UsesView(MyView.class)
-    static public class MyPresenter extends  BasePresenter<MyView, MyEventBus> {
+    static public class MyPresenter extends BasePresenter<MyView, MyEventBus> {
 
         public void onEvent(final Capturer capturer) {
             capturer.capture(this);
@@ -104,13 +100,13 @@ public class InterceptTest extends TestBase {
     @Test
     public void shouldStillCallEvent() {
         eventBus.event(capturer);
-        assertNotNull("The event should still be called", capturer.presenter);
+        assertNotNull("The event should still be called", capturer.getCaptured());
     }
 
     @Test
     public void shouldNotDispatchEventIfInterceptorHaltsProcessing() {
         interceptor.haltsProcessing();
         eventBus.event(capturer);
-        assertNull("The event should not be dispatched", capturer.presenter);
+        assertNull("The event should not be dispatched", capturer.getCaptured());
     }
 }

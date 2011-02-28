@@ -1,9 +1,11 @@
 package net.premereur.mvp.core.guice;
 
 import static org.junit.Assert.assertNotNull;
+import net.premereur.mvp.UniCapturer;
 import net.premereur.mvp.core.Event;
 import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.core.EventHandler;
+import net.premereur.mvp.core.guice.ConcurrencyTest.MyPresenter;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -23,19 +25,8 @@ public class HandlerTest {
 
     }
 
-    static class Capturer {
-        MyHandler captured;
-
-        void capture(final MyHandler target) {
-            this.captured = target;
-        }
-
-        public void reset() {
-            this.captured = null;
-        }
-
+    static class Capturer extends UniCapturer<MyHandler> {
     }
-
 
     private MyEventBus eventBus;
     private Capturer capturer;
@@ -53,7 +44,7 @@ public class HandlerTest {
     @Test
     public void shouldReuseEventHandlerWhenSendingSecondEvent() {
         eventBus.event(capturer);
-        final MyHandler p1 = capturer.captured;
+        final MyHandler p1 = capturer.getCaptured();
         assertNotNull("Should receive event", p1);
     }
 

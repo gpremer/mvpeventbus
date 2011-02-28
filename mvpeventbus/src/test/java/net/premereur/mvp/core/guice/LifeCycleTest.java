@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.premereur.mvp.TestBase;
+import net.premereur.mvp.UniCapturer;
 import net.premereur.mvp.core.Event;
 import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.core.Presenter;
@@ -58,17 +59,7 @@ public class LifeCycleTest extends TestBase {
         }
     }
 
-    static class Capturer {
-        MyPresenter captured;
-
-        void capture(final MyPresenter target) {
-            this.captured = target;
-        }
-
-        public void reset() {
-            this.captured = null;
-        }
-
+    static class Capturer extends UniCapturer<MyPresenter> {
     }
 
     static class MultiCapturer {
@@ -114,16 +105,16 @@ public class LifeCycleTest extends TestBase {
     @Test
     public void shouldReuseEventHandlerWhenSendingSecondEvent() {
         eventBus.event(capturer);
-        MyPresenter p1 = capturer.captured;
+        MyPresenter p1 = capturer.getCaptured();
         eventBus.event(capturer);
-        MyPresenter p2 = capturer.captured;
+        MyPresenter p2 = capturer.getCaptured();
         assertTrue("Both presenter references should point to same presenter", p1 == p2);
     }
 
     @Test
     public void shouldNotSendEventsToDetachedEventHandlers() {
         eventBus.event(capturer);
-        MyPresenter p1 = capturer.captured;
+        MyPresenter p1 = capturer.getCaptured();
         assertEquals(1, p1.count);
         eventBus.detach(p1);
         eventBus.event(capturer);
@@ -133,17 +124,17 @@ public class LifeCycleTest extends TestBase {
     @Test
     public void shouldCreateNewEventHandlerWhenFirstOneRemovedFromEventBus() {
         eventBus.event(capturer);
-        MyPresenter p1 = capturer.captured;
+        MyPresenter p1 = capturer.getCaptured();
         eventBus.detach(p1);
         eventBus.event(capturer);
-        MyPresenter p2 = capturer.captured;
+        MyPresenter p2 = capturer.getCaptured();
         assertTrue("The presenter references should point to different presenters", p1 != p2);
     }
 
     @Test
     public void shouldSendEventsToDetachedEventHandlers() {
         eventBus.event(capturer);
-        MyPresenter p1 = capturer.captured;
+        MyPresenter p1 = capturer.getCaptured();
         assertEquals(1, p1.count);
         eventBus.detach(p1);
         eventBus.event(capturer);
@@ -155,7 +146,7 @@ public class LifeCycleTest extends TestBase {
         MyPresenter p = new MyPresenter();
         eventBus.attach(p);
         eventBus.event(capturer);
-        MyPresenter p1 = capturer.captured;
+        MyPresenter p1 = capturer.getCaptured();
         assertEquals(p, p1);
     }
 

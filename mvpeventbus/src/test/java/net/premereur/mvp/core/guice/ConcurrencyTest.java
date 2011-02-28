@@ -3,6 +3,7 @@ package net.premereur.mvp.core.guice;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import net.premereur.mvp.TestBase;
+import net.premereur.mvp.UniCapturer;
 import net.premereur.mvp.core.Event;
 import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.core.Presenter;
@@ -18,13 +19,7 @@ import com.google.inject.Singleton;
 
 public class ConcurrencyTest extends TestBase {
 
-    static class Capturer {
-        MyPresenter presenter;
-
-        void capture(final MyPresenter target) {
-            this.presenter = target;
-        }
-
+    static class Capturer extends UniCapturer<MyPresenter> {
     }
 
     static interface MyEventBus extends EventBus {
@@ -91,7 +86,7 @@ public class ConcurrencyTest extends TestBase {
         eventBus1.event(capturer1);
         Capturer capturer2 = new Capturer();
         eventBus2.event(capturer2);
-        assertNotSame(capturer1.presenter, capturer2.presenter);
+        assertNotSame(capturer1.getCaptured(), capturer2.getCaptured());
     }
 
     @Test
@@ -101,7 +96,7 @@ public class ConcurrencyTest extends TestBase {
         eventBus1.event(capturer1);
         Capturer capturer2 = new Capturer();
         eventBus1.event(capturer2);
-        assertSame(capturer1.presenter, capturer2.presenter);
+        assertSame(capturer1.getCaptured(), capturer2.getCaptured());
     }
 
     @Test
@@ -112,7 +107,7 @@ public class ConcurrencyTest extends TestBase {
         eventBus1.event(capturer1);
         Capturer capturer2 = new Capturer();
         eventBus2.event(capturer2);
-        assertSame(capturer1.presenter.dependency, capturer2.presenter.dependency);
+        assertSame(capturer1.getCaptured().dependency, capturer2.getCaptured().dependency);
     }
 
     @Test
@@ -123,7 +118,7 @@ public class ConcurrencyTest extends TestBase {
         eventBus1.event(capturer1);
         Capturer capturer2 = new Capturer();
         eventBus2.event(capturer2);
-        assertNotSame(capturer1.presenter.eventBus, capturer2.presenter.eventBus);
+        assertNotSame(capturer1.getCaptured().eventBus, capturer2.getCaptured().eventBus);
     }
 
 }

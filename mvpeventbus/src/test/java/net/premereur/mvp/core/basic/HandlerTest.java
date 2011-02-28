@@ -1,6 +1,7 @@
 package net.premereur.mvp.core.basic;
 
 import static org.junit.Assert.assertNotNull;
+import net.premereur.mvp.UniCapturer;
 import net.premereur.mvp.core.Event;
 import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.core.EventHandler;
@@ -27,22 +28,11 @@ public class HandlerTest {
     }
 
     public static class MyView implements View {
-        
-    }
-    
-    static class Capturer {
-        MyHandler captured;
-
-        void capture(final MyHandler target) {
-            this.captured = target;
-        }
-
-        public void reset() {
-            this.captured = null;
-        }
 
     }
 
+    static class Capturer extends UniCapturer<MyHandler> {
+    }
 
     private MyEventBus eventBus;
     private Capturer capturer;
@@ -60,7 +50,7 @@ public class HandlerTest {
     @Test
     public void shouldReuseEventHandlerWhenSendingSecondEvent() {
         eventBus.event(capturer);
-        final MyHandler p1 = capturer.captured;
+        final MyHandler p1 = capturer.getCaptured();
         assertNotNull("Should receive event", p1);
     }
 

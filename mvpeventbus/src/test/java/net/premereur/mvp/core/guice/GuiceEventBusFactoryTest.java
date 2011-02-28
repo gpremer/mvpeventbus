@@ -1,7 +1,6 @@
 package net.premereur.mvp.core.guice;
 
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 
 import java.util.logging.ConsoleHandler;
@@ -10,6 +9,7 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import net.premereur.mvp.TestBase;
+import net.premereur.mvp.UniCapturer;
 import net.premereur.mvp.core.Event;
 import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.core.Presenter;
@@ -25,12 +25,15 @@ import com.google.inject.Module;
 
 public class GuiceEventBusFactoryTest extends TestBase {
 
+    static class BusCapturer extends UniCapturer<MyEventBus> {
+    }
+
     static interface MyEventBus extends EventBus {
         @Event(MyPresenter.class)
         void event();
 
         @Event(MyPresenter.class)
-        void eventBusCall();
+        void eventBusCall(BusCapturer capturer);
     }
 
     static interface MyOtherEventBus extends EventBus {
@@ -41,8 +44,6 @@ public class GuiceEventBusFactoryTest extends TestBase {
 
     static interface Dependency {
         void f();
-
-        void receiveEventBus(MyEventBus eventBus);
     }
 
     static public class MyPresenter implements Presenter<MyView, MyEventBus> {
@@ -76,8 +77,8 @@ public class GuiceEventBusFactoryTest extends TestBase {
             this.dependency.f();
         }
 
-        public void onEventBusCall() {
-            this.dependency.receiveEventBus(this.eventBus);
+        public void onEventBusCall(final BusCapturer capturer) {
+            capturer.capture(eventBus);
         }
     }
 
@@ -155,8 +156,9 @@ public class GuiceEventBusFactoryTest extends TestBase {
 
     @Test
     public void shouldInjectedEventbusInPresenter() {
-        eventBus.eventBusCall();
-        verify(dependency).receiveEventBus(any(MyEventBus.class)); // It could still be null
+        final BusCapturer capturer = new BusCapturer();
+        eventBus.eventBusCall(capturer);
+        assertTrue(eventBus == capturer.getCaptured());
     }
 
 }
