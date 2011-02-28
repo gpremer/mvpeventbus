@@ -78,6 +78,10 @@ public class EventBusFactoryVerificationTest extends EventBusFactoryTestBase {
         public void detach(EventHandler presenter) {
         }
 
+        @Override
+        public void attach(EventHandler presenter) {
+        }
+
     }
 
     @Test(expected = VerificationException.class)

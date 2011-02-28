@@ -35,10 +35,12 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
     private static final Logger LOG = Logger.getLogger("net.premereur.mvp.core");
 
     private static final Method DETACH_METHOD;
+    private static final Method ATTACH_METHOD;
 
     static {
         try {
             DETACH_METHOD = EventBus.class.getMethod("detach", EventHandler.class);
+            ATTACH_METHOD = EventBus.class.getMethod("attach", EventHandler.class);
         } catch (final NoSuchMethodException e) {
             throw new RuntimeException("Bug in " + AbstractEventBusInvocationHandler.class, e); // This is a bug
         }
@@ -136,7 +138,7 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
 
     private boolean isSpecialMethod(final Method method) {
         final String methodName = methodName(method);
-        return methodName.equals("hashCode") || (method.equals(DETACH_METHOD));
+        return methodName.equals("hashCode") || method.equals(DETACH_METHOD) || method.equals(ATTACH_METHOD);
     }
 
     private Object handleSpecialMethods(final Object proxy, final Method method, final Object[] args) {
@@ -147,6 +149,11 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
         if (method.equals(DETACH_METHOD)) {
             final EventHandler handler = (EventHandler) args[0];
             handlerManager.detachPresenter(handler, (EventBus) proxy);
+            return null; // void
+        }
+        if (method.equals(ATTACH_METHOD)) {
+            final EventHandler handler = (EventHandler) args[0];
+            handlerManager.attachPresenter(handler, (EventBus) proxy);
             return null; // void
         }
         return null;

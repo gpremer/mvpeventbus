@@ -30,4 +30,14 @@ public interface EventBus {
      * @param handler the handler to be detached from the bus.
      */
     void detach(EventHandler handler);
+
+    /**
+     * Attaches an event handler to the bus instance. Use this in case there are reasons to create your own event handler. Obviously, an event handler that is
+     * not created by the event bus does not receive events from the event bus until it is attached to it.
+     * 
+     * If there is no event configured to send events to handlers of this class, the addition of the handler is silently ignored.
+     * 
+     * @param handler The event handler to attach.
+     */
+    void attach(EventHandler handler);
 }

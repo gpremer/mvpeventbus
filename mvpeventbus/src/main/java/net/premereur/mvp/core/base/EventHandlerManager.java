@@ -14,9 +14,9 @@ import net.premereur.mvp.core.EventHandler;
 public interface EventHandlerManager {
 
     /**
-     * Returns a concrete handler of the given type for use with the given event bus. If no handler of the requested type exists yet, create a new one. If
-     * this method is called twice for the same handlerClass/eventbus combination, the same handler instance should be returned (until the handler is
-     * detached or an additional is created).
+     * Returns a concrete handler of the given type for use with the given event bus. If no handler of the requested type exists yet, create a new one. If this
+     * method is called twice for the same handlerClass/eventbus combination, the same handler instance should be returned (until the handler is detached or an
+     * additional is created).
      * 
      * @param handlerClass the class of the handler to return.
      * @param eventBus the event bus instance the handler is associated with.
@@ -40,6 +40,14 @@ public interface EventHandlerManager {
      * @param eventBus the event bus from which the handler should be released.
      */
     void detachPresenter(EventHandler eventHandler, EventBus eventBus);
+
+    /**
+     * Attaches a handler created by the caller to the event bus.
+     * 
+     * @param eventHandler the handler to associate
+     * @param eventBus the event bus to which the handler should be attached.
+     */
+    void attachPresenter(EventHandler eventHandler, EventBus eventBus);
 
     /**
      * Returns previously returned event handlers from the event bus. Does not create a new handler if there was none already.

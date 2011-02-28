@@ -38,8 +38,11 @@ public class LifeCycleTest extends TestBase {
 
     public static class MyPresenter implements Presenter<MyView, MyEventBus> {
 
+        public int count = 0;
+
         public void onEvent(final Capturer capturer) {
             capturer.capture(this);
+            count += 1;
         }
 
         public void onCreateEvent(final MultiCapturer capturer) {
@@ -118,6 +121,16 @@ public class LifeCycleTest extends TestBase {
     }
 
     @Test
+    public void shouldNotSendEventsToDetachedEventHandlers() {
+        eventBus.event(capturer);
+        MyPresenter p1 = capturer.captured;
+        assertEquals(1, p1.count);
+        eventBus.detach(p1);
+        eventBus.event(capturer);
+        assertEquals(1, p1.count);
+    }
+
+    @Test
     public void shouldCreateNewEventHandlerWhenFirstOneRemovedFromEventBus() {
         eventBus.event(capturer);
         MyPresenter p1 = capturer.captured;
@@ -125,6 +138,34 @@ public class LifeCycleTest extends TestBase {
         eventBus.event(capturer);
         MyPresenter p2 = capturer.captured;
         assertTrue("The presenter references should point to different presenters", p1 != p2);
+    }
+
+    @Test
+    public void shouldSendEventsToDetachedEventHandlers() {
+        eventBus.event(capturer);
+        MyPresenter p1 = capturer.captured;
+        assertEquals(1, p1.count);
+        eventBus.detach(p1);
+        eventBus.event(capturer);
+        assertEquals(1, p1.count);
+    }
+
+    @Test
+    public void shouldSendEventsToAttachedEventHandler() {
+        MyPresenter p = new MyPresenter();
+        eventBus.attach(p);
+        eventBus.event(capturer);
+        MyPresenter p1 = capturer.captured;
+        assertEquals(p, p1);
+    }
+
+    @Test
+    public void shouldSendEventsToExistingAndAttachedEventHandler() {
+        eventBus.event(capturer);
+        MyPresenter p = new MyPresenter();
+        eventBus.attach(p);
+        eventBus.normalEvent(multiCapturer);        
+        assertEquals(2, multiCapturer.numberCaptured());
     }
 
     @Test

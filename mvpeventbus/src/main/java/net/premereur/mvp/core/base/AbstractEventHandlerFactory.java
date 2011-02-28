@@ -74,12 +74,20 @@ public abstract class AbstractEventHandlerFactory implements EventHandlerManager
         final List<EventHandler> handlers = eventBusHandlers.get(handler.getClass());
         handlers.remove(handler); // may leave an empty list
         if (handlers.isEmpty()) {
-            // There should be no 2 threads requiring the same event bus, just to be
-            // on the safe side
-            synchronized (eventBus) {
-                eventBusHandlers.put(handler.getClass(), null);
-            }
+            eventBusHandlers.put(handler.getClass(), null);
         }
+    }
+
+    @Override
+    public final void attachPresenter(final EventHandler eventHandler, final EventBus eventBus) {
+        final Map<Class<?>, List<EventHandler>> eventBusHandlers = handlersForBus(eventBus);
+        final Class<? extends EventHandler> handlerClass = eventHandler.getClass();
+        List<EventHandler> handlers = eventBusHandlers.get(handlerClass);
+        if (handlers == null) {
+            handlers = new ArrayList<EventHandler>();
+            eventBusHandlers.put(handlerClass, handlers);
+        }
+        handlers.add(eventHandler);
     }
 
     private Map<Class<?>, List<EventHandler>> handlersForBus(final EventBus eventBus) {
