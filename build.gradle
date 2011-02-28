@@ -41,7 +41,7 @@ subprojects {
     configFile = file("${rootDir}/config/checkstyle/junit.xml")
   }
 
-  version = '1.0-rc8'
+  version = '1.0-rc9'
 
   jar {
     manifest.attributes provider: 'ICTects'
@@ -85,6 +85,11 @@ subprojects {
 	}
       }
     }
+  }
+
+  task srcZip(type: Zip) {
+    classifier = 'src'
+    from sourceSets.main.allSource
   }
 }
 
