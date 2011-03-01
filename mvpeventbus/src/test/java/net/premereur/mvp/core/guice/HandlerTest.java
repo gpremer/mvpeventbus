@@ -5,7 +5,6 @@ import net.premereur.mvp.UniCapturer;
 import net.premereur.mvp.core.Event;
 import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.core.EventHandler;
-import net.premereur.mvp.core.guice.ConcurrencyTest.MyPresenter;
 
 import org.junit.Before;
 import org.junit.Test;
