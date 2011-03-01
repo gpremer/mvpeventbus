@@ -27,7 +27,11 @@ public final class EventBusModule extends AbstractModule {
     private final Provider eventBusProvider = new Provider<EventBus>() {
         @Override
         public EventBus get() {
-            return EVENT_BUS_STORE.get();
+            final EventBus threadEventBus = EVENT_BUS_STORE.get();
+            if (threadEventBus == null) {
+                throw new IllegalStateException("There is no event bus associated with the thread");
+            }
+            return threadEventBus;
         }
     };
 
@@ -44,10 +48,13 @@ public final class EventBusModule extends AbstractModule {
     /**
      * Sets the event bus provider to return the given event bus instance for the current thread.
      * 
-     * @param eventBus the event bus that should be in scope.
+     * @param threadEventBus the event bus that should be in scope.
      */
-    static void setThreadEventBus(final EventBus eventBus) {
-        EVENT_BUS_STORE.set(eventBus);
+    static void setThreadEventBus(final EventBus threadEventBus) {
+        if (threadEventBus == null) {
+            throw new IllegalArgumentException("The event bus cannot be set to null");
+        }
+        EVENT_BUS_STORE.set(threadEventBus);
     }
 
     @SuppressWarnings("unchecked")
