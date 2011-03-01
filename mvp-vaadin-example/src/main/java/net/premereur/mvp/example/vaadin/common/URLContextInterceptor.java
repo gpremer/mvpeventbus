@@ -19,7 +19,6 @@ public class URLContextInterceptor implements EventInterceptor {
         final URLContext urlAnnot = eventMethod.getAnnotation(URLContext.class);
         if (urlAnnot != null) {
             final String fragment = urlAnnot.value();
-            System.out.println(fragment);
             ((ApplicationBus) bus).setURIFragment(fragment);
         }
         return PROCEED;
