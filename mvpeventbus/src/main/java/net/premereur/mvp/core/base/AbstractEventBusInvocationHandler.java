@@ -86,6 +86,7 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
      */
     @Override
     public final Object invoke(final Object proxy, final Method eventMethod, final Object[] args) throws Throwable {
+        prepareEventBusForCalling((EventBus) proxy); // To give the Guice implementation a chance of setting a "current" event bus
         if (isSpecialMethod(eventMethod)) {
             return handleSpecialMethods(proxy, eventMethod, args);
         }
@@ -127,7 +128,6 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
                     if (LOG.isLoggable(Level.FINE)) {
                         LOG.fine("Dispatching to " + handler.getClass() + " -> " + methodName(method));
                     }
-                    prepareEventBusForCalling((EventBus) proxy);
                     method.invoke(handler, args);
                 } catch (InvocationTargetException e) {
                     throw new InvocationTargetException(e, "While invoking " + methodName(method) + " on " + handler.getClass());
