@@ -143,7 +143,7 @@ public class GuiceEventBusFactoryTest extends TestBase {
     }
 
     @Test
-    public void shouldInjectedDifferentEventbusInterfacesInPresenter() {
+    public void shouldInjectDifferentEventbusInterfacesInPresenter() {
         eventBus.event();
         // Sending the event will instantiate the presenter. If injection works, i.e. all types are bound, no exception is thrown and vice versa.
     }
@@ -155,7 +155,7 @@ public class GuiceEventBusFactoryTest extends TestBase {
     }
 
     @Test
-    public void shouldInjectedEventbusInPresenter() {
+    public void shouldInjectEventbusInPresenter() {
         final BusCapturer capturer = new BusCapturer();
         eventBus.eventBusCall(capturer);
         assertTrue(eventBus == capturer.getCaptured());
