@@ -14,23 +14,16 @@ import net.premereur.mvp.core.base.EventMethodMapper.HandlerMethodPair;
  * @author gpremer
  * 
  */
-class CreateHandlerFetchStrategy extends HandlerFetchStrategy {
+class CreateHandlerFetchStrategy implements HandlerFetchStrategy {
 
-    public CreateHandlerFetchStrategy(final EventHandlerManager presenterFactory, final EventMethodMapper methodMapper) {
-        super(presenterFactory, methodMapper);
+    @Override
+    public Iterable<EventHandler> getHandlers(final EventHandlerManager presenterMgr, final Class<?> handlerClass, final EventBus bus) {
+        return Collections.singleton(presenterMgr.getNewEventHandler(handlerClass, bus));
     }
 
     @Override
-    public Iterable<EventHandler> getHandlers(final Class<?> handlerClass, final EventBus bus) {
-//        List<EventHandler> singleton = new ArrayList<EventHandler>(); // Collections.singleton is not generics-smart enough
-//        singleton.add(getPresenterFactory().getNewEventHandler(handlerClass, bus));
-//        return singleton;
-        return Collections.singleton(getPresenterFactory().getNewEventHandler(handlerClass, bus));
-    }
-
-    @Override
-    public Iterable<HandlerMethodPair> getHandlerMethodPairs(final Method method) {
-        return getMethodMapper().getHandlerEvents(method, Policy.TO_NEW_INSTANCE);
+    public Iterable<HandlerMethodPair> getHandlerMethodPairs(final EventMethodMapper methodMapper, final Method method) {
+        return methodMapper.getHandlerEvents(method, Policy.TO_NEW_INSTANCE);
     }
 
 }

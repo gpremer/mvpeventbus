@@ -1,5 +1,9 @@
 package net.premereur.mvp.core.base;
 
+import static net.premereur.mvp.core.base.MethodInvocationResult.noInvocation;
+import static net.premereur.mvp.core.base.MethodInvocationResult.voidInvocation;
+import static net.premereur.mvp.core.base.MethodInvocationResult.withResult;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -26,11 +30,11 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
 
     private final Collection<EventInterceptor> interceptors;
 
-    private final HandlerFetchStrategy dispatchHandlerFetchStrategy;
+    private static final HandlerFetchStrategy DISPATCH_HANDLER_FETCH_STRATEGY;
 
-    private final HandlerFetchStrategy createHandlerFetchStrategy;
+    private static final HandlerFetchStrategy CREATE_HANDLER_FETCH_STRATEGY;
 
-    private final HandlerFetchStrategy existingHandlerFetchStrategy;
+    private static final HandlerFetchStrategy EXISTING_HANDLER_FETCH_STRATEGY;
 
     private static final Logger LOG = Logger.getLogger("net.premereur.mvp.core");
 
@@ -38,6 +42,9 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
     private static final Method ATTACH_METHOD;
 
     static {
+        DISPATCH_HANDLER_FETCH_STRATEGY = new DispatchHandlerFetchStrategy();
+        CREATE_HANDLER_FETCH_STRATEGY = new CreateHandlerFetchStrategy();
+        EXISTING_HANDLER_FETCH_STRATEGY = new ExistingHandlerFetchStrategy();
         try {
             DETACH_METHOD = EventBus.class.getMethod("detach", EventHandler.class);
             ATTACH_METHOD = EventBus.class.getMethod("attach", EventHandler.class);
@@ -62,9 +69,6 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
         final Collection<String> verificationErrors = new ArrayList<String>();
         registerAllEventMethods(eventBusClasses, verifier, verificationErrors);
         throwVerificationIfNeeded(verificationErrors);
-        this.dispatchHandlerFetchStrategy = new DispatchHandlerFetchStrategy(handlerMgr, methodMapper);
-        this.createHandlerFetchStrategy = new CreateHandlerFetchStrategy(handlerMgr, methodMapper);
-        this.existingHandlerFetchStrategy = new ExistingHandlerFetchStrategy(handlerMgr, methodMapper);
     }
 
     private void registerAllEventMethods(final Class<? extends EventBus>[] eventBusClasses, final EventBusVerifier verifier,
@@ -81,29 +85,32 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public final Object invoke(final Object proxy, final Method eventMethod, final Object[] args) throws Throwable {
         final EventBus eventBus = (EventBus) proxy;
-        if (isSpecialMethod(eventMethod)) {
-            return handleSpecialMethods(eventBus, eventMethod, args);
+        final MethodInvocationResult specialMethodResult = handleSpecialMethods(eventBus, eventMethod, args);
+        if (specialMethodResult.isHandled()) {
+            return specialMethodResult.getResult();
         }
+        handleEventMethod(eventMethod, args, eventBus);
+        return null; // event handler methods are void methods
+    }
+
+    private void handleEventMethod(final Method eventMethod, final Object[] args, final EventBus eventBus) throws IllegalAccessException,
+            InvocationTargetException {
         prepareEventBusForCalling(eventBus); // To give the Guice implementation a chance of setting a "current" event bus
         try {
             if (LOG.isLoggable(Level.FINE)) {
                 LOG.fine("Receiving event " + methodName(eventMethod) + LogHelper.formatArguments(" with ", args));
             }
             if (executeInterceptorChain(eventBus, eventMethod, args)) {
-                dispatchEventToHandlers(eventBus, eventMethod, args, dispatchHandlerFetchStrategy);
-                dispatchEventToHandlers(eventBus, eventMethod, args, createHandlerFetchStrategy);
-                dispatchEventToHandlers(eventBus, eventMethod, args, existingHandlerFetchStrategy);
+                dispatchEventToHandlers(eventBus, eventMethod, args, DISPATCH_HANDLER_FETCH_STRATEGY);
+                dispatchEventToHandlers(eventBus, eventMethod, args, CREATE_HANDLER_FETCH_STRATEGY);
+                dispatchEventToHandlers(eventBus, eventMethod, args, EXISTING_HANDLER_FETCH_STRATEGY);
             }
         } finally {
             unprepareEventBusForCalling(eventBus);
         }
-        return null; // event handler methods are void
     }
 
     /**
@@ -133,8 +140,8 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
 
     private void dispatchEventToHandlers(final EventBus eventBus, final Method eventMethod, final Object[] args, final HandlerFetchStrategy handlerFetchStrategy)
             throws IllegalAccessException, InvocationTargetException {
-        for (final EventMethodMapper.HandlerMethodPair handlerMethodPair : handlerFetchStrategy.getHandlerMethodPairs(eventMethod)) {
-            final Iterable<EventHandler> handlers = handlerFetchStrategy.getHandlers(handlerMethodPair.getHandlerClass(), eventBus);
+        for (final EventMethodMapper.HandlerMethodPair handlerMethodPair : handlerFetchStrategy.getHandlerMethodPairs(methodMapper, eventMethod)) {
+            final Iterable<EventHandler> handlers = handlerFetchStrategy.getHandlers(handlerManager, handlerMethodPair.getHandlerClass(), eventBus);
             final Method method = handlerMethodPair.getMethod();
             for (EventHandler handler : handlers) {
                 try {
@@ -149,27 +156,40 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
         }
     }
 
-    private boolean isSpecialMethod(final Method method) {
-        final String methodName = methodName(method);
-        return methodName.equals("hashCode") || method.equals(DETACH_METHOD) || method.equals(ATTACH_METHOD);
+    private MethodInvocationResult handleSpecialMethods(final EventBus eventBus, final Method method, final Object[] args) {
+        final MethodInvocationResult stdJavaResult = handleStandardJavaMethods(eventBus, method, args);
+        if (stdJavaResult.isHandled()) {
+            return stdJavaResult;
+        }
+        return handleBuiltInMethods(eventBus, method, args);
     }
 
-    private Object handleSpecialMethods(final EventBus eventBus, final Method method, final Object[] args) {
+    private MethodInvocationResult handleStandardJavaMethods(final EventBus eventBus, final Method method, final Object[] args) {
         final String methodName = methodName(method);
-        if (methodName.equals("hashCode")) {
-            return hashCode(); // The hash code of the handler
+        if (args == null && methodName.equals("hashCode")) {
+            return withResult(hashCode()); // The hash code of the handler
         }
+        if (args != null && args.length == 1 && methodName.equals("equals")) {
+            return withResult(eventBus == args[0]);
+        }
+        if (args == null && methodName.equals("toString")) {
+            return withResult("EventBus[0x" + Integer.toHexString(hashCode()) + "]");
+        }
+        return noInvocation();
+    }
+
+    private MethodInvocationResult handleBuiltInMethods(final EventBus eventBus, final Method method, final Object[] args) {
         if (method.equals(DETACH_METHOD)) {
             final EventHandler handler = (EventHandler) args[0];
-            handlerManager.detachPresenter(handler, (EventBus) eventBus);
-            return null; // void
+            handlerManager.detachPresenter(handler, eventBus);
+            return voidInvocation();
         }
         if (method.equals(ATTACH_METHOD)) {
             final EventHandler handler = (EventHandler) args[0];
-            handlerManager.attachPresenter(handler, (EventBus) eventBus);
-            return null; // void
+            handlerManager.attachPresenter(handler, eventBus);
+            return voidInvocation();
         }
-        return null;
+        return noInvocation();
     }
 
     private String methodName(final Method method) {

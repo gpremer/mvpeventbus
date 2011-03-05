@@ -31,11 +31,11 @@ public final class GuiceEventBusInvocationHandler extends AbstractEventBusInvoca
 
     @Override
     protected void prepareEventBusForCalling(final EventBus eventBus) {
-        EventBusModule.setThreadEventBus(eventBus); // so that Guice can inject the proper event bus
+        EventBusModule.pushThreadEventBus(eventBus); // so that Guice can inject the proper event bus
     }
 
     @Override
     protected void unprepareEventBusForCalling(final EventBus eventBus) {
-        EventBusModule.clearThreadEventBus();
+        EventBusModule.popThreadEventBus();
     }
 }

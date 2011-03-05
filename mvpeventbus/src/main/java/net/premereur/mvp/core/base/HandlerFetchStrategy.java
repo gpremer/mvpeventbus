@@ -12,27 +12,10 @@ import net.premereur.mvp.core.base.EventMethodMapper.HandlerMethodPair;
  * @author gpremer
  * 
  */
-abstract class HandlerFetchStrategy {
+interface HandlerFetchStrategy {
 
-    private EventHandlerManager presenterFactory;
+    Iterable<HandlerMethodPair> getHandlerMethodPairs(EventMethodMapper methodMapper2, final Method method);
 
-    private EventMethodMapper methodMapper;
-
-    abstract Iterable<HandlerMethodPair> getHandlerMethodPairs(final Method method);
-
-    abstract Iterable<EventHandler> getHandlers(Class<?> handlerClass, EventBus bus);
-
-    public HandlerFetchStrategy(final EventHandlerManager presenterFactory, final EventMethodMapper methodMapper) {
-        this.presenterFactory = presenterFactory;
-        this.methodMapper = methodMapper;
-    }
-
-    public EventMethodMapper getMethodMapper() {
-        return methodMapper;
-    }
-
-    public EventHandlerManager getPresenterFactory() {
-        return presenterFactory;
-    }
+    Iterable<EventHandler> getHandlers(EventHandlerManager presenterMgr, Class<?> handlerClass, EventBus bus);
 
 }

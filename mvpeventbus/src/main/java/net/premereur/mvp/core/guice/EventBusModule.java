@@ -1,6 +1,8 @@
 package net.premereur.mvp.core.guice;
 
+import java.util.ArrayDeque;
 import java.util.Collection;
+import java.util.Deque;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,17 +23,21 @@ public final class EventBusModule extends AbstractModule {
     private final Set<Class<? extends EventBus>> eventBusIntfs;
     // private EventBus eventBus;
 
-    private static final ThreadLocal<EventBus> EVENT_BUS_STORE = new ThreadLocal<EventBus>();
+    private static final ThreadLocal<Deque<EventBus>> EVENT_BUS_STORE = new ThreadLocal<Deque<EventBus>>() {
+        protected java.util.Deque<EventBus> initialValue() {
+            return new ArrayDeque<EventBus>();
+        };
+    };
 
     @SuppressWarnings("unchecked")
     private final Provider eventBusProvider = new Provider<EventBus>() {
         @Override
         public EventBus get() {
-            final EventBus threadEventBus = EVENT_BUS_STORE.get();
-            if (threadEventBus == null) {
+            final Deque<EventBus> threadEventBus = EVENT_BUS_STORE.get();
+            if (threadEventBus.isEmpty()) {
                 throw new IllegalStateException("There is no event bus associated with the thread");
             }
-            return threadEventBus;
+            return threadEventBus.peekLast(); // in stead of getLast because we want our own exception
         }
     };
 
@@ -50,11 +56,11 @@ public final class EventBusModule extends AbstractModule {
      * 
      * @param threadEventBus the event bus that should be in scope.
      */
-    static void setThreadEventBus(final EventBus threadEventBus) {
+    static void pushThreadEventBus(final EventBus threadEventBus) {
         if (threadEventBus == null) {
             throw new IllegalArgumentException("The event bus cannot be set to null");
         }
-        EVENT_BUS_STORE.set(threadEventBus);
+        EVENT_BUS_STORE.get().addLast(threadEventBus);
     }
 
     @SuppressWarnings("unchecked")
@@ -70,15 +76,15 @@ public final class EventBusModule extends AbstractModule {
     /**
      * Breaks the association of the current thread with an event bus instance.
      */
-    static void clearThreadEventBus() {
-        EVENT_BUS_STORE.set(null);
+    static void popThreadEventBus() {
+        EVENT_BUS_STORE.get().removeLast(); // will throw if there are no elements
     }
 
     /**
      * For unit testing: checks if there's an event bus associated with the current thread.
      */
     static boolean booleanHasThreadEventBus() {
-        return EVENT_BUS_STORE.get() != null;
+        return !EVENT_BUS_STORE.get().isEmpty();
     }
 
 }
