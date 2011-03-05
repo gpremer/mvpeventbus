@@ -6,4 +6,7 @@ dependencies {
   compile module('com.google.code.guice:guice:2.0.1') {
     dependency ('aopalliance:aopalliance:1.0')
   }
+  compile module('org.slf4j:slf4j-api:1.6.1')
+  testRuntime module('org.slf4j:slf4j-log4j12:1.6.1')
+  testRuntime module('log4j:log4j:1.2.16')
 }

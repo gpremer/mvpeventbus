@@ -9,13 +9,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import net.premereur.mvp.core.Event;
 import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.core.EventHandler;
 import net.premereur.mvp.util.reflection.ReflectionUtil;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Base class with common functionality for event bus invocation handlers.
@@ -36,7 +37,7 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
 
     private static final HandlerFetchStrategy EXISTING_HANDLER_FETCH_STRATEGY;
 
-    private static final Logger LOG = Logger.getLogger("net.premereur.mvp.core");
+    private static final Logger LOG = LoggerFactory.getLogger("net.premereur.mvp.core");
 
     private static final Method DETACH_METHOD;
     private static final Method ATTACH_METHOD;
@@ -100,8 +101,8 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
             InvocationTargetException {
         prepareEventBusForCalling(eventBus); // To give the Guice implementation a chance of setting a "current" event bus
         try {
-            if (LOG.isLoggable(Level.FINE)) {
-                LOG.fine("Receiving event " + methodName(eventMethod) + LogHelper.formatArguments(" with ", args));
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Receiving event {} {}", methodName(eventMethod), LogHelper.formatArguments(" with ", args));
             }
             if (executeInterceptorChain(eventBus, eventMethod, args)) {
                 dispatchEventToHandlers(eventBus, eventMethod, args, DISPATCH_HANDLER_FETCH_STRATEGY);
@@ -145,8 +146,8 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
             final Method method = handlerMethodPair.getMethod();
             for (EventHandler handler : handlers) {
                 try {
-                    if (LOG.isLoggable(Level.FINE)) {
-                        LOG.fine("Dispatching to " + handler.getClass() + " -> " + methodName(method));
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Dispatching to {} -> {}", handler.getClass(), methodName(method));
                     }
                     method.invoke(handler, args);
                 } catch (InvocationTargetException e) {
