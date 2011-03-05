@@ -86,19 +86,32 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
      */
     @Override
     public final Object invoke(final Object proxy, final Method eventMethod, final Object[] args) throws Throwable {
-        prepareEventBusForCalling((EventBus) proxy); // To give the Guice implementation a chance of setting a "current" event bus
+        final EventBus eventBus = (EventBus) proxy;
         if (isSpecialMethod(eventMethod)) {
-            return handleSpecialMethods(proxy, eventMethod, args);
+            return handleSpecialMethods(eventBus, eventMethod, args);
         }
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine("Receiving event " + methodName(eventMethod) + LogHelper.formatArguments(" with ", args));
+        prepareEventBusForCalling(eventBus); // To give the Guice implementation a chance of setting a "current" event bus
+        try {
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine("Receiving event " + methodName(eventMethod) + LogHelper.formatArguments(" with ", args));
+            }
+            if (executeInterceptorChain(eventBus, eventMethod, args)) {
+                dispatchEventToHandlers(eventBus, eventMethod, args, dispatchHandlerFetchStrategy);
+                dispatchEventToHandlers(eventBus, eventMethod, args, createHandlerFetchStrategy);
+                dispatchEventToHandlers(eventBus, eventMethod, args, existingHandlerFetchStrategy);
+            }
+        } finally {
+            unprepareEventBusForCalling(eventBus);
         }
-        if (executeInterceptorChain((EventBus) proxy, eventMethod, args)) {
-            dispatchEventToHandlers(proxy, eventMethod, args, dispatchHandlerFetchStrategy);
-            dispatchEventToHandlers(proxy, eventMethod, args, createHandlerFetchStrategy);
-            dispatchEventToHandlers(proxy, eventMethod, args, existingHandlerFetchStrategy);
-        }
-        return null;
+        return null; // event handler methods are void
+    }
+
+    /**
+     * Can be overridden to do necessary tear down with the event bus after it has finished receiving events.
+     * 
+     * @param eventBus the event bus that is to be closed for calling.
+     */
+    protected void unprepareEventBusForCalling(final EventBus eventBus) {
     }
 
     /**
@@ -118,10 +131,10 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
         return true;
     }
 
-    private void dispatchEventToHandlers(final Object proxy, final Method eventMethod, final Object[] args, final HandlerFetchStrategy handlerFetchStrategy)
+    private void dispatchEventToHandlers(final EventBus eventBus, final Method eventMethod, final Object[] args, final HandlerFetchStrategy handlerFetchStrategy)
             throws IllegalAccessException, InvocationTargetException {
         for (final EventMethodMapper.HandlerMethodPair handlerMethodPair : handlerFetchStrategy.getHandlerMethodPairs(eventMethod)) {
-            final Iterable<EventHandler> handlers = handlerFetchStrategy.getHandlers(handlerMethodPair.getHandlerClass(), (EventBus) proxy);
+            final Iterable<EventHandler> handlers = handlerFetchStrategy.getHandlers(handlerMethodPair.getHandlerClass(), eventBus);
             final Method method = handlerMethodPair.getMethod();
             for (EventHandler handler : handlers) {
                 try {
@@ -141,19 +154,19 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
         return methodName.equals("hashCode") || method.equals(DETACH_METHOD) || method.equals(ATTACH_METHOD);
     }
 
-    private Object handleSpecialMethods(final Object proxy, final Method method, final Object[] args) {
+    private Object handleSpecialMethods(final EventBus eventBus, final Method method, final Object[] args) {
         final String methodName = methodName(method);
         if (methodName.equals("hashCode")) {
             return hashCode(); // The hash code of the handler
         }
         if (method.equals(DETACH_METHOD)) {
             final EventHandler handler = (EventHandler) args[0];
-            handlerManager.detachPresenter(handler, (EventBus) proxy);
+            handlerManager.detachPresenter(handler, (EventBus) eventBus);
             return null; // void
         }
         if (method.equals(ATTACH_METHOD)) {
             final EventHandler handler = (EventHandler) args[0];
-            handlerManager.attachPresenter(handler, (EventBus) proxy);
+            handlerManager.attachPresenter(handler, (EventBus) eventBus);
             return null; // void
         }
         return null;

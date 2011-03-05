@@ -70,8 +70,15 @@ public final class EventBusModule extends AbstractModule {
     /**
      * Breaks the association of the current thread with an event bus instance.
      */
-    public static void clearThreadEventBus() {
+    static void clearThreadEventBus() {
         EVENT_BUS_STORE.set(null);
+    }
+
+    /**
+     * For unit testing: checks if there's an event bus associated with the current thread.
+     */
+    static boolean booleanHasThreadEventBus() {
+        return EVENT_BUS_STORE.get() != null;
     }
 
 }
