@@ -12,7 +12,7 @@ import net.premereur.mvp.core.Event;
 import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.core.Presenter;
 import net.premereur.mvp.core.View;
-import net.premereur.mvp.core.Event.Policy;
+import net.premereur.mvp.core.Event.Instantiation;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -23,13 +23,13 @@ public class LifeCycleTest extends TestBase {
         @Event(MyPresenter.class)
         void event(final Capturer capturer);
 
-        @Event(value = {MyPresenter.class}, instantiation = Policy.TO_NEW_INSTANCE)
+        @Event(value = {MyPresenter.class}, instantiation = Instantiation.TO_NEW_INSTANCE)
         void createEvent(final MultiCapturer capturer);
 
         @Event(MyPresenter.class)
         void normalEvent(final MultiCapturer capturer);
 
-        @Event(value = {MyPresenter.class}, instantiation = Policy.TO_EXISTING_INSTANCES)
+        @Event(value = {MyPresenter.class}, instantiation = Instantiation.TO_EXISTING_INSTANCES)
         void existingEvent(final MultiCapturer capturer);
     }
 

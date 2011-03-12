@@ -5,7 +5,7 @@ import java.util.List;
 
 import net.premereur.mvp.core.EventBus;
 import net.premereur.mvp.core.EventHandler;
-import net.premereur.mvp.core.Event.Policy;
+import net.premereur.mvp.core.Event.Instantiation;
 import net.premereur.mvp.core.base.EventMethodMapper.HandlerMethodPair;
 
 /**
@@ -23,7 +23,7 @@ class ExistingHandlerFetchStrategy implements HandlerFetchStrategy {
 
     @Override
     public Iterable<HandlerMethodPair> getHandlerMethodPairs(final EventMethodMapper methodMapper, final Method method) {
-        return methodMapper.getHandlerEvents(method, Policy.TO_EXISTING_INSTANCES);
+        return methodMapper.getHandlerEvents(method, Instantiation.TO_EXISTING_INSTANCES);
     }
 
 }

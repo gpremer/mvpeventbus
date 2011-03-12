@@ -37,7 +37,7 @@ public @interface Event {
      * @author gpremer
      * 
      */
-    public static enum Policy {
+    public static enum Instantiation {
         /**
          * Forces the creation of a new instance of the handler (and associates it with the bus). This instance is the only one that will receive the event.
          */
@@ -54,12 +54,34 @@ public @interface Event {
     }
 
     /**
+     * The invocation policies that are supported.
+     * 
+     * @author gpremer
+     * 
+     */
+    public static enum Invocation {
+        /**
+         * Process this event immediately, even when called when another event handler is executing.
+         */
+        IMMEDIATE,
+        /**
+         * Process this event after the currently executing event has finished. If no event is executing when sending this event, execute immediately.
+         */
+        DELAYED
+    }
+
+    /**
      * The {@link EventHandler}s to forward this event to.
      */
     Class<? extends EventHandler>[] value();
 
     /**
-     * Sets the creation policy for an event handler.
+     * Sets the instantiation policy for an event handler.
      */
-    Policy instantiation() default Policy.TO_INSTANCES;
+    Instantiation instantiation() default Instantiation.TO_INSTANCES;
+
+    /**
+     * Sets the invocation policy for an event handler.
+     */
+    Invocation invocation() default Invocation.IMMEDIATE;
 }

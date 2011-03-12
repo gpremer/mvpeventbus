@@ -6,12 +6,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import net.premereur.mvp.core.Event;
 import net.premereur.mvp.core.EventHandler;
-import net.premereur.mvp.core.Event.Policy;
+import net.premereur.mvp.core.Event.Instantiation;
 
 /**
  * Maintains the connection between an event and the presenter methods that the event should be forwarded to.
@@ -58,14 +60,15 @@ public class EventMethodMapper {
     }
 
     private final Map<String, List<HandlerMethodPair>>[] eventMethodsByEventMethodByPolicy;
+    private final Set<String> delayedEventmethods = new HashSet<String>();
 
     /**
      * Creates a new EventMethodMapper.
      */
     @SuppressWarnings("unchecked")
     public EventMethodMapper() {
-        eventMethodsByEventMethodByPolicy = new HashMap[Event.Policy.values().length];
-        for (Event.Policy policy : Event.Policy.values()) {
+        eventMethodsByEventMethodByPolicy = new HashMap[Event.Instantiation.values().length];
+        for (Event.Instantiation policy : Event.Instantiation.values()) {
             eventMethodsByEventMethodByPolicy[policy.ordinal()] = new HashMap<String, List<HandlerMethodPair>>();
         }
     }
@@ -84,6 +87,9 @@ public class EventMethodMapper {
             final String eventMethodSignature = eventMethodSignature(eventMethod);
             final List<HandlerMethodPair> handlingMethods = createHandlerMethodPairsForEvent(eventMethod, eventAnnot, verificationErrors);
             registerHandlingMethods(eventMethodSignature, handlingMethods, eventMethodsByEventMethodByPolicy[eventAnnot.instantiation().ordinal()]);
+            if (eventAnnot.invocation() == Event.Invocation.DELAYED) {
+                registerDelayedEvent(eventMethodSignature);
+            }
         }
     }
 
@@ -94,6 +100,10 @@ public class EventMethodMapper {
         } else {
             handlingMethodsByEventMethod.put(eventMethodSignature, handlingMethods);
         }
+    }
+
+    private void registerDelayedEvent(final String eventMethodSignature) {
+        delayedEventmethods.add(eventMethodSignature);
     }
 
     private static List<HandlerMethodPair> createHandlerMethodPairsForEvent(final Method eventMethod, final Event eventAnt,
@@ -151,9 +161,18 @@ public class EventMethodMapper {
      * @param policy the instantiation policy
      * @return all matching event handler methods (and classes)
      */
-    public final Iterable<HandlerMethodPair> getHandlerEvents(final Method eventMethod, final Policy policy) {
+    public final Iterable<HandlerMethodPair> getHandlerEvents(final Method eventMethod, final Instantiation policy) {
         final Iterable<HandlerMethodPair> methods = this.eventMethodsByEventMethodByPolicy[policy.ordinal()].get(eventMethodSignature(eventMethod));
         return methods == null ? NO_METHODS : methods;
+    }
+
+    /**
+     * Verifies whether an event bus method was declared as DELAYED.
+     * 
+     * @param eventMethod the event method to check
+     */
+    public final boolean isDelayedMethod(final Method eventMethod) {
+        return delayedEventmethods.contains(eventMethodSignature(eventMethod));
     }
 
 }

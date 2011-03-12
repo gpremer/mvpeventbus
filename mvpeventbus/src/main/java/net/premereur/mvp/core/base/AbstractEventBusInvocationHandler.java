@@ -9,6 +9,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import net.premereur.mvp.core.Event;
 import net.premereur.mvp.core.EventBus;
@@ -31,10 +33,19 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
 
     private final Collection<EventInterceptor> interceptors;
 
+    private final ThreadLocal<Queue<MethodInvocation>> delayedMethodQueue = new ThreadLocal<Queue<MethodInvocation>>() {
+        protected Queue<MethodInvocation> initialValue() {
+            return new ConcurrentLinkedQueue<MethodInvocation>();
+        }
+    };
+    private final ThreadLocal<Boolean> isInvoking = new ThreadLocal<Boolean>() {
+        protected Boolean initialValue() {
+            return Boolean.FALSE;
+        };
+    };
+
     private static final HandlerFetchStrategy DISPATCH_HANDLER_FETCH_STRATEGY;
-
     private static final HandlerFetchStrategy CREATE_HANDLER_FETCH_STRATEGY;
-
     private static final HandlerFetchStrategy EXISTING_HANDLER_FETCH_STRATEGY;
 
     private static final Logger LOG = LoggerFactory.getLogger("net.premereur.mvp.core");
@@ -93,16 +104,31 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
         if (specialMethodResult.isHandled()) {
             return specialMethodResult.getResult();
         }
-        handleEventMethod(eventMethod, args, eventBus);
+        if (needsToBeDelayed(eventMethod)) {
+            delayMethod(eventBus, eventMethod, args);
+        } else {
+            handleEventMethod(eventMethod, args, eventBus);
+            handleDelayedMethods();
+        }
         return null; // event handler methods are void methods
+    }
+
+    private void delayMethod(final EventBus eventBus, final Method eventMethod, final Object[] args) {
+        LOG.debug("Delaying event {}", methodName(eventMethod));
+        delayedMethodQueue.get().add(new MethodInvocation(eventBus, eventMethod, args));
+    }
+
+    private boolean needsToBeDelayed(final Method eventMethod) {
+        return methodMapper.isDelayedMethod(eventMethod) && isInvokingEvent();
     }
 
     private void handleEventMethod(final Method eventMethod, final Object[] args, final EventBus eventBus) throws IllegalAccessException,
             InvocationTargetException {
         prepareEventBusForCalling(eventBus); // To give the Guice implementation a chance of setting a "current" event bus
+        setInvokingEvent(true);
         try {
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Receiving event {} {}", methodName(eventMethod), LogHelper.formatArguments(" with ", args));
+                LOG.debug("Executing event {} {}", methodName(eventMethod), LogHelper.formatArguments(" with ", args));
             }
             if (executeInterceptorChain(eventBus, eventMethod, args)) {
                 dispatchEventToHandlers(eventBus, eventMethod, args, DISPATCH_HANDLER_FETCH_STRATEGY);
@@ -110,7 +136,23 @@ public abstract class AbstractEventBusInvocationHandler implements InvocationHan
                 dispatchEventToHandlers(eventBus, eventMethod, args, EXISTING_HANDLER_FETCH_STRATEGY);
             }
         } finally {
+            setInvokingEvent(false);
             unprepareEventBusForCalling(eventBus);
+        }
+    }
+
+    private void setInvokingEvent(final boolean invoking) {
+        isInvoking.set(invoking);
+    }
+
+    private boolean isInvokingEvent() {
+        return isInvoking.get();
+    }
+
+    private void handleDelayedMethods() throws Throwable {
+        while (!delayedMethodQueue.get().isEmpty()) {
+            final MethodInvocation invocation = delayedMethodQueue.get().poll();
+            invoke(invocation.getEventBus(), invocation.getEventMethod(), invocation.getArgs());
         }
     }
 
