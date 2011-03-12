@@ -59,17 +59,19 @@ public class EventMethodMapper {
         }
     }
 
-    private final Map<String, List<HandlerMethodPair>>[] eventMethodsByEventMethodByPolicy;
-    private final Set<String> delayedEventmethods = new HashSet<String>();
+    private final Map<Method, List<HandlerMethodPair>>[] eventMethodsByEventMethodByPolicy;
+    private final Set<Method> delayedEventmethods = new HashSet<Method>();
+    private final Map<String, Method> firstMethodOfSignature;
 
     /**
      * Creates a new EventMethodMapper.
      */
     @SuppressWarnings("unchecked")
     public EventMethodMapper() {
+        firstMethodOfSignature = new HashMap<String, Method>(); // Too bad the memory is retained after the last addHandlerMethods
         eventMethodsByEventMethodByPolicy = new HashMap[Event.Instantiation.values().length];
         for (Event.Instantiation policy : Event.Instantiation.values()) {
-            eventMethodsByEventMethodByPolicy[policy.ordinal()] = new HashMap<String, List<HandlerMethodPair>>();
+            eventMethodsByEventMethodByPolicy[policy.ordinal()] = new HashMap<Method, List<HandlerMethodPair>>();
         }
     }
 
@@ -86,24 +88,31 @@ public class EventMethodMapper {
             final Event eventAnnot = eventMethod.getAnnotation(Event.class);
             final String eventMethodSignature = eventMethodSignature(eventMethod);
             final List<HandlerMethodPair> handlingMethods = createHandlerMethodPairsForEvent(eventMethod, eventAnnot, verificationErrors);
-            registerHandlingMethods(eventMethodSignature, handlingMethods, eventMethodsByEventMethodByPolicy[eventAnnot.instantiation().ordinal()]);
+            registerHandlingMethods(eventMethod, eventMethodSignature, handlingMethods, eventMethodsByEventMethodByPolicy[eventAnnot.instantiation().ordinal()]);
             if (eventAnnot.invocation() == Event.Invocation.DELAYED) {
-                registerDelayedEvent(eventMethodSignature);
+                registerDelayedEvent(eventMethod); // the same event a different bus may have a different invocation policy
             }
         }
     }
 
-    private void registerHandlingMethods(final String eventMethodSignature, final List<HandlerMethodPair> handlingMethods,
-            final Map<String, List<HandlerMethodPair>> handlingMethodsByEventMethod) {
-        if (handlingMethodsByEventMethod.containsKey(eventMethodSignature)) {
-            handlingMethodsByEventMethod.get(eventMethodSignature).addAll(handlingMethods);
+    private void registerHandlingMethods(final Method eventMethod, final String eventMethodSignature, final List<HandlerMethodPair> handlingMethods,
+            final Map<Method, List<HandlerMethodPair>> handlingMethodsByEventMethod) {
+        // The reason for this extra temporary list is that the same logical event on different event bus segments have different Method instances.
+        // Therefore, we let all those events point to the same list (instance) that contains the handlers. This makes lookup fast and minimises memory usage.
+        final List<HandlerMethodPair> allHandlingMethods;
+        if (!firstMethodOfSignature.containsKey(eventMethodSignature)) { // the first time a method of this signature is seen?
+            firstMethodOfSignature.put(eventMethodSignature, eventMethod);
+            allHandlingMethods = handlingMethods;
         } else {
-            handlingMethodsByEventMethod.put(eventMethodSignature, handlingMethods);
+            final Method firstMethodWithSignature = firstMethodOfSignature.get(eventMethodSignature);
+            allHandlingMethods = handlingMethodsByEventMethod.get(firstMethodWithSignature);
+            allHandlingMethods.addAll(handlingMethods);
         }
+        handlingMethodsByEventMethod.put(eventMethod, allHandlingMethods);
     }
 
-    private void registerDelayedEvent(final String eventMethodSignature) {
-        delayedEventmethods.add(eventMethodSignature);
+    private void registerDelayedEvent(final Method eventMethod) {
+        delayedEventmethods.add(eventMethod);
     }
 
     private static List<HandlerMethodPair> createHandlerMethodPairsForEvent(final Method eventMethod, final Event eventAnt,
@@ -162,7 +171,7 @@ public class EventMethodMapper {
      * @return all matching event handler methods (and classes)
      */
     public final Iterable<HandlerMethodPair> getHandlerEvents(final Method eventMethod, final Instantiation policy) {
-        final Iterable<HandlerMethodPair> methods = this.eventMethodsByEventMethodByPolicy[policy.ordinal()].get(eventMethodSignature(eventMethod));
+        final Iterable<HandlerMethodPair> methods = this.eventMethodsByEventMethodByPolicy[policy.ordinal()].get(eventMethod);
         return methods == null ? NO_METHODS : methods;
     }
 
@@ -172,7 +181,7 @@ public class EventMethodMapper {
      * @param eventMethod the event method to check
      */
     public final boolean isDelayedMethod(final Method eventMethod) {
-        return delayedEventmethods.contains(eventMethodSignature(eventMethod));
+        return delayedEventmethods.contains(eventMethod);
     }
 
 }

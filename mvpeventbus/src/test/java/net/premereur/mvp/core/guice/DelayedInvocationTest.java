@@ -49,7 +49,7 @@ public class DelayedInvocationTest {
             dispatch(b, invocations);
             b.append("ad ");
         }
-        
+
         private void dispatch(final StringBuilder b, Invocation... invocations) {
             if (invocations != null && invocations.length > 0) {
                 Invocation[] nextInvocations = Arrays.copyOfRange(invocations, 1, invocations.length);
