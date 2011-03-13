@@ -21,7 +21,6 @@ import com.google.inject.Provider;
 public final class EventBusModule extends AbstractModule {
 
     private final Set<Class<? extends EventBus>> eventBusIntfs;
-    // private EventBus eventBus;
 
     private static final ThreadLocal<Deque<EventBus>> EVENT_BUS_STORE = new ThreadLocal<Deque<EventBus>>() {
         protected java.util.Deque<EventBus> initialValue() {
