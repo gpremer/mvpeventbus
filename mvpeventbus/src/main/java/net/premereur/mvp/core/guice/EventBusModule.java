@@ -1,8 +1,7 @@
 package net.premereur.mvp.core.guice;
 
-import java.util.ArrayDeque;
+import java.util.LinkedList;
 import java.util.Collection;
-import java.util.Deque;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,9 +21,9 @@ public final class EventBusModule extends AbstractModule {
 
     private final Set<Class<? extends EventBus>> eventBusIntfs;
 
-    private static final ThreadLocal<Deque<EventBus>> EVENT_BUS_STORE = new ThreadLocal<Deque<EventBus>>() {
-        protected java.util.Deque<EventBus> initialValue() {
-            return new ArrayDeque<EventBus>();
+    private static final ThreadLocal<LinkedList<EventBus>> EVENT_BUS_STORE = new ThreadLocal<LinkedList<EventBus>>() {
+        protected LinkedList<EventBus> initialValue() {
+            return new LinkedList<EventBus>();
         };
     };
 
@@ -32,7 +31,7 @@ public final class EventBusModule extends AbstractModule {
     private final Provider eventBusProvider = new Provider<EventBus>() {
         @Override
         public EventBus get() {
-            final Deque<EventBus> threadEventBus = EVENT_BUS_STORE.get();
+            final LinkedList<EventBus> threadEventBus = EVENT_BUS_STORE.get();
             if (threadEventBus.isEmpty()) {
                 throw new IllegalStateException("There is no event bus associated with the thread");
             }
