@@ -35,7 +35,7 @@ public final class EventBusModule extends AbstractModule {
             if (threadEventBus.isEmpty()) {
                 throw new IllegalStateException("There is no event bus associated with the thread");
             }
-            return threadEventBus.peekLast(); // in stead of getLast because we want our own exception
+            return threadEventBus.getLast(); // can't throw because we checked for emptiness
         }
     };
 
